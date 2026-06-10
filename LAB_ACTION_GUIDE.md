@@ -243,7 +243,7 @@ What are the secure coding patterns for:
 ```
 /fix-vulnerability
 
-SQL Injection in AuthController.java login method
+Authentication hardening in AuthController.java
 
 #file:src/main/java/com/securelabs/vulnerable/auth/AuthController.java
 ```
