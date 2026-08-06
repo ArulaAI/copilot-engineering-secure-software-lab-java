@@ -11,6 +11,10 @@ Generate a comprehensive STRIDE threat model for the specified system or compone
 
 ## Process
 
+### Tool Path Guidance
+- When writing files or calling file-edit tools, always expand workspace-relative paths to absolute paths rooted at the workspace root. Verify parent directories exist before writing. This prevents "Invalid input path" errors that can interrupt output and corrupt generated files.
+
+
 ### Step 1: System Analysis
 1. Identify all components
 2. Map data flows
@@ -22,20 +26,21 @@ Create a Mermaid flowchart showing:
 - Components as nodes
 - Data flows as arrows
 - Trust boundaries as subgraphs
+- Mermaid safety: quote all node labels and any edge label with punctuation; avoid raw `()` in edge labels, prefer `HTTPS requests` over `HTTP(S) requests)`.
 
 ```mermaid
 flowchart TD
     subgraph Internet["Untrusted"]
-        Client[Client]
+        Client["Client"]
     end
 
     subgraph DMZ["DMZ"]
-        Gateway[API Gateway]
+        Gateway["API Gateway"]
     end
 
     subgraph Internal["Internal"]
-        Service[Service]
-        DB[(Database)]
+        Service["Service"]
+        DB[("Database")]
     end
 
     Client --> Gateway
@@ -82,7 +87,7 @@ Rate each threat:
 Use the template from `threat-models/templates/stride-template.md`:
 
 ```markdown
-# STRIDE Threat Model: [System Name]
+# My Threat Model
 
 ## System Overview
 **Author:** [Name]
@@ -148,6 +153,6 @@ Use the template from `threat-models/templates/stride-template.md`:
 
 Reference the completed example at `threat-models/examples/auth-payment-system-threat-model.md` for guidance.
 
-Save the generated threat model to outputs/my-threat-model.md
+Save the generated threat model to threat-models/my-threat-model.md
 
 Generate the threat model now. Be thorough in identifying threats - assume an adversarial perspective.

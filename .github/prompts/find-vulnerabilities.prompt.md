@@ -72,8 +72,12 @@ For each vulnerability, document:
 
 ## Output Format
 
+Return the findings as a single continuous Markdown table.
+Do not insert blank lines between rows.
+Do not switch to headings, bullets, or code fences in the findings section.
+
 ```markdown
-## Vulnerability Report: [Filename]
+## Vulnerability Report: [Filename or Scope]
 
 ### Summary
 - Total vulnerabilities found: X
@@ -81,26 +85,10 @@ For each vulnerability, document:
 
 ### Findings
 
-#### 1. [A0X] Vulnerability Name
-**Severity:** Critical
-**Line:** XX
-**CWE:** CWE-XXX
-
-**Vulnerable Code:**
-```java
-// code here
-```
-
-**Attack Scenario:**
-An attacker could...
-
-**Recommended Fix:**
-```java
-// secure code here
-```
-
----
-[Repeat for each finding]
+| File | OWASP Category | CWE | Severity | Line(s) | Attack Scenario | Recommended Fix |
+| --- | --- | --- | --- | --- | --- | --- |
+| path/to/file.java | A03 Injection | CWE-89 | Critical | 10-18 | Short exploit summary | Short secure fix summary |
+| [Repeat for each finding without blank lines between rows] |
 ```
 
 Begin the analysis now. Be thorough - this lab contains 62 documented vulnerabilities.

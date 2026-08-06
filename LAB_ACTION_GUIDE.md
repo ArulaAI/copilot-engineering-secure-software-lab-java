@@ -8,9 +8,9 @@ Follow these lean steps using GitHub Copilot for all work. Each lab builds on th
 | --- | --- | --- | --- |
 | Setup | 5 min | `mvn clean compile` (run in terminal) | Terminal commands |
 | 1 | 30 min | Analyze `src/main/java/**/vulnerable/**` | Select **Security Vulnerability Hunter** mode, or use `/find-vulnerabilities` |
-| 2 | 25 min | STRIDE analysis, Mermaid architecture | Select **Threat Modeler** mode, or use `/generate-threat-model` |
+| 2 | 25 min | STRIDE analysis, Mermaid architecture | Select **STRIDE Threat Modeler** mode, or use `/generate-threat-model` |
 | 3 | 35 min | Refactor vulnerable code, run tests | Select **Secure Code Reviewer** mode, or use `/fix-vulnerability` |
-| Verify | 5 min | `mvn clean package` (run in terminal) | Select **OWASP Expert** mode for final review |
+| Verify | 5 min | `mvn clean package` (run in terminal) | Select **OWASP Security Expert** mode for final review |
 
 ## Copilot Customizations
 
@@ -31,8 +31,8 @@ This lab includes expert-level GitHub Copilot customizations to accelerate your 
 |-------|---------|----------|
 | **Security Vulnerability Hunter** | Systematic OWASP Top 10 vulnerability discovery | Lab 1 - Finding vulnerabilities |
 | **Secure Code Reviewer** | Validates security fixes against best practices | Lab 3 - Reviewing your fixes |
-| **Threat Modeler** | STRIDE methodology expert | Lab 2 - Creating threat models |
-| **OWASP Expert** | OWASP category reference and CWE mapping | All labs - Understanding vulnerabilities |
+| **STRIDE Threat Modeler** | STRIDE methodology expert | Lab 2 - Creating threat models |
+| **OWASP Security Expert** | OWASP category reference and CWE mapping | All labs - Understanding vulnerabilities |
 
 ### Prompts (Invoke with `/prompt-name`)
 
@@ -40,7 +40,7 @@ Prompts can be invoked directly by typing `/` followed by the prompt name:
 
 | Prompt | How to Use | Output |
 |--------|------------|--------|
-| `/find-vulnerabilities` | Type `/find-vulnerabilities` then add file context | Vulnerability report with severity, CWE, attack scenarios |
+| `/find-vulnerabilities` | Type `/find-vulnerabilities` then add file context | Single Markdown table with OWASP category, severity, CWE, line numbers, attack scenarios |
 | `/fix-vulnerability` | Type `/fix-vulnerability` then describe the issue | Fixed code with explanation and test case |
 | `/generate-threat-model` | Type `/generate-threat-model` then add system context | Complete threat model document with Mermaid diagram |
 
@@ -119,11 +119,12 @@ For each issue found:
 3. Line number(s)
 4. Attack scenario
 5. Recommended fix
+Return all findings in a single continuous Markdown table.
 Save the output to outputs/lab1-vulnerabilities.md
 ```
 
 **Need Help with Categories?**
-1. Select **OWASP Expert** from mode dropdown
+1. Select **OWASP Security Expert** from mode dropdown
 2. Ask: `What is the difference between A01 Broken Access Control and A07 Authentication Failures?`
 
 ### Phase 3: Documentation (5 min)
@@ -135,8 +136,8 @@ Save the output to outputs/lab1-vulnerabilities.md
 
 ### Phase 1: Architecture (5 min)
 
-**Option A: Using the Threat Modeler Agent**
-1. Select **Threat Modeler** from mode dropdown
+**Option A: Using the STRIDE Threat Modeler Agent**
+1. Select **STRIDE Threat Modeler** from mode dropdown
 2. Type:
 ```
 Create an architecture diagram for the Spring Boot payment system in this repository.
@@ -148,8 +149,8 @@ Save the output to threat-models/my-threat-model.md
 **Option B: Using the Generate Threat Model Prompt**
 ```
 /generate-threat-model
-
-For the authentication and payment system in src/main/java/com/securelabs/
+Save the output to threat-models/my-threat-model.md
+For the authentication and payment system in src/main/java/com/securelabs/vulnerable
 ```
 
 **Option C: Manual Approach**
@@ -171,8 +172,8 @@ Use Mermaid flowchart syntax with subgraphs for trust boundaries.
 
 ### Phase 2: STRIDE Analysis (15 min)
 
-**Option A: Using the Threat Modeler Agent**
-1. Select **Threat Modeler** from mode dropdown
+**Option A: Using the STRIDE Threat Modeler Agent**
+1. Select **STRIDE Threat Modeler** from mode dropdown
 2. Type:
 ```
 Perform a complete STRIDE analysis for the payment system.
@@ -208,7 +209,7 @@ For each threat: describe attack, impact (H/M/L), and mitigation.
 ### Phase 3: Prioritization (5 min)
 
 **Using the Agent:**
-1. Select **Threat Modeler** from mode dropdown
+1. Select **STRIDE Threat Modeler** from mode dropdown
 2. Type:
 ```
 Prioritize the identified threats by:
@@ -226,8 +227,8 @@ Compare your model against the example: `#file:threat-models/examples/auth-payme
 
 ### Before You Start: Understanding Fix Patterns
 
-**Ask the OWASP Expert for guidance:**
-1. Select **OWASP Expert** from mode dropdown
+**Ask the OWASP Security Expert for guidance:**
+1. Select **OWASP Security Expert** from mode dropdown
 2. Ask:
 ```
 What are the secure coding patterns for:
@@ -441,7 +442,7 @@ Save the output to outputs/lab3-security-review.md
 ```
 
 **Verify Against OWASP Standards:**
-1. Select **OWASP Expert** from mode dropdown
+1. Select **OWASP Security Expert** from mode dropdown
 2. Ask:
 ```
 Review the implemented fixes against OWASP ASVS (Application Security Verification Standard).
@@ -531,8 +532,8 @@ Flag any violations with severity and recommended fix.
 |------|------|----------|
 | Agent | Security Vulnerability Hunter | `.github/agents/security-vulnerability-hunter.agent.md` |
 | Agent | Secure Code Reviewer | `.github/agents/secure-code-reviewer.agent.md` |
-| Agent | Threat Modeler | `.github/agents/threat-modeler.agent.md` |
-| Agent | OWASP Expert | `.github/agents/owasp-expert.agent.md` |
+| Agent | STRIDE Threat Modeler | `.github/agents/threat-modeler.agent.md` |
+| Agent | OWASP Security Expert | `.github/agents/owasp-expert.agent.md` |
 | Prompt | Find Vulnerabilities | `.github/prompts/find-vulnerabilities.prompt.md` |
 | Prompt | Fix Vulnerability | `.github/prompts/fix-vulnerability.prompt.md` |
 | Prompt | Generate Threat Model | `.github/prompts/generate-threat-model.prompt.md` |
