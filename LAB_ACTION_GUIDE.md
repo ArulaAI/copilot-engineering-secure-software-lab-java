@@ -149,8 +149,9 @@ Save the output to threat-models/my-threat-model.md
 **Option B: Using the Generate Threat Model Prompt**
 ```
 /generate-threat-model
-Save the output to threat-models/my-threat-model.md
+
 For the authentication and payment system in src/main/java/com/securelabs/vulnerable
+Save the output to threat-models/my-threat-model.md
 ```
 
 **Option C: Manual Approach**
