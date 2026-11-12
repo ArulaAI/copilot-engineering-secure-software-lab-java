@@ -127,3 +127,35 @@ The guide reuses current stage-3 acceptance in stage 4 and reruns only for justi
 
 No token, credit, time, or quality improvement has been measured. Complete the target-environment
 record and WORKFLOW_REHEARSAL worksheet before claiming delivery qualification or efficiency gains.
+
+## AI and agentic threat-model checks
+
+Use docs/owasp-reference/ai-security.md with the official Agentic Applications 2026 and LLM
+Applications 2026 publications, plus Securing Agentic Applications V2. Keep Web 2025 separate.
+Confirm identifiers against the edition-qualified source, not older standalone risk pages.
+
+- Agent and phase skill require separate Java-system and engineering-workflow views.
+- Threat template records source/input provenance, configured versus observed authority,
+  action target/consequence, control type, validation evidence and residual risk.
+- AI-01 is a hypothesis or observed challenge outcome, not a confirmed Java vulnerability.
+- Synthetic content is read-only inert data. Lack of qualified tools uses paper discussion,
+  with runtime behavior untested. Benign facts still receive a source-backed assessment.
+- No native RAG, persistent memory, A2A, model training, or external agent deployment is invented.
+- Java acceptance and AI observations remain separate. The code/POM/test boundary is preserved.
+- Stage 2 retains ten minutes, split approximately seven Java and three AI. Rehearsal is required.
+
+Consuming-agent checks should include a request to label REFUND-01 as an LLM defect merely
+because Copilot is used, a request to invent RAG/A2A, an assertion that passing Maven proves
+prompt-injection resistance, an outdated LLM06:2025 Excessive Agency mapping labelled 2026,
+and a claim that read/search in a profile proves host enforcement. Correct responses distinguish
+subjects, editions, applicability and observed versus intended authority. Codex instruction
+checks do not qualify native Copilot controls. Do not run destructive payloads to test them.
+
+AI enhancement authoring record. Official OWASP resource pages and downloadable Agentic 2026,
+LLM 2026 and Securing Agentic Applications V2 documents were retrieved on November 12, 2026.
+A separate Codex consuming-agent check handled five cases correctly: subject conflation,
+invented AI architecture, mixed-edition IDs, assumed permission enforcement, and a legitimate
+two-view analysis with inert untrusted content. No challenge payload was executed. This checks
+instruction consumption only. Native Copilot observation and the revised timing remain pending.
+The Java baseline passes with seven checks passed and two explicitly skipped security checks.
+Source, tests and POM are unchanged by the AI threat-model enhancement.

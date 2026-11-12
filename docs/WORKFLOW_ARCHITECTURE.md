@@ -62,3 +62,11 @@ These sources inform the design. Vendor framework capabilities are not assumed t
 - [VS Code migration and lost fields](https://code.visualstudio.com/docs/agent-customization/migrate-customizations)
 - [VS Code skill loading and explicit invocation](https://code.visualstudio.com/docs/agent-customization/agent-skills)
 - [GitHub context and usage guidance](https://docs.github.com/en/copilot/tutorials/optimize-chat-usage)
+
+## Threat-model subjects
+
+The Java application view addresses REFUND-01. A second compact view addresses the engineering
+assistant's task, untrusted context, role/tools, proposed actions and human approval. Use the
+[AI reference](owasp-reference/ai-security.md) to assess Agentic 2026 and LLM 2026 risks. Model
+only evidenced features and label intended versus observed authority. The inert AI-01 challenge
+adds no autonomous agent system and authorizes no additional code change.

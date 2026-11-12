@@ -55,3 +55,13 @@ make evidence and proposed usage/quality benefits reviewable. Five active agents
 No source, tests, POM or runtime dependency changes are part of this migration. Native Copilot
 and IntelliJ invocation/permissions require the target-environment checks. Model outputs remain
 variable; Java checks verify their defined behavior. Token/time savings are unmeasured hypotheses.
+
+## OWASP AI security and threat modeling
+
+Official Agentic Applications 2026 and LLM Applications 2026 documents and Securing Agentic
+Applications V2 were checked. Added a versioned AI reference, separate application/workflow
+views, provenance/authority/control-evidence fields, and an inert read-only AI-01 challenge.
+The threat-modeling skill and agents distinguish evidence, hypotheses, absent features and
+advisory versus enforced controls. Stage 2 remains ten minutes with a seven/three-minute split.
+No code, tests, POM, runtime, scanner or integration is added. Native behavior and timed target
+rehearsal remain pending. The course mappings are instructional, not official OWASP crosswalks.

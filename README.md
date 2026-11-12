@@ -38,7 +38,7 @@ organizational restrictions. Application-method checks do not establish HTTP/fil
 | --- | --- | --- |
 | Introduction and workflow demonstration | 20 | Understand evidence, roles, and tool limits |
 | Investigate the refund finding | 15 | Source-backed finding and failed acceptance checks |
-| Model and prioritize the threat | 10 | Validated flow and selected mitigation |
+| Model and prioritize the threats | 10 | Java flow and a separate AI-workflow risk |
 | Plan and implement the fix | 25 | Bounded implementation change |
 | Verify and independently review | 15 | Acceptance evidence and qualified verdict |
 | Debrief and transfer | 5 | A reusable review procedure |
@@ -69,6 +69,10 @@ Use [INSTRUCTOR_GUIDE](docs/INSTRUCTOR_GUIDE.md), [RUN_SHEET](docs/RUN_SHEET.md)
 [VERIFICATION](docs/VERIFICATION.md), and [change coverage](docs/REMEDIATION_STATUS.md).
 This branch requires a rehearsal on the target Fidelity IDE/plugin/harness/model combination.
 No minimum plugin version is claimed until the actual installation is recorded.
+Threat modeling combines the Java view with a small AI-assisted workflow view using the
+[AI and agentic security reference](docs/owasp-reference/ai-security.md). It uses Agentic
+Applications 2026 and LLM Applications 2026 alongside Web Top 10 2025. The read-only synthetic
+challenge can be a paper discussion, adding no service or dependency requirement.
 The primary proposed route is explicit phase skills in Copilot Chat, with separate agent
 selection. Local prompt adapters and the rehearsed manual route provide compatibility.
 See [workflow architecture](docs/WORKFLOW_ARCHITECTURE.md) and the facilitator-only

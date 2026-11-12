@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | 0 to 20 | Introduction and demo | Evidence chain, roles, context, save report |
 | 20 to 35 | Investigate | Two expected failed ownership checks, FLEX on extra findings |
-| 35 to 45 | Model | Implemented versus assumed flow, T-REFUND-01 |
+| 35 to 45 | Model | Seven minutes Java T-REFUND-01, three minutes AI workflow T-AI-01 |
 | 45 to 70 | Implement | Agreed plan, only RefundService.java changes |
 | 70 to 85 | Verify | Nine passing enabled checks, fresh review, NEVER CUT |
 | 85 to 90 | Debrief | Transfer questions, NEVER CUT |

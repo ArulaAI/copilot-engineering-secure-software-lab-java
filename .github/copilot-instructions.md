@@ -51,4 +51,7 @@ Record the actual command, exit status, failure names, and interpretation. Repor
 Do not represent a remembered run, a proposed command, or a model assertion as execution evidence.
 The original controllers in `src/main/java/com/securelabs/vulnerable/` remain a static review corpus.
 Old OWASP category IDs in historical samples refer to the 2021 edition. Use the current mapping
-in `docs/owasp-reference/top-10-summary.md` in new reports.
+in docs/owasp-reference/top-10-summary.md for new Java reports. For AI-assisted workflow
+threats use docs/owasp-reference/ai-security.md with Agentic 2026 / LLM 2026 identifiers.
+Keep the Java system and its engineering assistant separate. A passing Java suite does not
+establish AI security. Record hypotheses, effective permission evidence and untested controls.

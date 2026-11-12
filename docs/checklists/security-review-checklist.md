@@ -37,3 +37,14 @@
 
 Use version-qualified OWASP mappings from the adjacent reference. This checklist does not
 establish full ASVS compliance or certify the historical application.
+
+## AI-assisted workflow threat view
+
+- [ ] Java application and engineering assistant are separate modeled subjects.
+- [ ] Relevant ASI/LLM identifiers include the verified edition and mapping rationale.
+- [ ] Input provenance, trusted task, tool authority, action sink and consequence are explicit.
+- [ ] Intended tool restrictions are distinguished from observed host enforcement.
+- [ ] Control type and actual observation or untested status are recorded.
+- [ ] Absent features are not invented and passing Java tests are not AI-security evidence.
+
+Use the [AI reference](../owasp-reference/ai-security.md) for definitions and official sources.

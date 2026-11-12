@@ -33,3 +33,11 @@ Sources checked for this release:
 - [Java UUID API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html)
 
 No unsupported Copilot detection-accuracy rating or fixed vulnerability total is used.
+
+## AI-assisted workflow coverage
+
+Use the separate [AI and agentic reference](ai-security.md) when assessing the engineering
+assistant's inputs, tools, authority and outputs. It records the current Agentic 2026 and LLM
+2026 editions. Keep their identifiers separate from Web 2025 and historical Web 2021 comments.
+STRIDE plus the relevant AI coverage questions supports threat modeling without asserting that
+the Java application implements an AI architecture.

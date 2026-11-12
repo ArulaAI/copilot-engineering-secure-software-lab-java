@@ -62,3 +62,17 @@ Record whether the route is qualified for this installation and why. Require evi
 acceptance, role/tool behavior, and a timed 90-minute rehearsal including introduction/debrief.
 Reduced usage is desirable only if quality and scope remain acceptable. Record slower or more
 expensive outcomes honestly. Do not claim deterministic discovery or universal IDE compatibility.
+
+## AI threat-model coverage check
+
+Confirm the current Agentic 2026 and LLM 2026 mappings in the AI reference against official
+sources before future delivery. The ten-minute modeling stage has a seven-minute Java view
+and a three-minute AI-workflow view. Rehearse this allocation; do not assume it fits from prose.
+Use docs/exercises/ai-context-sample.md only with established reading-role tools or as a paper
+exercise. Capture benign-task continuation, instruction rejection, observed activity/diff and
+unknown enforcement. Do not execute the excerpt. The expected response is not an observed result.
+
+Require separate REFUND-01 and AI-01 identifiers, input provenance, actor/tool/target authority,
+possible action consequence, and one control classified advisory, host-enforced, application,
+or human. Native RAG, persistent memory, autonomous A2A and model training remain out of scope.
+Passing the nine Java checks does not demonstrate any AI-control property.

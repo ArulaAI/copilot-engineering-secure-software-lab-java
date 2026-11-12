@@ -42,3 +42,13 @@ Use finding REFUND-01 and threat T-REFUND-01 in all evidence artifacts.
 Optional risk discussion includes payment-existence disclosure through NOT_FOUND, database
 transaction boundaries, multiple service instances, persistent idempotency, and authenticated
 HTTP integration. The single-process fixture does not prove these properties.
+
+## Separate engineering workflow threat view
+
+The Java application remains an in-process refund fixture. A separate short threat model
+examines how the learner uses Copilot to inspect source, propose code and review test evidence.
+Use [AI-01](exercises/ai-context-sample.md) as inert untrusted input in a qualified read-only
+role or as a facilitator paper exercise. Do not execute the excerpt or change tests/code for it.
+Record the attempted goal change, possible tool consequence and observed/untested controls.
+This threat view does not add RAG, persistent memory, native A2A or an AI agent to the Java app.
+The required code change is still REFUND-01 in RefundService.java only.

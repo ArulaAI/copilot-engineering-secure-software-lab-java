@@ -44,10 +44,21 @@ TIP this stage is FLEX. Cut extra historical-corpus investigation, preserving RE
 
 ## 35 to 45 minutes. Threat model
 
-DO require implemented/assumed/proposed labels. The fixture has no deployed gateway or database.
+DO use about seven minutes for the Java view and three for the separate engineering-workflow view.
+Require implemented/assumed/proposed labels. The Java fixture has no deployed gateway, database,
+or AI agent. Use docs/owasp-reference/ai-security.md for verified editions and category names.
 SAY Which asset changes, who should control it, and where should that decision be enforced?
-WATCH FOR six-category quotas or automatic severity labels without exploit preconditions.
-CHECK-IN T-REFUND-01 links to REFUND-01 and the planned authorization check.
+For the AI view ask where untrusted content enters context, which tools could act on it,
+and which control is an instruction versus an observed host restriction.
+DO use docs/exercises/ai-context-sample.md only in a qualified read-only role. No commands,
+edits, credentials or external services are involved. If unavailable, discuss it on paper and
+mark runtime behavior untested. Inspect benign facts as well as the attempted instruction.
+WATCH FOR all-ten-category quotas, treating a false output as a rogue agent, or using Java tests
+as AI security proof. Intended profile tools are not evidence of effective platform enforcement.
+CHECK-IN T-REFUND-01 links to the Java patch. T-AI-01 records the workflow hypothesis, input
+provenance, relevant ASI/LLM edition, action consequence, control and evidence status.
+Do not expand the required implementation beyond REFUND-01. Full AI reference reading is
+facilitator preparation or follow-up, not a new timed exercise.
 
 ## 45 to 70 minutes. Plan and implement
 
