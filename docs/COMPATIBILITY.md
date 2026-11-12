@@ -25,8 +25,8 @@ Record the actual VS Code version, Copilot extension version, selected harness, 
 The primary route to qualify is Copilot Chat with the Copilot harness. Confirm seven agents in
 the picker (Package Explorer is a hidden subagent) and seven skills (five stage commands,
 /hand-off, /security-review). Select the intended agent
-first, inspect effective tools, attach the phase inputs with Add Context or dragging, then type /
-and choose the existing skill from the picker. Inspect attachments, skill loading and tool activity.
+first, then type / and choose the stage skill; the skill reads its inputs by path, so learners
+attach nothing on this route. Inspect skill loading and tool activity during rehearsal.
 Check chat.useAgentSkills and actual skill discovery. The documented
 github.copilot.chat.cli.customAgents.enabled setting may need enabling in supported versions
 and defaults to false in the current reference. Use only settings allowed by the organization.
@@ -39,6 +39,19 @@ remain instructions, not an access-control guarantee. Inspect actual activity an
 All course skills use explicit invocation. Their procedures can call the named subagents.
 A separate subagent context is not process/OS isolation or a guarantee of independent judgment. No forked skill, experimental
 skill-tool setting, Copilot CLI, or additional runtime is required.
+
+## Limits to know (facilitator only)
+
+These are kept out of the learner guide on purpose. Raise them in the debrief or when asked.
+
+- A role or skill does not grant permissions; the harness's tool list does. Verify effective
+  tools in rehearsal, not from the agent file.
+- A new chat or a subagent reduces carried-over context. It is not process or OS isolation and
+  does not prove independent judgment.
+- Approving a command is a human checkpoint. It complements, and does not replace, host
+  restrictions.
+- A hand-off is selective and can omit facts. The stage files remain the source of truth.
+- `/compact` summarizes; details from earlier turns can be lost.
 
 The workflow depends on three platform behaviors to qualify on the target installation:
 

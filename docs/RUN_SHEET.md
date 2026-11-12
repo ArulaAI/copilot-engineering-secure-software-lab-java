@@ -13,13 +13,12 @@
 Commands are in docs/SCENARIO.md. Every run writes to outputs/evidence/ with `mvn -l`, which
 prints nothing to the terminal.
 
-Rhythm per stage. Select the role, inspect effective tools, attach phase files, choose the existing
-skill from /, inspect loading/activity, pass the gate, then switch to Hand-off Recorder and choose
-`/hand-off`. Check the saved report and selective summary before starting a new chat. After Stage 3's hand-off, stay in that chat and switch back
+Rhythm per stage: pick the agent, type the command from the / list, pass the gate, switch to
+Hand-off Recorder and type `/hand-off`, glance at the saved report, start a new chat. After Stage 3's hand-off, stay in that chat and switch back
 to Secure Remediation Engineer for Stage 4. Learners never paste prompts or logs.
 
-Limits. One correction pass and one re-review, then escalate. Reviewer reruns acceptance itself.
-Fresh/subagent context is not OS isolation. Qualify subagents, permissions and timing on target IDEs. No red-team before verification.
+Limits: one correction pass and one re-review, then escalate. The reviewer reruns acceptance
+itself. No red-team before verification. Platform limits are in docs/COMPATIBILITY.md.
 `mvn -Dtest=OutputsCheck test` shows which learners have complete report forms.
 Assessment aids are reference/finding-catalog.md and reference/threat-model.md.
 
@@ -27,4 +26,4 @@ If findings differ, compare evidence and reasoning, never counts. If asked wheth
 application is secure, point to the deferred items in their top 5. Do not introduce
 installations during the session.
 
-Closing sentence. map before you judge, rank before you fix, and attack your own fix.
+Closing sentence: map before you judge, rank before you fix, and attack your own fix.

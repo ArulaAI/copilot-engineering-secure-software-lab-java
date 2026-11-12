@@ -25,12 +25,10 @@ and facilitator docs. Do not claim a prompt restriction prevents access to publi
 
 SAY You have inherited a service nobody on the team wrote. We will map it before judging it,
 rank before fixing, and attack our own fixes.
-DO demonstrate the full rhythm. Select the role in the Agent dropdown, check effective tools,
-attach phase inputs with Add Context or dragging, choose the existing skill from /, and inspect
-attachments, skill loading and tool activity. Check the gate, switch to Hand-off Recorder in
-the same chat and choose /hand-off, then inspect the saved report before starting the new chat.
-SAY A hand-off is selective. Check what it points to and what remains unknown. Separate context
-is not process/OS isolation and does not prove independent judgment.
+DO demonstrate the full rhythm: pick the agent, type the command from the / list, read the
+report, tick the gate, switch to Hand-off Recorder in the same chat and type /hand-off, glance
+at the saved report, then open a new chat. Learners never attach files or paste prompts.
+SAY A hand-off is a short summary that points to files; open the files when you need detail.
 TIP a prepared same-code comparison with and without its requirement/test can replace part of
 this demonstration. Discuss evidence quality without adding required minutes or tooling.
 DO show that `mvn -l` writes to outputs/evidence/ and prints nothing to the terminal.

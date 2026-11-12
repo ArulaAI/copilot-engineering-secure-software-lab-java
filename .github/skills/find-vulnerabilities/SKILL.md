@@ -27,7 +27,8 @@ learner to switch and stop.
 3. Merge symptoms with one root cause into one finding with several locations.
 4. Assign severity (Critical, High, Medium, Low) from the exploit path and impact. A comment
    saying "vulnerable" is not evidence; the code path is.
-5. Reject at least one plausible false positive with evidence.
+5. Mark each finding confirmed or needs evidence, and say what evidence is missing for the second.
+   Reject at least one plausible false positive with evidence.
 6. Fill [the findings template](../../../outputs/findings.template.md), sorted by severity, and
    set `findings_total` and `top_severity`.
 
