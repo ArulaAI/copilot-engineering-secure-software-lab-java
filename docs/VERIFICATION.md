@@ -84,7 +84,8 @@ existing local Maven cache. No dependencies or plugins were added or upgraded.
 | mvn -o clean test on starter | Exit 0, seven passed, two explicitly skipped |
 | mvn -o -Dlab.verify=true -Dtest=RefundSecurityTest test on starter | Exit 1, two intended assertion failures, no errors |
 | mvn -o -Dlab.verify=true clean test with corrected solution | Exit 0, nine passed, zero skipped |
-| Restore missing ownership guard | Same two security assertion failures reproduced |
+| Remove ownership guard from the corrected behavior | Same two security assertion failures reproduced |
+| Remove webhook time-window enforcement | Valid-signature expired-time check fails |
 | Restore original starter and rerun baseline | Exit 0 |
 | javac --release 17 for both required lab classes | Exit 0, compiled class target 61 |
 | Active Markdown links and YAML headers | Resolved and parsed successfully |

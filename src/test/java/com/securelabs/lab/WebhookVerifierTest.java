@@ -48,5 +48,12 @@ class WebhookVerifierTest {
             assertFalse(verifier.verify("{}", timestamp, SIGNATURE));
         }
         assertFalse(verifier.verify(null, "1700000000000", SIGNATURE));
+        assertFalse(new WebhookVerifier(key, Clock.offset(clock, Duration.ofMinutes(5).plusMillis(1)))
+            .verify("{}", "1700000000000", SIGNATURE));
+        assertFalse(new WebhookVerifier(key, Clock.offset(clock, Duration.ofMinutes(-5).minusMillis(1)))
+            .verify("{}", "1700000000000", SIGNATURE));
+        // Valid signature for an extreme timestamp proves rejection is caused by the time policy.
+        assertFalse(verifier.verify("{}", "-9223372036854775808",
+            "797ddc7010611d4ec19f45db93588fe6d81e25076af586c8a48820b6c0923248"));
     }
 }
