@@ -1,54 +1,62 @@
-# Refund authorization scenario
+# Lab scenario
 
-A fictional payment service stores a completed USD 100.00 payment owned by customer-1.
-Customer-2 is authenticated but does not own that payment. The service accepts a refund
-request and returns a typed result. No real payment is issued.
+## The codebase
 
-## Implemented boundaries
+You have joined a team that owns a legacy Java Spring service. Nobody who wrote it is still
+around. It has user accounts, payments, file uploads, sessions and an admin API, spread across
+four packages under `src/main/java/com/securelabs/vulnerable/` (`api`, `auth`, `data`,
+`session`), about 2,400 lines. All data is synthetic. Nothing is deployed.
 
-- The test fixture supplies a java.security.Principal representing trusted upstream identity.
-- RefundService receives that principal and looks up a seeded payment in an in-memory map.
-- The service validates the request and updates local refund state atomically.
-- The service has one intentionally missing object-authorization control, REFUND-01.
+Your job in this lab: understand the codebase, find and rank its security problems, decide what
+to mitigate first, then fix two of them with evidence.
 
-Authentication is outside this exercise. A Principal constructed in a test represents that
-boundary; it is not safe to construct it from arbitrary request headers in a real application.
-No gateway, identity provider, external payment API, or database integration is implemented.
+## Stages
 
-## Business rules
+1. **Map** the codebase (index, entry points, architecture diagram), then **analyze** it and
+   rank findings by severity.
+2. **Threat-model** the findings with STRIDE and blast radius, and choose the top 5 to mitigate.
+3. **Fix** the two lab fixes below, proven by shipped exploit tests.
+4. **Verify** the fixes in an isolated review, then **red-team** them.
 
-1. Only the authenticated payment owner can perform a full refund.
-2. There is no administrator override in this scenario. An admin-looking name grants no access.
-3. Missing identity is rejected. Unknown payment IDs return NOT_FOUND.
-4. The amount must be positive, match the original amount, and have at most two decimal places.
-5. The currency must match USD. Partial refunds are outside the scenario.
-6. A completed refund cannot be performed again. Rejections must not consume the owner's refund.
-7. Concurrent requests must produce exactly one REFUNDED outcome.
+## Lab fixes (assigned)
 
-## Working scope
+Every learner fixes these two, whatever their own ranking says. Both are one file each.
 
-Modify only `src/main/java/com/securelabs/lab/RefundService.java` during the required fix.
-Read its tests, but do not change them. Preserve existing legitimate behavior and public methods.
-Use finding REFUND-01 and threat T-REFUND-01 in all evidence artifacts.
+| Fix ID | File | Methods to change | Defect | A correct fix |
+| --- | --- | --- | --- | --- |
+| SQLI-01 | `vulnerable/data/UserRepository.java` | `findByEmail`, `searchUsers` | SQL built by string concatenation | Bind values as parameters; allow-list the sort column and throw `IllegalArgumentException` for anything else |
+| PATH-01 | `vulnerable/data/FileHandler.java` | `readFile`, `deleteFile`, `listFiles` | User input joined to a folder path | Reject any path that resolves outside the upload folder with `IllegalArgumentException` or `SecurityException`, before touching the file system |
 
-## Evidence to collect
+The same patterns appear in other methods and classes. Those are variants: record them in your
+findings and threat model, but do not fix them in this lab.
 
-- Source location and explanation of the trust-boundary violation.
-- Actual failed security acceptance checks before the patch.
-- A small diagram with implemented and assumed components labelled.
-- A change plan, implementation diff, and full passing acceptance output after the patch.
-- A fresh review that states what was verified and what remains outside scope.
+Shipped tests in `src/test/java/com/securelabs/vulnerable/data/`:
 
-Optional risk discussion includes payment-existence disclosure through NOT_FOUND, database
-transaction boundaries, multiple service instances, persistent idempotency, and authenticated
-HTTP integration. The single-process fixture does not prove these properties.
+- `UserRepositoryTest`, `FileHandlerTest`: legitimate behavior. They pass before and after the fix.
+- `UserRepositorySecurityTest`, `FileHandlerSecurityTest`: exploit tests. They fail on the
+  unfixed code and must pass after it. They run only with `-Dsecurity.verify=true`.
 
-## Separate engineering workflow threat view
+Never change these tests or `pom.xml`. In Stage 4 you may add one new test class ending in
+`RedTeamCheck` in the same folder.
 
-The Java application remains an in-process refund fixture. A separate short threat model
-examines how the learner uses Copilot to inspect source, propose code and review test evidence.
-Use [AI-01](exercises/ai-context-sample.md) as inert untrusted input in a qualified read-only
-role or as a facilitator paper exercise. Do not execute the excerpt or change tests/code for it.
-Record the attempted goal change, possible tool consequence and observed/untested controls.
-This threat view does not add RAG, persistent memory, native A2A or an AI agent to the Java app.
-The required code change is still REFUND-01 in RefundService.java only.
+## Commands
+
+| Purpose | Command |
+| --- | --- |
+| Baseline (setup) | `mvn -l outputs/evidence/baseline.txt clean test` |
+| Reproduce | `mvn -l outputs/evidence/reproduce.txt -Dsecurity.verify=true "-Dtest=*SecurityTest" test` |
+| Acceptance | `mvn -l outputs/evidence/acceptance.txt -Dsecurity.verify=true clean test` |
+| Diff | `git diff --output=outputs/evidence/fix.diff -- src/main/java` |
+| Red-team | `mvn -l outputs/evidence/redteam.txt "-Dtest=*RedTeamCheck" test` |
+| Check report forms | `mvn -l outputs/evidence/forms.txt -Dtest=OutputsCheck test` |
+
+Expected results: baseline 10 run, 0 failed, 6 skipped. Reproduce 6 run, 6 failed.
+Acceptance 10 run, 0 failed, 0 skipped. With `-l`, Maven prints nothing to the terminal; open
+the file to read the result.
+
+## Out of scope
+
+Fixing anything other than SQLI-01 and PATH-01, starting the Spring application, the
+dependency CVEs in `pom.xml` (record them as findings only), and real deployment concerns such as
+TLS, network controls and production identity. Symbolic links inside the upload folder are not
+tested by this fixture; record them as residual risk if red-team raises them.

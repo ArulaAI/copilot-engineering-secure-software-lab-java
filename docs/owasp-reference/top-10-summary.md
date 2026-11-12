@@ -5,7 +5,7 @@ verify a fix. Category IDs require an edition. Historical source comments retain
 
 | 2025 category | Course relevance | Previous 2021 category where applicable |
 | --- | --- | --- |
-| A01 Broken Access Control | Object ownership, REFUND-01, SSRF | A01 and A10 |
+| A01 Broken Access Control | Object ownership, path traversal (PATH-01), SSRF | A01 and A10 |
 | A02 Security Misconfiguration | Missing configuration and unsafe defaults | A05 |
 | A03 Software Supply Chain Failures | Dependency manifests and approved artifact provenance | A06, expanded scope |
 | A04 Cryptographic Failures | Keys, hashing, signature primitives | A02 |
@@ -16,8 +16,8 @@ verify a fix. Category IDs require an edition. Historical source comments retain
 | A09 Security Logging and Alerting Failures | Sensitive data exposure and security events | A09 |
 | A10 Mishandling of Exceptional Conditions | Fail-open errors and resource handling | New category |
 
-For REFUND-01, A01:2025 and CWE-862/CWE-639 are useful candidates. Explain the concrete missing
-object-authorization control before assigning a category. Do not infer severity from category alone.
+For SQLI-01, A05:2025 and CWE-89 fit; for PATH-01, A01:2025 and CWE-22. Explain the concrete
+missing control before assigning a category. Do not infer severity from category alone.
 For ASVS, use a supplied versioned requirement and explain applicability. No blanket compliance claim.
 
 UUID.randomUUID uses a cryptographically strong pseudorandom generator. That does not establish

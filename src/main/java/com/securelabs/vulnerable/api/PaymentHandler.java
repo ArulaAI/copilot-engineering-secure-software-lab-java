@@ -1,5 +1,3 @@
-/* Historical vulnerable review corpus. OWASP category IDs in comments use the 2021 edition.
- * Optional static review only. See docs/SCENARIO.md for the required exercise. */
 package com.securelabs.vulnerable.api;
 
 import org.springframework.http.ResponseEntity;
@@ -7,46 +5,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-/**
- * VULNERABLE: Payment Handler
- *
- * This file contains INTENTIONAL security vulnerabilities for training purposes.
- * DO NOT use these patterns in production code.
- *
- * Vulnerabilities:
- * - A04: Insecure Design - missing business logic validation
- * - A09: Sensitive data in logs (PCI violation)
- * - A01: Missing authorization checks
- * - A08: Missing webhook signature verification
- */
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentHandler {
-
     private static final Map<String, Transaction> transactions = new HashMap<>();
 
-    /**
-     * VULNERABLE: Process payment with multiple security issues
-     */
     @PostMapping("/process")
     public ResponseEntity<?> processPayment(@RequestBody PaymentRequest request) {
-        // VULNERABLE: Logging full card number (PCI violation - A09)
         System.out.println("Processing payment - Card: " + request.getCardNumber() +
                           ", CVV: " + request.getCvv() +
                           ", Amount: " + request.getAmount());
 
-        // VULNERABLE: No input validation on amount (A04)
-        // Allows negative amounts, extremely large amounts, etc.
         double amount = request.getAmount();
 
-        // VULNERABLE: No currency validation
         String currency = request.getCurrency();
 
-        // VULNERABLE: No card number format validation
         String cardNumber = request.getCardNumber();
-
-        // VULNERABLE: No authentication required
-        // VULNERABLE: No rate limiting
 
         String transactionId = "txn_" + System.currentTimeMillis();
 
@@ -54,27 +28,23 @@ public class PaymentHandler {
         transaction.setId(transactionId);
         transaction.setAmount(amount);
         transaction.setCurrency(currency);
-        transaction.setCardNumber(cardNumber); // VULNERABLE: Storing full card number
-        transaction.setCvv(request.getCvv()); // VULNERABLE: Storing CVV
+        transaction.setCardNumber(cardNumber);
+        transaction.setCvv(request.getCvv());
         transaction.setUserId(request.getUserId());
         transaction.setStatus("completed");
         transaction.setTimestamp(System.currentTimeMillis());
 
         transactions.put(transactionId, transaction);
 
-        // VULNERABLE: Returning sensitive card data in response
         return ResponseEntity.ok(Map.of(
             "success", true,
             "transactionId", transactionId,
             "amount", amount,
-            "cardNumber", cardNumber, // VULNERABLE: Exposing full card number
+            "cardNumber", cardNumber,
             "status", "completed"
         ));
     }
 
-    /**
-     * VULNERABLE: Refund without authorization check
-     */
     @PostMapping("/refund")
     public ResponseEntity<?> processRefund(@RequestBody RefundRequest request) {
         String transactionId = request.getTransactionId();
@@ -86,13 +56,8 @@ public class PaymentHandler {
             return ResponseEntity.status(404).body(Map.of("error", "Transaction not found"));
         }
 
-        // VULNERABLE: No authorization check - anyone can refund any transaction
-        // VULNERABLE: No check if requesting user owns the transaction
-        // VULNERABLE: No check if refund amount exceeds original amount
-
         System.out.println("Processing refund: " + transactionId + " Amount: " + refundAmount);
 
-        // VULNERABLE: Allows refund greater than original amount
         transaction.setStatus("refunded");
 
         return ResponseEntity.ok(Map.of(
@@ -103,22 +68,14 @@ public class PaymentHandler {
         ));
     }
 
-    /**
-     * VULNERABLE: Webhook without signature verification
-     */
     @PostMapping("/webhook")
     public ResponseEntity<?> handleWebhook(@RequestBody Map<String, Object> payload,
                                            @RequestHeader Map<String, String> headers) {
-        // VULNERABLE: No signature verification (A08)
-        // VULNERABLE: No timestamp validation (replay attack possible)
-        // VULNERABLE: No IP whitelist check
-
         System.out.println("Webhook received: " + payload);
 
         String eventType = (String) payload.get("type");
         Map<String, Object> data = (Map<String, Object>) payload.get("data");
 
-        // VULNERABLE: Trusting webhook data without verification
         if ("payment.completed".equals(eventType)) {
             String transactionId = (String) data.get("transactionId");
             Transaction transaction = transactions.get(transactionId);
@@ -130,46 +87,33 @@ public class PaymentHandler {
         return ResponseEntity.ok(Map.of("received", true));
     }
 
-    /**
-     * VULNERABLE: Get transaction without authorization
-     */
     @GetMapping("/transactions/{transactionId}")
     public ResponseEntity<?> getTransaction(@PathVariable String transactionId) {
-        // VULNERABLE: No authentication or authorization check (A01)
-        // VULNERABLE: IDOR - anyone can view any transaction
-
         Transaction transaction = transactions.get(transactionId);
 
         if (transaction == null) {
             return ResponseEntity.status(404).body(Map.of("error", "Transaction not found"));
         }
 
-        // VULNERABLE: Exposing full card number and CVV
         return ResponseEntity.ok(Map.of(
             "id", transaction.getId(),
             "amount", transaction.getAmount(),
             "currency", transaction.getCurrency(),
             "cardNumber", transaction.getCardNumber(),
-            "cvv", transaction.getCvv(), // VULNERABLE: Exposing CVV
+            "cvv", transaction.getCvv(),
             "userId", transaction.getUserId(),
             "status", transaction.getStatus()
         ));
     }
 
-    /**
-     * VULNERABLE: List all transactions (admin endpoint without auth)
-     */
     @GetMapping("/transactions")
     public ResponseEntity<?> listTransactions() {
-        // VULNERABLE: No authentication - exposes all transactions
-        // VULNERABLE: No pagination - could dump entire database
-
         List<Map<String, Object>> result = new ArrayList<>();
         for (Transaction t : transactions.values()) {
             result.add(Map.of(
                 "id", t.getId(),
                 "amount", t.getAmount(),
-                "cardNumber", t.getCardNumber(), // VULNERABLE
+                "cardNumber", t.getCardNumber(),
                 "userId", t.getUserId(),
                 "status", t.getStatus()
             ));
@@ -178,14 +122,8 @@ public class PaymentHandler {
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * VULNERABLE: Delete transaction without proper authorization
-     */
     @DeleteMapping("/transactions/{transactionId}")
     public ResponseEntity<?> deleteTransaction(@PathVariable String transactionId) {
-        // VULNERABLE: No audit trail
-        // VULNERABLE: No authorization check
-
         Transaction removed = transactions.remove(transactionId);
 
         if (removed == null) {

@@ -4,16 +4,15 @@ These resources are outside src/ and do not compile into the training applicatio
 Do not consult them during participant discovery, planning, implementation, or review.
 They are visible in the public repository, so this is an educational boundary only.
 
-## Reviewed solution
+## Reviewed solutions
 
-solutions/RefundService.java adds the ownership rejection to the course starter. In a disposable
-checkout copy it over src/main/java/com/securelabs/lab/RefundService.java and run
-`mvn -Dlab.verify=true clean test`. Nine checks must pass with zero skipped.
-Restore the starter before distributing the exercise. See docs/VERIFICATION.md for mutation checks.
+`solutions/UserRepository.java` (SQLI-01) and `solutions/FileHandler.java` (PATH-01) change only
+the assigned methods; the variants stay vulnerable. In a disposable checkout copy both into
+`src/main/java/com/securelabs/vulnerable/data/` and run `mvn -Dsecurity.verify=true clean test`.
+Ten tests must pass with zero skipped. Restore the originals before distributing the exercise.
 
-The solution uses an upstream trusted Principal fixture. It implements one full refund per
-transaction in a single JVM. No administrator override, HTTP authentication, persistent
-storage, distributed locking, or external settlement is established by this fixture.
+`finding-catalog.md` lists the codebase's root causes for assessing Stages 1B and 2.
+`threat-model.md` gives an example architecture, top 5 and expected red-team outcomes.
 
 ## Historical archive
 

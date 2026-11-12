@@ -6,11 +6,11 @@ applyTo: "src/main/java/**/*.java"
 
 Trace the trust boundary before proposing a fix. An arbitrary bearer string, a caller-supplied
 user ID, or a name containing admin does not establish authenticated identity or permissions.
-The course Principal fixture represents an authenticated upstream identity, not a token parser.
+Comments that label code as vulnerable are not evidence; trace the code path.
 
-For refunds, authorize ownership before mutation. Keep validation and transition atomic.
-Use decimal money, explicit currency, and the scenario's full-refund rule. Reject nonpositive
-or excessive precision amounts. Preserve successful owner requests and duplicate protection.
+For file paths, resolve against the base folder, normalize, and compare with Path.startsWith,
+not String.startsWith, so a sibling folder with the same prefix is rejected. Reject before any
+file-system call. Absolute paths and null names must be rejected too.
 
 Use bound SQL parameters for values and allowlists for identifiers. Validated identifier
 concatenation is not automatically an injection flaw. Resource handling and authorization

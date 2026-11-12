@@ -10,7 +10,7 @@ version change is introduced. The selected path invokes application methods thro
 | B3 Identity | Required fixture consumes trusted Principal and has no bearer parsing. Unsafe references quarantined. |
 | B4 HMAC | New WebhookVerifier fails closed, binds exact payload, validates time, and has real tests. |
 | B5 Models | All active model pins removed. Approved cohort model must be recorded during preflight. |
-| B6 IDEs | Separate discovery/context routes and qualification record. Fidelity replay remains pending. |
+| B6 IDEs | Separate discovery/context routes and qualification record. Client replay remains pending. |
 | M1 Answers | Removed automatic answer-key use. Facilitator references outside source, public access limit stated. |
 | M2 Counts | Evidence rubric replaces volume targets. One validated required finding. |
 | M3 Judgment | Human inspection and rejected hypothesis required. |
@@ -45,9 +45,12 @@ and facilitator-only documents. The public branch and Git history cannot conceal
 
 ## Explicit phase skill migration
 
-Four lab-* phase skills now define required inputs, selected-role checks, bounded actions,
+Four phase skills (/find-vulnerabilities, /generate-threat-model, /fix-vulnerability,
+/review-security-fix) now define required inputs, selected-role checks, bounded actions,
 outputs, and stopping conditions. The security-review skill is an explicit workflow overview.
-The four Local prompts are thin compatibility adapters, with distinct names from skills.
+The skills reuse the course's original command names; the duplicate prompt files were removed.
+Learners type the command plus REFUND-01 and never paste prompts or logs. Run evidence is
+written to outputs/evidence/ with mvn -l and read by path.
 A shared evidence contract defines compact handoffs, untrusted-content handling, acceptance
 traceability, and one correction/re-review limit. The acceptance template and rehearsal worksheet
 make evidence and proposed usage/quality benefits reviewable. Five active agents remain.
@@ -61,7 +64,15 @@ variable; Java checks verify their defined behavior. Token/time savings are unme
 Official Agentic Applications 2026 and LLM Applications 2026 documents and Securing Agentic
 Applications V2 were checked. Added a versioned AI reference, separate application/workflow
 views, provenance/authority/control-evidence fields, and an inert read-only AI-01 challenge.
+That view and its challenge were later retired in favor of a debrief table (see VERIFICATION.md).
 The threat-modeling skill and agents distinguish evidence, hypotheses, absent features and
 advisory versus enforced controls. Stage 2 remains ten minutes with a seven/three-minute split.
 No code, tests, POM, runtime, scanner or integration is added. Native behavior and timed target
 rehearsal remain pending. The course mappings are instructional, not official OWASP crosswalks.
+
+## Superseded: refund scenario removed (November 12, 2026)
+
+The refund starter, webhook verifier, their tests and the refund solution were removed. The lab
+now maps and analyzes the legacy codebase directly and fixes two assigned findings (SQLI-01,
+PATH-01) proven by shipped exploit tests. Rows above about refund, webhook and Principal fixtures
+describe the earlier version. See docs/VERIFICATION.md for current checks.
