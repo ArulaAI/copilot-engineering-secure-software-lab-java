@@ -9,3 +9,5 @@ Before run. [command, exit status, failure names, actual output]
 Patch. [actual diff]
 After run. [command, exit status, pass/fail/skipped counts, actual output]
 Remaining failures or untested boundaries. [limits]
+
+Acceptance matrix and correction count. [outputs/acceptance.md, initial or correction 1, reason]

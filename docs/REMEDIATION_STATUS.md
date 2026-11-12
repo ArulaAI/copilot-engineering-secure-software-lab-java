@@ -42,3 +42,16 @@ An approved JDK/plugin/harness/model record and target-laptop rehearsal are stil
 For the live learning lab participants may clone the release branch and observe the educational
 reference boundary. For independent assessment, prepare a participant package omitting reference/
 and facilitator-only documents. The public branch and Git history cannot conceal the solution.
+
+## Explicit phase skill migration
+
+Four lab-* phase skills now define required inputs, selected-role checks, bounded actions,
+outputs, and stopping conditions. The security-review skill is an explicit workflow overview.
+The four Local prompts are thin compatibility adapters, with distinct names from skills.
+A shared evidence contract defines compact handoffs, untrusted-content handling, acceptance
+traceability, and one correction/re-review limit. The acceptance template and rehearsal worksheet
+make evidence and proposed usage/quality benefits reviewable. Five active agents remain.
+
+No source, tests, POM or runtime dependency changes are part of this migration. Native Copilot
+and IntelliJ invocation/permissions require the target-environment checks. Model outputs remain
+variable; Java checks verify their defined behavior. Token/time savings are unmeasured hypotheses.

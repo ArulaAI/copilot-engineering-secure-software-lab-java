@@ -52,9 +52,9 @@ The flexible portion is additional discovery breadth, not verification or the de
 - `src/main/java/com/securelabs/lab/` contains the required refund starter and webhook verifier.
 - `src/test/java/com/securelabs/lab/` contains real baseline and acceptance checks.
 - `src/main/java/com/securelabs/vulnerable/` is an intentionally vulnerable historical review corpus.
-- `.github/` contains five custom agents, four Local prompt files, one reusable skill,
+- `.github/` contains five custom agents, four Local prompt adapters, four phase skills, one workflow overview skill,
   repository instructions, and scoped Java instructions.
-- `outputs/` contains participant evidence templates.
+- `outputs/` contains five participant evidence templates, including an acceptance matrix.
 - `docs/` contains the scenario, compatibility steps, and facilitator delivery material.
 - `reference/` contains facilitator solutions and an explicitly unsafe historical archive,
   outside compilation. Do not consult it during participant investigation or remediation.
@@ -69,5 +69,11 @@ Use [INSTRUCTOR_GUIDE](docs/INSTRUCTOR_GUIDE.md), [RUN_SHEET](docs/RUN_SHEET.md)
 [VERIFICATION](docs/VERIFICATION.md), and [change coverage](docs/REMEDIATION_STATUS.md).
 This branch requires a rehearsal on the target Fidelity IDE/plugin/harness/model combination.
 No minimum plugin version is claimed until the actual installation is recorded.
+The primary proposed route is explicit phase skills in Copilot Chat, with separate agent
+selection. Local prompt adapters and the rehearsed manual route provide compatibility.
+See [workflow architecture](docs/WORKFLOW_ARCHITECTURE.md) and the facilitator-only
+[rehearsal worksheet](docs/WORKFLOW_REHEARSAL.md). Speed, usage, and quality improvements
+are expected hypotheses until measured. Native skill support may require an approved plugin
+update if the existing installation lacks it.
 
 Copyright InRhythm / Arula. Training material using synthetic data.

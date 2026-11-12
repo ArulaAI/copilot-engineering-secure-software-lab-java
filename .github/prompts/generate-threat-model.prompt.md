@@ -1,11 +1,11 @@
 ---
 name: generate-threat-model
-description: Model the selected refund flow and connect threats to acceptance.
+description: Local harness adapter for the lab-threat-model procedure.
 agent: STRIDE Threat Modeler
 ---
 
-Read docs/SCENARIO.md and the selected findings supplied in this conversation.
-Inspect the refund implementation. Model the Principal fixture, refund service, and
-in-memory payment state. Label implementation evidence and assumptions. Apply STRIDE
-to relevant boundaries, explain impact and exploit preconditions, and prioritize REFUND-01.
-Return outputs/threat-model.template.md content in chat. Preserve the finding ID.
+This explicitly requested Local task uses the [lab-threat-model procedure](../skills/lab-threat-model/SKILL.md)
+and its linked shared evidence contract. Read and follow those files as task instructions.
+Confirm the selected agent is STRIDE Threat Modeler and check its tools before proceeding.
+This adapter reads the procedure directly; do not claim native skill invocation from it.
+Ask for any missing required inputs and stop if the role, evidence, or scope cannot be established.

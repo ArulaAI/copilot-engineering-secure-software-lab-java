@@ -22,15 +22,28 @@ requires its existing approved service connectivity.
 ## VS Code
 
 Record the actual VS Code version, Copilot extension version, selected harness, and model.
-In the validated Local route, confirm all five agents in the picker and all four slash
-prompts. Select Security Vulnerability Hunter and run /find-vulnerabilities with the scenario
-and source attached. Reading roles return chat text. Save outputs/findings.md yourself.
+The primary route to qualify is Copilot Chat with the Copilot harness. Confirm all five agents
+and all five skills. Select the intended agent first, verify effective tools, then invoke the
+corresponding lab-* skill. Check chat.useAgentSkills and actual skill discovery. The documented
+github.copilot.chat.cli.customAgents.enabled setting may need enabling in supported versions
+and defaults to false in the current reference. Use only settings allowed by the organization.
+These are environment qualification checks, not automatic configuration changes.
 
-The Copilot harness does not use Local prompt files the same way. Verify discovery of the
-security-review skill and the selected custom agent. If skill invocation is unavailable,
-open .github/skills/security-review/SKILL.md and explicitly request its procedure. Do not
-claim native skill loading from that manual fallback. Match agent tools to the selected harness
-using editor diagnostics and observed activity. Do not assume names have identical semantics.
+Skills do not preserve a prompt's agent/model/tools fields. Confirm the implementation role
+can execute approved commands and that reading roles cannot edit or execute. File-scope rules
+remain instructions, not an access-control guarantee. Inspect actual activity and diffs.
+All course skills use explicit invocation and inline context. No forked skill, experimental
+skill-tool setting, Copilot CLI, or additional runtime is required.
+
+On the qualified Local route, the four old slash names are thin adapters selecting agents
+and reading the canonical phase skill procedure. The native phase skills use distinct lab-*
+names to avoid ambiguous commands when both formats appear. The adapters do not establish
+native skill invocation. Compare behavior before retiring a compatibility entrypoint.
+
+If native invocation is unavailable, open the relevant phase SKILL.md and its shared evidence
+contract, then explicitly request that procedure. This manual route must be rehearsed and
+labelled accurately. Reading-role output is saved by the participant. Match tool names to
+the selected harness using diagnostics and observed activity.
 
 ## IntelliJ IDEA
 
@@ -51,13 +64,19 @@ choice. Do not request paid upgrades or guarantee identical findings from differ
 
 ## Harness lifecycle
 
-The documentation reviewed for this release lists several JetBrains customizations as preview.
+JetBrains announced its Copilot harness as generally available in August 2026 and default
+when available in October 2026. Current GitHub documentation still lists individual JetBrains
+customizations as preview. Harness availability does not establish feature availability.
+Qualify each feature in the actual approved plugin and tenant. Native skills may require an
+approved update if the existing version lacks them; retain the qualified fallback for delivery.
 VS Code documents Local prompt files separately from Copilot-harness skills and lists Local
-removal in February 2027. Recheck before future delivery. A tested Local route can serve this
-session, while the skill/manual procedure supplies a separately qualified route.
+removal in February 2027. Recheck before future delivery.
 
 - [GitHub feature matrix](https://docs.github.com/en/copilot/reference/copilot-feature-matrix)
 - [GitHub customization reference](https://docs.github.com/en/copilot/reference/customization-cheat-sheet)
+- [VS Code skill support](https://code.visualstudio.com/docs/agent-customization/agent-skills)
+- [VS Code migration](https://code.visualstudio.com/docs/agent-customization/migrate-customizations)
+- [VS Code settings](https://code.visualstudio.com/docs/agents/reference/ai-settings)
 - [VS Code prompt files](https://code.visualstudio.com/docs/agent-customization/prompt-files)
 - [VS Code agent configuration](https://code.visualstudio.com/docs/agents/reference/custom-agent-file-reference)
 

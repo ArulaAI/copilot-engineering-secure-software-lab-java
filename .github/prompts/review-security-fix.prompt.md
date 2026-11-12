@@ -1,11 +1,11 @@
 ---
 name: review-security-fix
-description: Review a patch in fresh context against explicit security acceptance.
+description: Local harness adapter for the lab-review procedure.
 agent: Secure Code Reviewer
 ---
 
-In this fresh conversation, read docs/SCENARIO.md, the participant's finding, threat model,
-change plan, actual diff, relevant source/tests, and execution output supplied by the participant.
-If any evidence is missing, identify it. Review REFUND-01 independently. Return the
-review template with ACCEPTED FOR THE SELECTED SCENARIO, CHANGES REQUIRED, or NEEDS EVIDENCE.
-Label inspected logs separately from tests you executed. You have no execution or editing tools.
+This explicitly requested Local task uses the [lab-review procedure](../skills/lab-review/SKILL.md)
+and its linked shared evidence contract. Read and follow those files as task instructions.
+Confirm the selected agent is Secure Code Reviewer and check its tools before proceeding.
+This adapter reads the procedure directly; do not claim native skill invocation from it.
+Ask for any missing required inputs and stop if the role, evidence, or scope cannot be established.

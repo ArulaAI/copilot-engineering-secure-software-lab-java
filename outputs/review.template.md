@@ -10,3 +10,5 @@ Validation and concurrent duplicate handling. [evidence or missing]
 Verdict. [ACCEPTED FOR THE SELECTED SCENARIO / CHANGES REQUIRED / NEEDS EVIDENCE]
 Required follow-up. [actionable items]
 Residual risks and limits. [HTTP authentication, persistence, distributed execution]
+
+Acceptance matrix and review count. [outputs/acceptance.md, initial or re-review 1]

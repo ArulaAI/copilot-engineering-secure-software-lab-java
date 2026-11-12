@@ -1,12 +1,11 @@
 ---
 name: find-vulnerabilities
-description: Investigate a bounded scope using source evidence.
+description: Local harness adapter for the lab-investigate procedure.
 agent: Security Vulnerability Hunter
 ---
 
-Read docs/SCENARIO.md and inspect src/main/java/com/securelabs/lab/RefundService.java
-and src/test/java/com/securelabs/lab/RefundSecurityTest.java. Investigate REFUND-01.
-Describe the trusted identity boundary and identify a concrete unauthorized state change.
-Also assess one plausible false positive, such as validated positive amount handling.
-Do not use reference/ or a finding-count target. Return the findings template in chat.
-Tell me the exact reproduction command and expected failure, without claiming execution.
+This explicitly requested Local task uses the [lab-investigate procedure](../skills/lab-investigate/SKILL.md)
+and its linked shared evidence contract. Read and follow those files as task instructions.
+Confirm the selected agent is Security Vulnerability Hunter and check its tools before proceeding.
+This adapter reads the procedure directly; do not claim native skill invocation from it.
+Ask for any missing required inputs and stop if the role, evidence, or scope cannot be established.

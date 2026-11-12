@@ -17,7 +17,9 @@ Final `mvn -Dlab.verify=true clean test`. Offline option is -o with existing cac
 
 Tools. Hunter investigates. Threat Modeler explains flow. Remediation Engineer edits after the
 participant selects scope. Reviewer reads fresh evidence. OWASP Expert explains mappings.
-Local prompts are shortcuts. The skill defines the procedure. Save reading-role output manually.
+Select the role first, then invoke /lab-investigate, /lab-threat-model, /lab-remediate, or /lab-review.
+Local adapters read the same procedures. Save reading-role output manually. Keep handoffs compact.
+Permit one correction pass/re-review, then escalate unresolved work. Keep acceptance.md with the evidence.
 
 If asked why findings differ, compare source, assumptions, and behavior. Never promise complete
 or identical discovery. If asked whether the application is secure, state the selected scenario

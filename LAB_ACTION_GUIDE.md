@@ -38,11 +38,24 @@ Use the role names below. Agent discovery and tool names vary with IDE and harne
 | /fix-vulnerability | Secure Remediation Engineer |
 | /review-security-fix | Secure Code Reviewer |
 
-For the Copilot harness use the security-review skill, after verifying discovery. If unavailable,
-open .github/skills/security-review/SKILL.md and explicitly ask Copilot to follow it.
-This is a manual procedure fallback, not proof that automatic skill loading works.
-Repository instructions and scoped Java instructions establish evidence and implementation rules.
-Check the IDE's references/customization diagnostics rather than assuming instructions attached.
+Select the named agent first, then explicitly invoke the phase skill in Copilot Chat.
+
+| Phase skill | Agent to select first | Required artifact |
+| --- | --- | --- |
+| /lab-investigate | Security Vulnerability Hunter | outputs/findings.md |
+| /lab-threat-model | STRIDE Threat Modeler | outputs/threat-model.md |
+| /lab-remediate | Secure Remediation Engineer | outputs/change-plan.md and outputs/acceptance.md |
+| /lab-review | Secure Code Reviewer in a fresh chat | outputs/review.md and matrix review statuses |
+
+Use /security-review only for workflow guidance. All five skills require explicit invocation
+and use inline context. They do not switch agents, preserve prompt tool selections, or launch
+workers. Verify the selected agent's effective tools. The distinct lab-* names avoid collisions
+with Local prompt adapters. The Local adapters read the same canonical skill procedure directly.
+
+If native skills are unavailable, open the phase SKILL.md and its linked shared contract and
+explicitly request that procedure using the rehearsed manual route. This does not establish native
+loading or enforce permissions. Repository and scoped instructions retain core evidence rules.
+Check the IDE's customization diagnostics and actual activity rather than assuming attachment.
 
 Reading agents return content in chat. Save each result manually to the indicated output file,
 then check the file exists. This avoids granting code-edit privileges just to generate a report.
@@ -50,8 +63,10 @@ then check the file exists. This avoids granting code-edit privileges just to ge
 ## Entry artifacts
 
 Read docs/SCENARIO.md. Open RefundService.java, RefundServiceTest.java, and RefundSecurityTest.java
-from their lab packages. Copy the four outputs/*.template.md files to findings.md,
-threat-model.md, change-plan.md, and review.md in outputs/. Fill them during the stages.
+from their lab packages. Copy the five outputs/*.template.md files to findings.md,
+threat-model.md, change-plan.md, acceptance.md, and review.md in outputs/. Fill them during
+the stages. The acceptance matrix links the selected threat to code, checks, run evidence,
+and review status. Keep missing or unexecuted before-results explicitly labelled.
 Do not consult reference/ or answer keys during investigation, remediation, or review.
 
 ## STAGE 1. Investigate the refund finding (15 min)
@@ -67,10 +82,11 @@ Distinguish a demonstrated authorization failure from a model-generated hypothes
 The unmodified starter should show exactly two failed assertions, both expecting FORBIDDEN
 and receiving REFUNDED. Compilation failures or missing packages are setup failures, not the exercise.
 1.3 Select Security Vulnerability Hunter and attach the three lab files using the IDE's context UI.
-Use /find-vulnerabilities on the tested Local path, or send this request.
+Invoke /lab-investigate with that agent selected. Local fallback is /find-vulnerabilities.
+For the rehearsed manual route, open the phase skill and send this request.
 
 ```text
-Follow the security-review procedure for investigation. Read docs/SCENARIO.md and
+Follow the lab-investigate skill and shared evidence contract for investigation. Read docs/SCENARIO.md and
 RefundService.java with its tests. Explain REFUND-01 using the trusted principal,
 transaction owner, and state mutation. Assess one plausible false positive as well.
 Return the findings template. Do not read reference/ and do not edit code.
@@ -94,7 +110,8 @@ Connect the selected finding to an asset and a trust boundary.
 ### Steps
 
 2.1 Select STRIDE Threat Modeler and attach the scenario, source, and findings.
-Use /generate-threat-model on the Local path, or send this request.
+Invoke /lab-threat-model with that agent selected. Local fallback is /generate-threat-model.
+For the rehearsed manual route, open the phase skill and send this request.
 
 ```text
 Model the refund flow using STRIDE. Label each component and edge implemented,
@@ -119,19 +136,24 @@ Make a minimal authorized change while preserving legitimate operations.
 ### Steps
 
 3.1 Select Secure Remediation Engineer and attach the scenario and evidence artifacts.
-Use /fix-vulnerability on the Local path, or send this request.
+Invoke /lab-remediate with that agent selected. Local fallback is /fix-vulnerability.
+For the rehearsed manual route, open the phase skill and send this request.
 
 ```text
-Follow the security-review procedure. Propose a bounded REFUND-01 change plan.
+Follow the lab-remediate skill and shared contract. Propose a bounded REFUND-01 change plan.
 Only RefundService.java may change. Preserve the scenario rules and existing tests.
-Show the plan before editing. After I agree, reproduce the failure, implement the
-minimal fix, run mvn -Dlab.verify=true clean test, and report actual results and diff.
+Show the plan before editing. After I agree, inspect the current reproduction evidence,
+run reproduction if missing or stale, implement the minimal fix, run
+mvn -Dlab.verify=true clean test, and report actual results and diff.
 Do not read reference/ or modify dependencies or tests.
 ```
 
 3.2 Review and agree to the proposed scope. Save outputs/change-plan.md.
 3.3 Apply the change and inspect the diff. If terminal execution is unavailable, run the
-commands yourself and provide their actual output. Record unresolved problems honestly.
+commands yourself and provide their actual output. Populate outputs/acceptance.md with the
+criteria, code decisions, test names, and actual evidence. Record unresolved problems honestly.
+Keep the implementation conversation while its context is relevant. No full-repository rescans
+or model switches are needed to reconcile finding counts.
 
 ### Success criteria
 
@@ -146,12 +168,17 @@ Establish what the change actually proves.
 
 ### Steps
 
-4.1 Run `mvn -Dlab.verify=true clean test`. All nine checks must pass with zero skipped.
+4.1 Inspect the current stage-3 output for `mvn -Dlab.verify=true clean test`.
+Reuse it if it matches the current source/diff. Run again only if code changed, evidence is
+missing/stale, or a relevant failure needs checking. All nine checks must pass with zero skipped.
 4.2 Run `git diff -- src/main/java/com/securelabs/lab/RefundService.java` and save the diff
 or copy it into the change-plan evidence section. Record command output and exit status.
 4.3 Start a fresh chat with Secure Code Reviewer. Attach the scenario, finding, threat model,
-change plan, actual diff, relevant source/tests, and full execution output.
-Use /review-security-fix on the Local path, or send this request.
+change plan, acceptance matrix, actual diff, relevant source/tests, and execution evidence.
+Use compact excerpts containing every failure/skip and retain the full log for inspection.
+Do not copy the entire authoring conversation or unrelated repository documents.
+Invoke /lab-review with the reviewer selected in the fresh chat. Local fallback is
+/review-security-fix. For the rehearsed manual route, open the phase skill and send this request.
 
 ```text
 Review REFUND-01 independently using the supplied source, diff, tests, and execution output.
@@ -160,7 +187,10 @@ Return ACCEPTED FOR THE SELECTED SCENARIO, CHANGES REQUIRED, or NEEDS EVIDENCE.
 State residual risks and scope limits. A passing baseline or finding count is insufficient.
 ```
 
-4.4 Resolve a concrete defect if found and rerun acceptance. Save outputs/review.md.
+4.4 Allow at most one correction pass for a concrete in-scope defect, then rerun acceptance
+and perform one re-review. Record the attempt and defect. Pause unresolved work for the facilitator
+after that limit. Do not edit tests, widen scope, or loop for model agreement. Save outputs/review.md
+and update matrix statuses using inspected evidence. Never mark unexecuted checks as passed.
 
 ### Success criteria
 
@@ -175,6 +205,7 @@ State residual risks and scope limits. A passing baseline or finding count is in
 | outputs/findings.md | REFUND-01 source and reproduction |
 | outputs/threat-model.md | T-REFUND-01 and validated boundary |
 | outputs/change-plan.md | Agreed scope, diff, actual before/after output |
+| outputs/acceptance.md | Criteria linked to code, tests, run evidence, and review status |
 | outputs/review.md | Fresh qualified verdict and residual risks |
 
 ## Debrief (5 min)
@@ -188,7 +219,8 @@ State residual risks and scope limits. A passing baseline or finding count is in
 
 | Symptom | Cause to check | Action |
 | --- | --- | --- |
-| Prompt missing | Harness and prompt discovery | Use tested Local path or skill/manual procedure |
+| Prompt missing | Harness and prompt discovery | Copilot uses lab-* phase skills; Local uses adapters |
+| Skill or agent missing | Plugin, harness, policies and discovery | Use the qualified manual route or facilitator review |
 | Agent missing or tool unavailable | Plugin version and effective configuration | Use fallback in COMPATIBILITY and record limitation |
 | Findings only in chat | Reading agent cannot write files | Save manually and verify the file |
 | Tests green before fix | Security checks skipped | Enable -Dlab.verify=true |
