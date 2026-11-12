@@ -26,15 +26,20 @@ and facilitator docs. Do not claim a prompt restriction prevents access to publi
 SAY We will establish evidence for one security change. A model report and a green baseline
 are starting points, and the selected security acceptance checks determine the outcome.
 DO explain the scenario, trusted Principal fixture, method-level scope, and available roles.
-DO demonstrate context attachment, a read-only investigation, manual report saving, and a fresh
-review. Demonstrate explicit lab-* invocation after selecting its role. Show Local adapters
+DO demonstrate the Agent dropdown, Add Context or file dragging, a read-only investigation,
+manual report saving, and a fresh review. Type / and choose the existing lab-* skill from the
+picker after selecting its role. Check attachments, skill loading and actual tool activity. Show Local adapters
 only on the qualified compatibility route. Explain that the skill does not set agent permissions.
 WATCH FOR anyone treating a bearer string as trusted identity or the word secure as a guarantee.
-CHECK-IN participants can run baseline and see the required files. Route setup issues to help.
+CHECK-IN participants can supply current baseline evidence and see the required files. Route setup issues to help.
+TIP optionally spend five minutes within this introduction comparing the same refund diff alone
+and with scenario/tests. Prepared outputs are sufficient. Ask which claim becomes supportable
+and which needs evidence. This context comparison adds no tooling or benchmark claim.
 
 ## 20 to 35 minutes. Investigate
 
-DO have participants run the two enabled security checks. Both fail on the starter with
+DO inspect current reproduction evidence tied to unchanged source, or have participants run
+missing/stale enabled security checks. Both fail on the starter with
 expected FORBIDDEN but actual REFUNDED. These are intentional defects. Missing artifacts,
 compile errors, or unrelated exceptions require troubleshooting, not explanation as vulnerabilities.
 SAY Find the decision that permits an authenticated non-owner to mutate refund state.
@@ -62,6 +67,10 @@ facilitator preparation or follow-up, not a new timed exercise.
 
 ## 45 to 70 minutes. Plan and implement
 
+DO start a fresh implementation chat after AI-01. Hand off the validated finding, condensed Java
+threat summary/criteria, source/tests and current logs. Close the raw sample, clear unwanted
+attachments/active-editor context, and exclude the raw challenge and full prior chat. A fresh chat
+is not process/OS isolation and does not remove workspace read capability.
 DO ask participants to agree to the proposed scope before editing only RefundService.java.
 DO preserve tests, POM, valid owner behavior, and the existing atomic state transition.
 WATCH FOR disabling security checks, editing expectations, adding dependencies, or copying the solution.
@@ -95,14 +104,14 @@ storage, deployment, and verification boundaries.
 
 | Symptom | Action |
 | --- | --- |
-| Slash prompt missing | Check harness, then use the tested skill/manual route |
+| Skill missing | Stop for facilitator, check harness and use the rehearsed walkthrough |
 | Different findings or severity | Compare evidence and preconditions, not raw counts |
-| No report file | Reading roles return text; participant saves and checks the file |
+| No report file | Reading roles return text. Participant saves and checks the file |
 | Baseline green before fix | Show the skipped checks and enable lab.verify |
 | Model pinned/unavailable | Confirm approved selected model and reload repository agents |
 | New package requested | Decline scope expansion and use existing Java/Maven features |
 | Spring server fails | Required exercise invokes methods through tests; record runtime issue separately |
-| Skill or role unavailable in IDEA | Use rehearsed context/manual route with explicit limitations |
+| Skill or role unavailable in IDEA | Stop for facilitator and use the rehearsed qualified route |
 
 ## Solutions and residual scope
 

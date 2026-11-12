@@ -40,21 +40,21 @@ and reading the canonical phase skill procedure. The native phase skills use dis
 names to avoid ambiguous commands when both formats appear. The adapters do not establish
 native skill invocation. Compare behavior before retiring a compatibility entrypoint.
 
-If native invocation is unavailable, open the relevant phase SKILL.md and its shared evidence
-contract, then explicitly request that procedure. This manual route must be rehearsed and
-labelled accurately. Reading-role output is saved by the participant. Match tool names to
-the selected harness using diagnostics and observed activity.
+If native invocation is unavailable, stop for the facilitator. Use a rehearsed walkthrough of
+the existing phase SKILL.md and shared contract, with participant-run checks and report saving.
+Do not invent a slash command or substitute a long copied operating prompt. Label this route
+accurately and match effective tools to the harness using diagnostics and observed activity.
 
 ## IntelliJ IDEA
 
 Record IDEA and Copilot plugin versions, available agent mode/customizations, and model.
 Use the plugin's context-attachment controls to select the scenario, source, and tests.
 Check actual attachments before submitting. Do not rely on VS Code #file or @workspace syntax.
-If custom agents or skills are unavailable, open the relevant agent file and skill as explicit
-instructions in chat. This fallback does not enforce tool restrictions. Keep analysis/review
-in a non-editing mode, decline proposed edits, and save reports manually. Run Maven yourself.
-Confirm each fallback is approved and rehearsed. If an analysis-only mode cannot be established,
-use the facilitator-led review instead of claiming the read-only role is enforced.
+If custom agents or skills are unavailable, stop for the facilitator's rehearsed walkthrough of
+the existing agent, phase skill and contract. Keep analysis/review in a qualified non-editing
+mode, decline proposed edits, save reports manually and run Maven yourself. No long replacement
+chat script is required. Confirm this route is approved and rehearsed. If an analysis-only mode
+cannot be established, use facilitator-led or paper review and record the enforcement limit.
 
 ## Model and result expectations
 

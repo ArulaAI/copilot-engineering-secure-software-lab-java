@@ -17,8 +17,12 @@ Final `mvn -Dlab.verify=true clean test`. Offline option is -o with existing cac
 
 Tools. Hunter investigates. Threat Modeler explains flow. Remediation Engineer edits after the
 participant selects scope. Reviewer reads fresh evidence. OWASP Expert explains mappings.
-Select the role first, then invoke /lab-investigate, /lab-threat-model, /lab-remediate, or /lab-review.
-Local adapters read the same procedures. Save reading-role output manually. Keep handoffs compact.
+Select the role in the Agent dropdown, attach context and choose the existing phase skill from /.
+Use /lab-investigate, /lab-threat-model, /lab-remediate, or /lab-review. Inspect attachments and activity.
+Local adapters read the same procedures on a qualified route. A missing skill stops for facilitator
+help. Save reading-role output manually. Start a fresh implementation chat after AI-01 with a compact
+validated Java handoff, excluding the raw challenge. Keep the implementation chat for corrections
+and start a fresh review chat with current diff/tests/evidence.
 Permit one correction pass/re-review, then escalate unresolved work. Keep acceptance.md with the evidence.
 
 If asked why findings differ, compare source, assumptions, and behavior. Never promise complete
