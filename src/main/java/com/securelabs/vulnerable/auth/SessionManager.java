@@ -1,3 +1,5 @@
+/* Historical vulnerable review corpus. OWASP category IDs in comments use the 2021 edition.
+ * Optional static review only. See docs/SCENARIO.md for the required exercise. */
 package com.securelabs.vulnerable.auth;
 
 import java.util.HashMap;
@@ -23,10 +25,10 @@ public class SessionManager {
 
     /**
      * VULNERABLE: Weak session token generation
-     * UUID.randomUUID() is not cryptographically secure for session tokens
+     * UUID.randomUUID() uses strong randomness. This fixture lacks expiry and leaks tokens.
      */
     public static String createSession(String userId) {
-        // VULNERABLE: Predictable session ID
+        // Strong random UUID does not compensate for missing session lifecycle controls
         String sessionId = UUID.randomUUID().toString();
 
         SessionData session = new SessionData();

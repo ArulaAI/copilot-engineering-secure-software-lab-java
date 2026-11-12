@@ -1,287 +1,73 @@
-# Copilot Secure Development Lab - Java
-
-**Workshop:** Secure Software Development with GitHub Copilot
-**Duration:** 90 minutes
-**Audience:** Java/Spring Boot engineers advancing secure coding skills
-
----
-
-## WARNING
-
-This repository contains **intentionally vulnerable code** for educational purposes.
-
-**DO NOT:**
-- Deploy this code to production
-- Use vulnerable patterns in real applications
-- Copy code without fixing vulnerabilities
-
----
-
-## Copilot-Only Workflow
-
-**All lab work must be completed using GitHub Copilot.
-** This ensures you learn to leverage AI for security tasks.
-
-### How to Use Copilot in This Lab
-
-1. **Copilot Chat** (`Ctrl+Shift+I` / `Cmd+Shift+I`)
-   - Analyze code for vulnerabilities
-   - Generate secure implementations
-   - Create threat models
-
-2. **Inline Suggestions**
-   - Type comments starting with `//` to get suggestions
-   - Accept suggestions with `Tab`
-
-3. **Terminal Commands**
-   - Use `#runInTerminal` in Copilot Chat
-   - Example: `#runInTerminal mvn dependency:tree`
-
-4. **File References**
-   - Use `#file:path/to/File.java` to include context
-   - Use `@workspace` for project-wide queries
-
-**Do NOT manually type code or terminal commands.**
-
----
-
-## Getting Started
-
-```
-# Build the project (via Copilot Chat)
-#runInTerminal mvn clean compile
-
-# Run tests
-#runInTerminal mvn test
-
-# Run the application
-#runInTerminal mvn spring-boot:run
-
-# Check for vulnerable dependencies
-#runInTerminal mvn dependency-check:check
-```
-
----
-
-## Lab Structure (90 minutes)
-
-| Time | Lab | Duration | Focus |
-|------|-----|----------|-------|
-| 0:00 | **Lab 1:** Vulnerability Identification | 30 min | Find OWASP Top 10 issues |
-| 0:30 | **Lab 2:** Threat Modeling | 25 min | Create STRIDE threat model |
-| 0:55 | **Lab 3:** Secure Implementation | 35 min | Fix vulnerabilities |
-
----
-
-## Repository Structure
-
-```
-copilot-secure-dev-lab-java/
-├── src/main/java/com/securelabs/
-│   ├── vulnerable/              # Intentionally vulnerable code (12 files)
-│   │   ├── auth/                # AuthController, PasswordHandler, SessionManager
-│   │   ├── api/                 # PaymentHandler, ResourceController, UserApi, ModernApiHandler
-│   │   ├── data/                # UserRepository, QueryBuilder, FileHandler
-│   │   └── session/             # TokenManager
-│   └── secure/                  # Reference implementations (5 files)
-│       ├── auth/                # SecureAuthController
-│       ├── api/                 # SecurePaymentHandler, SecureResourceController, SecureModernApiHandler
-│       └── data/                # SecureUserRepository
-├── src/test/java/               # Security verification tests
-├── exercises/
-│   ├── lab1-identification/     # Vulnerability hunting (62 documented vulnerabilities)
-│   ├── lab2-threat-model/       # STRIDE analysis
-│   └── lab3-implementation/     # Fixing vulnerabilities
-├── threat-models/
-│   ├── templates/               # STRIDE template
-│   └── examples/                # Completed threat model
-└── docs/
-    ├── owasp-reference/         # OWASP Top 10 quick reference
-    └── checklists/              # Security review checklist
-```
-
----
-
-## OWASP Top 10 Coverage
-
-| Category | Vulnerable Files | Secure Reference |
-|----------|-----------------|------------------|
-| A01: Access Control | AuthController, ResourceController, FileHandler, UserApi, ModernApiHandler | secure/api/ |
-| A02: Cryptography | PasswordHandler, TokenManager, SessionManager | secure/auth/ |
-| A03: Injection | UserRepository, QueryBuilder, ModernApiHandler | secure/data/, secure/api/ |
-| A04: Insecure Design | PaymentHandler, UserApi | secure/api/SecurePaymentHandler |
-| A05: Misconfiguration | ResourceController, SessionManager, UserApi | secure/api/SecureResourceController |
-| A06: Vulnerable Components | pom.xml (log4j 2.14.1) | mvn dependency-check:check |
-| A07: Authentication | AuthController, SessionManager | secure/auth/ |
-| A08: Integrity Failures | TokenManager, PaymentHandler, FileHandler | secure/api/ |
-| A09: Logging Failures | AuthController, PaymentHandler, UserApi, ModernApiHandler | secure/api/ |
-| A10: SSRF | ResourceController, FileHandler, ModernApiHandler | secure/api/SecureResourceController |
-
----
-
-## Quick Start for Each Lab
-
-### Lab 1: Vulnerability Identification
-
-Open: `exercises/lab1-identification/instructions.md`
-
-```
-# Copilot Chat prompt to start:
-@workspace I'm analyzing this Java codebase for OWASP Top 10 vulnerabilities.
-The vulnerable code is in src/main/java/com/securelabs/vulnerable/.
-List all the files I should analyze and the expected vulnerabilities in each.
-```
-
-### Lab 2: Threat Modeling
-
-Open: `exercises/lab2-threat-model/instructions.md`
-
-```
-# Copilot Chat prompt to start:
-Create a STRIDE threat model for an authentication and payment system.
-The system includes: AuthController, PaymentHandler, SessionManager.
-Generate a Mermaid architecture diagram and identify threats for each STRIDE category.
-```
-
-### Lab 3: Secure Implementation
-
-Open: `exercises/lab3-implementation/instructions.md`
-
-```
-# Copilot Chat prompt to start:
-#file:src/main/java/com/securelabs/vulnerable/auth/AuthController.java
-Refactor this code to fix all security vulnerabilities.
-Use patterns from #file:src/main/java/com/securelabs/secure/auth/SecureAuthController.java as reference.
-```
-
----
-
-## Verification
-
-### Run Security Tests
-
-```
-#runInTerminal mvn test
-```
-
-### Run Dependency Check
-
-```
-#runInTerminal mvn dependency-check:check
-```
-
-### Build Project
-
-```
-#runInTerminal mvn clean package -DskipTests
-```
-
----
-
-## Key Resources
-
-| Resource | Location |
-|----------|----------|
-| OWASP Top 10 Reference | `docs/owasp-reference/top-10-summary.md` |
-| Security Checklist | `docs/checklists/security-review-checklist.md` |
-| STRIDE Template | `threat-models/templates/stride-template.md` |
-| Completed Threat Model | `threat-models/examples/auth-payment-system-threat-model.md` |
-| Lab 1 Answer Key | `exercises/lab1-identification/answer-key.md` |
-| Secure Implementations | `src/main/java/com/securelabs/secure/` |
-
----
-
-## Helpful Copilot Prompts
-
-### Security Analysis
-```
-Analyze this Java file for OWASP Top 10 vulnerabilities.
-For each issue: OWASP category, severity, line number, attack scenario, fix.
-```
-
-### Threat Modeling
-```
-Perform STRIDE analysis for this Spring Boot system.
-Identify threats for each category with impact and mitigation.
-```
-
-### Secure Refactoring
-```
-Refactor this code to follow Spring Security best practices.
-Add: input validation, authorization, secure logging, parameterized queries.
-```
-
-### Code Review
-```
-Review this Java code against the security checklist.
-Flag any violations with severity and recommended fix.
-```
-
----
-
-## Java-Specific Security Patterns
-
-### Password Hashing
-```java
-// SECURE: Use BCrypt with cost factor >= 12
-BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-String hash = encoder.encode(password);
-boolean valid = encoder.matches(input, hash);
-```
-
-### SQL Injection Prevention
-```java
-// SECURE: Use PreparedStatement
-String sql = "SELECT * FROM users WHERE email = ?";
-PreparedStatement stmt = connection.prepareStatement(sql);
-stmt.setString(1, email);
-```
-
-### Secure Random
-```java
-// SECURE: Use SecureRandom for tokens
-SecureRandom random = new SecureRandom();
-byte[] bytes = new byte[32];
-random.nextBytes(bytes);
-```
-
----
-
-## Support
-
-- **Documentation:** See `docs/` directory
-- **Reference Code:** See `src/main/java/com/securelabs/secure/` directory
-- **Answer Keys:** See exercise directories
-
----
-
-### GitHub Copilot Chat - Quick Reference Note
-
-> `#` variables and `@` participants → VS Code only.
->
-> Slash commands (`/explain`, `/fix`, `/tests`, `/doc`, `/simplify`) → available in both VS Code and IntelliJ.
-
-IntelliJ does not support `#codebase`, `#file`, `#selection`, `#terminalLastCommand`, or any `@workspace` / `@github` / `@terminal` participants. IntelliJ automatically includes the open file as context without requiring explicit syntax.
-
----
-
-### Maven Setup & Troubleshooting
-
-#### Prerequisites
-
-You will need **Visual Studio Code** (or another IDE) and **Maven** installed on your machine.
-
-- If Maven is not installed, you can install it from the **Company Portal**.
-- Please see this [guide](https://confluence.fmr.com/spaces/AP140884/pages/2358092473/Setup+Maven+Settings.xml+File) to ensure your `settings.xml` file is set up properly before running any Maven commands.
-
-
-#### Verify your setup
-
-```bash
-java -version    # Should show 17 or higher
-mvn -version     # Should show Maven 3.9 or higher
-```
-
----
-
-**Remember:** Security is everyone's responsibility. Use Copilot as a tool, but verify all suggestions.
+# Secure Software Development with GitHub Copilot
+
+A 90-minute hands-on learning lab. Assess a Java security finding, model its impact,
+implement a bounded fix, and validate the result with application regression checks.
+
+## Start here
+
+1. Complete [setup and compatibility checks](docs/COMPATIBILITY.md).
+2. Open [the participant action guide](LAB_ACTION_GUIDE.md).
+3. Read [the refund scenario](docs/SCENARIO.md).
+4. Run `mvn clean test` at the repository root.
+
+The baseline passing does not mean the application is secure. Two security acceptance
+checks are deliberately skipped until enabled. Run
+`mvn -Dlab.verify=true -Dtest=RefundSecurityTest test` before the fix. Exactly two
+assertion failures are expected on the starter. After the fix,
+`mvn -Dlab.verify=true clean test` must pass without skipped checks.
+
+## Prerequisites
+
+- An approved JDK, Java 17 or later, with Maven using the same JDK.
+- Maven 3.9 or later with the organization's existing approved settings.xml configuration.
+- Existing approved GitHub Copilot access in VS Code or IntelliJ IDEA.
+- Repository access and successful pre-session compile/test and customization checks.
+
+No new package, Python runtime, CLI, hooks, database, or external API is required.
+The POM dependency and plugin versions are unchanged from the validated lab.
+Fresh Maven caches still need the organization's approved artifact repository. An offline
+run is possible only after its existing artifacts are available.
+
+Spring Boot startup is outside the required workflow. The historical dependency fixture
+can prevent startup. Do not install blocked artifacts or change repository mirrors to bypass
+organizational restrictions. Application-method checks do not establish HTTP/filter security.
+
+## Session schedule
+
+| Stage | Minutes | Outcome |
+| --- | --- | --- |
+| Introduction and workflow demonstration | 20 | Understand evidence, roles, and tool limits |
+| Investigate the refund finding | 15 | Source-backed finding and failed acceptance checks |
+| Model and prioritize the threat | 10 | Validated flow and selected mitigation |
+| Plan and implement the fix | 25 | Bounded implementation change |
+| Verify and independently review | 15 | Acceptance evidence and qualified verdict |
+| Debrief and transfer | 5 | A reusable review procedure |
+| Total | 90 | |
+
+Laptop setup occurs before the session. Facilitators can run a parallel help room.
+The flexible portion is additional discovery breadth, not verification or the debrief.
+
+## Course structure
+
+- `src/main/java/com/securelabs/lab/` contains the required refund starter and webhook verifier.
+- `src/test/java/com/securelabs/lab/` contains real baseline and acceptance checks.
+- `src/main/java/com/securelabs/vulnerable/` is an intentionally vulnerable historical review corpus.
+- `.github/` contains five custom agents, four Local prompt files, one reusable skill,
+  repository instructions, and scoped Java instructions.
+- `outputs/` contains participant evidence templates.
+- `docs/` contains the scenario, compatibility steps, and facilitator delivery material.
+- `reference/` contains facilitator solutions and an explicitly unsafe historical archive,
+  outside compilation. Do not consult it during participant investigation or remediation.
+
+The public clone exposes facilitator files. Instructions are an educational boundary,
+not a technical access restriction. For independent assessment distribute a participant
+package that omits reference/ and facilitator-only docs, rather than relying on prompt rules.
+
+## Facilitators
+
+Use [INSTRUCTOR_GUIDE](docs/INSTRUCTOR_GUIDE.md), [RUN_SHEET](docs/RUN_SHEET.md),
+[VERIFICATION](docs/VERIFICATION.md), and [change coverage](docs/REMEDIATION_STATUS.md).
+This branch requires a rehearsal on the target Fidelity IDE/plugin/harness/model combination.
+No minimum plugin version is claimed until the actual installation is recorded.
+
+Copyright InRhythm / Arula. Training material using synthetic data.

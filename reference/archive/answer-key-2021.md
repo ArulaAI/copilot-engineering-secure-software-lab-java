@@ -1,3 +1,5 @@
+<!-- ARCHIVED AND UNVALIDATED. See reference/README.md. Not active course instructions. -->
+
 # Lab 1 Answer Key: Vulnerability Identification (Java)
 
 ## Summary

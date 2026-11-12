@@ -1,3 +1,5 @@
+<!-- ARCHIVED AND UNVALIDATED. See reference/README.md. Not active course instructions. -->
+
 ---
 name: Threat Modeler
 description: STRIDE methodology expert for comprehensive threat modeling

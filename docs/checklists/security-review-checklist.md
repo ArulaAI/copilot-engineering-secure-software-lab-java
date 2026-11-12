@@ -1,60 +1,39 @@
-# Security Code Review Checklist
+# Security review checklist
 
-## Input Validation
-- [ ] All external inputs validated
-- [ ] Whitelist validation used where possible
-- [ ] Input length limits enforced
-- [ ] Special characters properly handled
-- [ ] File uploads validated (type, size, content)
+## Evidence and scope
 
-## Authentication
-- [ ] Strong password hashing (bcrypt/argon2)
-- [ ] Account lockout implemented
-- [ ] Session timeout configured
-- [ ] Secure session token generation
-- [ ] MFA support where required
+- [ ] Selected finding, threat, plan, diff, and tests share an identifier.
+- [ ] Claims distinguish observed behavior, inference, assumptions, and coverage limits.
+- [ ] Discovery is independent of facilitator answers and prior model conclusions.
 
-## Authorization
-- [ ] Access control on all protected resources
-- [ ] Principle of least privilege applied
-- [ ] RBAC/ABAC properly implemented
-- [ ] No IDOR vulnerabilities
-- [ ] Resource ownership verified
+## Identity and authorization
 
-## Data Protection
-- [ ] Sensitive data encrypted at rest
-- [ ] TLS for data in transit
-- [ ] No sensitive data in logs
-- [ ] PII properly handled
-- [ ] Secrets not hardcoded
+- [ ] Trusted identity comes from an explicit upstream boundary.
+- [ ] Caller-controlled IDs, bearer text, or admin-looking names confer no privilege.
+- [ ] Object ownership is checked before state mutation.
+- [ ] Valid owner behavior remains available after a rejected attack.
 
-## Injection Prevention
-- [ ] Parameterized queries used
-- [ ] Output encoding applied
-- [ ] No command injection
-- [ ] Template injection prevented
-- [ ] LDAP injection prevented
+## Business behavior and state
 
-## Error Handling
-- [ ] Generic error messages to users
-- [ ] Detailed errors only in logs
-- [ ] No stack traces exposed
-- [ ] Graceful failure handling
+- [ ] Amount, precision, currency, and full-refund rules are enforced.
+- [ ] Duplicate/concurrent calls cannot produce multiple refunds.
+- [ ] Fixture atomicity is distinguished from a production database transaction.
 
-## Logging & Monitoring
-- [ ] Security events logged
-- [ ] No sensitive data in logs
-- [ ] Log injection prevented
-- [ ] Audit trail maintained
+## Verification and review
 
-## OWASP Top 10 Check
-- [ ] A01: Broken Access Control
-- [ ] A02: Cryptographic Failures
-- [ ] A03: Injection
-- [ ] A04: Insecure Design
-- [ ] A05: Security Misconfiguration
-- [ ] A06: Vulnerable Components
-- [ ] A07: Auth Failures
-- [ ] A08: Data Integrity Failures
-- [ ] A09: Logging Failures
-- [ ] A10: SSRF
+- [ ] The relevant acceptance check failed before the change for the expected reason.
+- [ ] Actual implementation methods are tested, with legitimate and unauthorized cases.
+- [ ] Full enabled acceptance passes, with commands, exit status, and skipped counts recorded.
+- [ ] Tests, dependencies, and unrelated source are unchanged by the participant fix.
+- [ ] A fresh review inspects source and evidence and states a qualified verdict.
+
+## Optional review topics
+
+- [ ] SQL values are parameterized and dynamic identifiers allowlisted.
+- [ ] Cryptographic configuration errors fail closed and signatures bind exact payloads.
+- [ ] Time windows and event deduplication are assessed separately.
+- [ ] SSRF policy applies at connection time, retries, and redirects with resource limits.
+- [ ] Session expiry is enforced server-side and path checks consider symlink assumptions.
+
+Use version-qualified OWASP mappings from the adjacent reference. This checklist does not
+establish full ASVS compliance or certify the historical application.

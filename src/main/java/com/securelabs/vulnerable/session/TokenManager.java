@@ -1,3 +1,5 @@
+/* Historical vulnerable review corpus. OWASP category IDs in comments use the 2021 edition.
+ * Optional static review only. See docs/SCENARIO.md for the required exercise. */
 package com.securelabs.vulnerable.session;
 
 import io.jsonwebtoken.*;

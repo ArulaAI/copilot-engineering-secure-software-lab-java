@@ -1,554 +1,204 @@
-# Lab Action Guide - Java
+# Lab Action Guide — Secure Software Development
 
-Follow these lean steps using GitHub Copilot for all work. Each lab builds on the previous—complete them in order.
+Java payment authorization. Follow the stages in order and use Copilot for investigation,
+planning, and implementation. Inspect its output and run commands yourself when appropriate.
 
-## Quick Reference
+## Quick reference
 
-| Lab | Duration | Primary Actions | Copilot Tools |
+| Stage | Minutes | Primary task | Tool |
 | --- | --- | --- | --- |
-| Setup | 5 min | `mvn clean compile` (run in terminal) | Terminal commands |
-| 1 | 30 min | Analyze `src/main/java/**/vulnerable/**` | Select **Security Vulnerability Hunter** mode, or use `/find-vulnerabilities` |
-| 2 | 25 min | STRIDE analysis, Mermaid architecture | Select **STRIDE Threat Modeler** mode, or use `/generate-threat-model` |
-| 3 | 35 min | Refactor vulnerable code, run tests | Select **Secure Code Reviewer** mode, or use `/fix-vulnerability` |
-| Verify | 5 min | `mvn clean package` (run in terminal) | Select **OWASP Security Expert** mode for final review |
+| Introduction | 20 | Evidence workflow and demonstration | Facilitator |
+| 1. Investigate | 15 | Reproduce and explain REFUND-01 | Security Vulnerability Hunter |
+| 2. Model | 10 | Identify boundary and prioritize | STRIDE Threat Modeler |
+| 3. Implement | 25 | Plan and apply a bounded fix | Secure Remediation Engineer |
+| 4. Verify | 15 | Run acceptance and review | Terminal and Secure Code Reviewer |
+| Debrief | 5 | Transfer the workflow | Group |
+| Total | 90 | | |
 
-## Copilot Customizations
+Setup is completed before the session using docs/COMPATIBILITY.md. Additional findings are
+FLEX. Verification and debrief are never cut. Do not try to fix the entire historical corpus.
 
-This lab includes expert-level GitHub Copilot customizations to accelerate your security work.
+## Copilot customizations
 
-### How to Use Agents/Chatmodes
+Read docs/COMPATIBILITY.md first. Select agents from the agent picker where supported.
+Use the role names below. Agent discovery and tool names vary with IDE and harness.
 
-**Agents and chatmodes are selected from the Copilot Chat mode dropdown**, not referenced with `@` syntax.
+| Agent | Responsibility | Tools |
+| --- | --- | --- |
+| Security Vulnerability Hunter | Source-backed investigation | Read and search |
+| STRIDE Threat Modeler | Supported flows, assumptions, priorities | Read and search |
+| Secure Remediation Engineer | Agreed implementation and actual checks | Read, search, edit, execute |
+| Secure Code Reviewer | Fresh review of patch and supplied evidence | Read and search |
+| OWASP Security Expert | Edition-qualified category explanation | Read and search |
 
-1. Open Copilot Chat (`Ctrl+Shift+I` / `Cmd+Shift+I`)
-2. Click the **mode selector dropdown** at the top of the chat panel
-3. Select the desired agent (e.g., "Security Vulnerability Hunter")
-4. Type your prompt - the agent's expertise will guide the response
+| Local prompt | Intended agent |
+| --- | --- |
+| /find-vulnerabilities | Security Vulnerability Hunter |
+| /generate-threat-model | STRIDE Threat Modeler |
+| /fix-vulnerability | Secure Remediation Engineer |
+| /review-security-fix | Secure Code Reviewer |
 
-### Available Agents
+For the Copilot harness use the security-review skill, after verifying discovery. If unavailable,
+open .github/skills/security-review/SKILL.md and explicitly ask Copilot to follow it.
+This is a manual procedure fallback, not proof that automatic skill loading works.
+Repository instructions and scoped Java instructions establish evidence and implementation rules.
+Check the IDE's references/customization diagnostics rather than assuming instructions attached.
 
-| Agent | Purpose | Best For |
-|-------|---------|----------|
-| **Security Vulnerability Hunter** | Systematic OWASP Top 10 vulnerability discovery | Lab 1 - Finding vulnerabilities |
-| **Secure Code Reviewer** | Validates security fixes against best practices | Lab 3 - Reviewing your fixes |
-| **STRIDE Threat Modeler** | STRIDE methodology expert | Lab 2 - Creating threat models |
-| **OWASP Security Expert** | OWASP category reference and CWE mapping | All labs - Understanding vulnerabilities |
+Reading agents return content in chat. Save each result manually to the indicated output file,
+then check the file exists. This avoids granting code-edit privileges just to generate a report.
 
-### Prompts (Invoke with `/prompt-name`)
+## Entry artifacts
 
-Prompts can be invoked directly by typing `/` followed by the prompt name:
+Read docs/SCENARIO.md. Open RefundService.java, RefundServiceTest.java, and RefundSecurityTest.java
+from their lab packages. Copy the four outputs/*.template.md files to findings.md,
+threat-model.md, change-plan.md, and review.md in outputs/. Fill them during the stages.
+Do not consult reference/ or answer keys during investigation, remediation, or review.
 
-| Prompt | How to Use | Output |
-|--------|------------|--------|
-| `/find-vulnerabilities` | Type `/find-vulnerabilities` then add file context | Single Markdown table with OWASP category, severity, CWE, line numbers, attack scenarios |
-| `/fix-vulnerability` | Type `/fix-vulnerability` then describe the issue | Fixed code with explanation and test case |
-| `/generate-threat-model` | Type `/generate-threat-model` then add system context | Complete threat model document with Mermaid diagram |
+## STAGE 1. Investigate the refund finding (15 min)
 
-### Auto-Applied Instructions
+### Objective
 
-The `.github/instructions/java-security.instructions.md` file automatically applies Java security coding standards to all `*.java` files. Copilot will reference these patterns when suggesting code.
+Distinguish a demonstrated authorization failure from a model-generated hypothesis.
 
-## Setup – Environment Preparation
+### Steps
 
-- Run `mvn clean compile` in your terminal
-- Run `mvn test` in your terminal
-- Verify no build errors before proceeding
-- Open `README.md` to review lab structure
+1.1 Run the baseline `mvn clean test`. Note the two skipped security acceptance checks.
+1.2 Run `mvn -Dlab.verify=true -Dtest=RefundSecurityTest test`.
+The unmodified starter should show exactly two failed assertions, both expecting FORBIDDEN
+and receiving REFUNDED. Compilation failures or missing packages are setup failures, not the exercise.
+1.3 Select Security Vulnerability Hunter and attach the three lab files using the IDE's context UI.
+Use /find-vulnerabilities on the tested Local path, or send this request.
 
-## Lab 1 – Vulnerability Identification (30 min)
-
-### Phase 1: Reconnaissance (10 min)
-
-**Option A: Using the Security Vulnerability Hunter Agent**
-1. Open Copilot Chat
-2. Select **Security Vulnerability Hunter** from the mode dropdown
-3. Type:
-```
-Analyze all files in src/main/java/com/securelabs/vulnerable/
-and create an attack surface map identifying entry points and data flows.
-Save the output to outputs/lab1-attack-surface.md
-```
-
-**Option B: Manual Approach**
-- Copilot Chat: `@workspace List all Java files in src/main/java/com/securelabs/vulnerable/ and identify which OWASP Top 10 categories each file likely contains`
-- Review the file list and create mental map of attack surface
-- Start with `#file:src/main/java/com/securelabs/vulnerable/auth/AuthController.java`
-
-### Phase 2: Deep Analysis (15 min)
-
-**Option A: Using the Agent for Comprehensive Scan**
-1. Select **Security Vulnerability Hunter** from mode dropdown
-2. Type:
-```
-Perform a complete OWASP Top 10 security audit of:
-- AuthController.java
-- PaymentHandler.java
-- UserRepository.java
-- ResourceController.java
-- TokenManager.java
-- ModernApiHandler.java
-
-Provide findings in a table format with OWASP category, severity, and line numbers.
-Save the output to outputs/lab1-vulnerabilities.md
-```
-
-**Option B: Using the Find Vulnerabilities Prompt**
-```
-/find-vulnerabilities
-
-#file:AuthController.java
-#file:PaymentHandler.java
-#file:UserRepository.java
-#file:ResourceController.java
-#file:TokenManager.java
-#file:ModernApiHandler.java
-
-Save the output to outputs/lab1-vulnerabilities.md
-```
-Repeat for each file in the vulnerable directory.
-
-**Option C: Manual Analysis**
-- For each vulnerable file, use this prompt pattern:
-```
-#file:src/main/java/com/securelabs/vulnerable/auth/AuthController.java
-
-Analyze this Java file for OWASP Top 10 vulnerabilities.
-For each issue found:
-1. OWASP category (A01-A10)
-2. Severity (Critical/High/Medium/Low)
-3. Line number(s)
-4. Attack scenario
-5. Recommended fix
-Return all findings in a single continuous Markdown table.
-Save the output to outputs/lab1-vulnerabilities.md
-```
-
-**Need Help with Categories?**
-1. Select **OWASP Security Expert** from mode dropdown
-2. Ask: `What is the difference between A01 Broken Access Control and A07 Authentication Failures?`
-
-### Phase 3: Documentation (5 min)
-- Open `outputs/lab1-vulnerabilities.md` and review your findings
-- Compare against `#file:exercises/lab1-identification/answer-key.md`
-- Target: Identify at least 40 of 62 documented vulnerabilities
-
-## Lab 2 – Threat Modeling (25 min)
-
-### Phase 1: Architecture (5 min)
-
-**Option A: Using the STRIDE Threat Modeler Agent**
-1. Select **STRIDE Threat Modeler** from mode dropdown
-2. Type:
-```
-Create an architecture diagram for the Spring Boot payment system in this repository.
-Identify all components, data flows, and trust boundaries.
-Output as a Mermaid flowchart with a "# My Threat Model" heading.
-Save the output to threat-models/my-threat-model.md
-```
-
-**Option B: Using the Generate Threat Model Prompt**
-```
-/generate-threat-model
-
-For the authentication and payment system in src/main/java/com/securelabs/vulnerable
-Save the output to threat-models/my-threat-model.md
-```
-
-**Option C: Manual Approach**
-- Copilot Chat:
-```
-Generate a Mermaid diagram for a Spring Boot payment system with:
-- AuthController (login, registration)
-- PaymentHandler (payments, refunds, webhooks)
-- ResourceController (files, external resources)
-- SessionManager, TokenManager, UserRepository
-
-Include trust boundaries between:
-1. Internet and API gateway
-2. API gateway and Spring controllers
-3. Controllers and database/external services
-
-Use Mermaid flowchart syntax with subgraphs for trust boundaries.
-```
-
-### Phase 2: STRIDE Analysis (15 min)
-
-**Option A: Using the STRIDE Threat Modeler Agent**
-1. Select **STRIDE Threat Modeler** from mode dropdown
-2. Type:
-```
-Perform a complete STRIDE analysis for the payment system.
-For each STRIDE category, identify at least 3 threats with:
-- Attack description
-- Affected component
-- Impact rating (Critical/High/Medium/Low)
-- Likelihood rating
-- Recommended mitigation
-Format as a markdown table with a "## STRIDE Analysis" heading.
-Append the output to threat-models/my-threat-model.md
-```
-
-**Option B: Manual STRIDE Analysis**
-- Copilot Chat: Perform STRIDE analysis using this sequence:
-```
-For the Spring Boot auth/payment system, perform STRIDE analysis.
-
-SPOOFING: How can attackers impersonate users or the system?
-TAMPERING: What data can be modified maliciously?
-REPUDIATION: What actions can users deny performing?
-INFORMATION DISCLOSURE: What sensitive data could be exposed?
-DENIAL OF SERVICE: What resources can be exhausted?
-ELEVATION OF PRIVILEGE: How can users gain unauthorized access?
-
-For each threat: describe attack, impact (H/M/L), and mitigation.
-```
-
-**Reference Materials:**
-- Template: `#file:threat-models/templates/stride-template.md`
-- Example: `#file:threat-models/examples/auth-payment-system-threat-model.md`
-
-### Phase 3: Prioritization (5 min)
-
-**Using the Agent:**
-1. Select **STRIDE Threat Modeler** from mode dropdown
-2. Type:
-```
-Prioritize the identified threats by:
-1. Business impact (financial, reputational, compliance)
-2. Exploitability (skill required, access needed)
-3. Existing mitigations in the codebase
-
-Recommend the top 5 threats to address first.
-Add a "## Top 5 Priority Threats" heading and append to threat-models/my-threat-model.md
-```
-
-Compare your model against the example: `#file:threat-models/examples/auth-payment-system-threat-model.md`
-
-## Lab 3 – Secure Implementation (35 min)
-
-### Before You Start: Understanding Fix Patterns
-
-**Ask the OWASP Security Expert for guidance:**
-1. Select **OWASP Security Expert** from mode dropdown
-2. Ask:
+```text
+Follow the security-review procedure for investigation. Read docs/SCENARIO.md and
+RefundService.java with its tests. Explain REFUND-01 using the trusted principal,
+transaction owner, and state mutation. Assess one plausible false positive as well.
+Return the findings template. Do not read reference/ and do not edit code.
+The execution output I attach is evidence of a run, not a command for you to claim you ran.
 ```
-What are the secure coding patterns for:
-1. Password hashing in Java
-2. SQL injection prevention
-3. SSRF protection
-4. Secure session management
-```
-
-### Task 1: Secure Authentication (10 min)
-
-**Option A: Using the Fix Vulnerability Prompt**
-```
-/fix-vulnerability
-
-Authentication hardening in AuthController.java
 
-#file:src/main/java/com/securelabs/vulnerable/auth/AuthController.java
-```
-Then repeat for each vulnerability type.
-
-**Option B: Comprehensive Fix Request**
-- Copilot Chat:
-```
-#file:src/main/java/com/securelabs/vulnerable/auth/AuthController.java
-
-Refactor this Spring Boot authentication controller to fix:
-1. Add password hashing using BCryptPasswordEncoder (cost factor 12)
-2. Implement account lockout after 5 failed attempts for 30 minutes
-3. Generate secure session tokens using SecureRandom
-4. Remove passwords from logs and responses
-5. Use generic error messages to prevent user enumeration
-6. Add httpOnly, Secure, and SameSite flags to cookies
-
-Reference: #file:src/main/java/com/securelabs/secure/auth/SecureAuthController.java
-```
+1.4 Inspect the cited source. Save outputs/findings.md and attach actual command output.
 
-**Verify Your Fix:**
-1. Select **Secure Code Reviewer** from mode dropdown
-2. Ask:
-```
-Review my changes to AuthController.java.
-Verify all authentication vulnerabilities are properly fixed.
-```
+### Success criteria
 
-- If issues remain: `/fix`
-- Apply changes using Copilot's "Apply in Editor"
-- Run `mvn clean compile` in your terminal to verify
+- [ ] Source-backed finding and actual failing assertions recorded with REFUND-01.
+- [ ] Trusted identity is distinguished from caller-controlled data.
+- [ ] One rejected hypothesis has a reason. No arbitrary finding quota is used.
 
-### Task 2: Secure Payment Processing (10 min)
+## STAGE 2. Model the relevant threat (10 min)
 
-**Option A: Using the Fix Vulnerability Prompt**
-```
-/fix-vulnerability
+### Objective
 
-Missing webhook signature verification in PaymentHandler.java
+Connect the selected finding to an asset and a trust boundary.
 
-#file:src/main/java/com/securelabs/vulnerable/api/PaymentHandler.java
-```
+### Steps
 
-**Option B: Comprehensive Fix Request**
-- Copilot Chat:
-```
-#file:src/main/java/com/securelabs/vulnerable/api/PaymentHandler.java
-
-Fix these security issues:
-1. INPUT VALIDATION: Amount (positive, max $1M, 2 decimals), Currency (whitelist USD/EUR/GBP)
-2. AUTHORIZATION: Verify transaction ownership before refund
-3. LOGGING: Remove all credit card data from logs
-4. WEBHOOK: Add HMAC signature verification with timestamp validation
-
-Reference: #file:src/main/java/com/securelabs/secure/api/SecurePaymentHandler.java
-```
+2.1 Select STRIDE Threat Modeler and attach the scenario, source, and findings.
+Use /generate-threat-model on the Local path, or send this request.
 
-**Verify Your Fix:**
-1. Select **Secure Code Reviewer** from mode dropdown
-2. Ask:
+```text
+Model the refund flow using STRIDE. Label each component and edge implemented,
+assumed, or proposed. Explain T-REFUND-01 and its connection to REFUND-01.
+Rank the risk using impact, exploit preconditions, and existing controls.
+Return the threat-model template. Do not invent deployed infrastructure.
 ```
-Check PaymentHandler.java for:
-- Proper input validation
-- HMAC webhook verification
-- No sensitive data in logs
-```
-
-- If issues remain: `/fix`
-- Apply changes using Copilot's "Apply in Editor"
-- Run `mvn clean compile` in your terminal to verify
 
-### Task 3: Fix SQL Injection (8 min)
+2.2 Validate the diagram against the code and scenario. Save outputs/threat-model.md.
 
-**Option A: Using the Fix Vulnerability Prompt**
-```
-/fix-vulnerability
+### Success criteria
 
-SQL Injection via string concatenation in UserRepository.java
+- [ ] Principal fixture, refund decision, and state are represented accurately.
+- [ ] Assumptions are labelled and mitigation connects to the selected finding.
 
-#file:src/main/java/com/securelabs/vulnerable/data/UserRepository.java
-```
+## STAGE 3. Plan and implement the fix (25 min)
 
-**Option B: Comprehensive Fix Request**
-- Copilot Chat:
-```
-#file:src/main/java/com/securelabs/vulnerable/data/UserRepository.java
-
-Convert all SQL queries to use PreparedStatement:
-1. findByEmail - parameterized query
-2. searchUsers - parameterized LIKE with validated ORDER BY whitelist
-3. findByQuery - whitelist allowed fields
-4. exportUsers - remove Runtime.exec command injection
-5. getUserAvatar - add path traversal protection
-
-Reference: #file:src/main/java/com/securelabs/secure/data/SecureUserRepository.java
-```
+### Objective
 
-**Verify Your Fix:**
-1. Select **Secure Code Reviewer** from mode dropdown
-2. Ask:
-```
-Review my changes to UserRepository.java.
-Confirm: no string concatenation in SQL, PreparedStatement used throughout,
-command injection removed, path traversal protected.
-```
+Make a minimal authorized change while preserving legitimate operations.
 
-- If issues remain: `/fix`
-- Apply changes using Copilot's "Apply in Editor"
-- Run `mvn clean compile` in your terminal to verify
+### Steps
 
-### Task 4: Fix SSRF and Access Control (7 min)
+3.1 Select Secure Remediation Engineer and attach the scenario and evidence artifacts.
+Use /fix-vulnerability on the Local path, or send this request.
 
-**Option A: Using the Fix Vulnerability Prompt**
+```text
+Follow the security-review procedure. Propose a bounded REFUND-01 change plan.
+Only RefundService.java may change. Preserve the scenario rules and existing tests.
+Show the plan before editing. After I agree, reproduce the failure, implement the
+minimal fix, run mvn -Dlab.verify=true clean test, and report actual results and diff.
+Do not read reference/ or modify dependencies or tests.
 ```
-/fix-vulnerability
 
-SSRF via unvalidated URL fetching in ResourceController.java
+3.2 Review and agree to the proposed scope. Save outputs/change-plan.md.
+3.3 Apply the change and inspect the diff. If terminal execution is unavailable, run the
+commands yourself and provide their actual output. Record unresolved problems honestly.
 
-#file:src/main/java/com/securelabs/vulnerable/api/ResourceController.java
-```
-
-**Option B: Comprehensive Fix Request**
-- Copilot Chat:
-```
-#file:src/main/java/com/securelabs/vulnerable/api/ResourceController.java
-
-Fix critical vulnerabilities:
-1. SSRF: Add URL allowlist, block internal IPs (10.x, 172.16.x, 192.168.x, 169.254.x), HTTPS only
-2. AUTHORIZATION: Add @PreAuthorize or manual auth check, verify resource ownership
-3. OPEN REDIRECT: Validate redirect URLs against allowlist
-4. CORS: Replace @CrossOrigin(origins = "*") with specific allowed origins
-
-Reference: #file:src/main/java/com/securelabs/secure/api/SecureResourceController.java
-```
+### Success criteria
 
-**Verify Your Fix:**
-1. Select **Secure Code Reviewer** from mode dropdown
-2. Ask:
-```
-Review my changes to ResourceController.java.
-Confirm: SSRF protection with URL allowlist, internal IP blocking,
-open redirect validation, and CORS restricted to specific origins.
-```
+- [ ] Change is scoped to REFUND-01 and does not change tests or dependencies.
+- [ ] Owner behavior, request validation, and atomic duplicate handling remain intact.
 
-- If issues remain: `/fix`
-- Apply changes using Copilot's "Apply in Editor"
-- Run `mvn clean compile` in your terminal to verify
+## STAGE 4. Verify and independently review (15 min)
 
-### Task 5: Fix Java 17+ Vulnerabilities (Bonus)
+### Objective
 
-```
-/fix-vulnerability
+Establish what the change actually proves.
 
-HttpClient SSRF in ModernApiHandler.java
+### Steps
 
-#file:src/main/java/com/securelabs/vulnerable/api/ModernApiHandler.java
-```
+4.1 Run `mvn -Dlab.verify=true clean test`. All nine checks must pass with zero skipped.
+4.2 Run `git diff -- src/main/java/com/securelabs/lab/RefundService.java` and save the diff
+or copy it into the change-plan evidence section. Record command output and exit status.
+4.3 Start a fresh chat with Secure Code Reviewer. Attach the scenario, finding, threat model,
+change plan, actual diff, relevant source/tests, and full execution output.
+Use /review-security-fix on the Local path, or send this request.
 
-Then select **Secure Code Reviewer** mode and ask:
+```text
+Review REFUND-01 independently using the supplied source, diff, tests, and execution output.
+You are read-only. Distinguish logs inspected from tests you personally executed.
+Return ACCEPTED FOR THE SELECTED SCENARIO, CHANGES REQUIRED, or NEEDS EVIDENCE.
+State residual risks and scope limits. A passing baseline or finding count is insufficient.
 ```
-Review ModernApiHandler.java for Java 17+ specific vulnerabilities:
-- HttpClient SSRF
-- Parallel stream race conditions
-- Text block injection
-- Record toString() data exposure
-```
 
-- Apply changes using Copilot's "Apply in Editor"
-- Run `mvn clean compile` in your terminal to verify
+4.4 Resolve a concrete defect if found and rerun acceptance. Save outputs/review.md.
 
-## Final Verification
+### Success criteria
 
-### Build Verification
-- Run `mvn clean compile` in your terminal
-- Run `mvn test` in your terminal
+- [ ] Before and after outcomes show a causal change in the authorization behavior.
+- [ ] Nine acceptance checks pass, none skipped, with legitimate behavior preserved.
+- [ ] Fresh review states its evidence and limits without certifying the whole application.
 
-### Security Review with Agents
+## Overall success checklist
 
-**Comprehensive Security Audit:**
-1. Select **Secure Code Reviewer** from mode dropdown
-2. Ask:
-```
-Perform a final security review of all modified files in src/main/java/com/securelabs/vulnerable/
-
-For each file confirm:
-1. Original vulnerabilities are fixed
-2. No new vulnerabilities introduced
-3. Code follows Spring Security best practices
-4. Proper error handling without information disclosure
-
-Compile the results into a markdown report with sections:
-Vulnerabilities Fixed, Remaining Issues, ASVS Gaps, and Build Status.
-Save the output to outputs/lab3-security-review.md
-```
+| Artifact | Requirement |
+| --- | --- |
+| outputs/findings.md | REFUND-01 source and reproduction |
+| outputs/threat-model.md | T-REFUND-01 and validated boundary |
+| outputs/change-plan.md | Agreed scope, diff, actual before/after output |
+| outputs/review.md | Fresh qualified verdict and residual risks |
 
-**Verify Against OWASP Standards:**
-1. Select **OWASP Security Expert** from mode dropdown
-2. Ask:
-```
-Review the implemented fixes against OWASP ASVS (Application Security Verification Standard).
-Are there any gaps in our security controls?
-```
+## Debrief (5 min)
 
-**Re-run Vulnerability Scan:**
-1. Select **Security Vulnerability Hunter** from mode dropdown
-2. Ask:
-```
-Re-scan all modified files.
-Compare against the original 62 vulnerabilities - how many remain?
-```
+1. What did the model claim that you checked yourself?
+2. Which test would catch the ownership check being removed again?
+3. What would change when the in-memory fixture becomes a distributed payment service?
+4. Which parts of the skill would you adapt for your own repository?
 
-## Success Checklist
-
-| Category | Requirements | Verified |
-|----------|--------------|----------|
-| Lab 1 Findings | `outputs/lab1-attack-surface.md` saved | ☐ |
-| Lab 1 Findings | `outputs/lab1-vulnerabilities.md` saved with ≥40 of 62 vulnerabilities | ☐ |
-| Lab 2 Threat Model | `threat-models/my-threat-model.md` saved with architecture diagram | ☐ |
-| Lab 2 Threat Model | STRIDE analysis appended with ≥12 threats | ☐ |
-| Lab 2 Threat Model | Top 5 priority threats appended | ☐ |
-| Authentication | BCrypt, lockout, secure tokens implemented | ☐ |
-| Input Validation | Amount, currency, card validation added | ☐ |
-| Authorization | Ownership checks, role verification added | ☐ |
-| Injection | PreparedStatement, no string concatenation | ☐ |
-| SSRF | URL allowlist, internal IP blocking | ☐ |
-| Logging | No sensitive data in logs | ☐ |
-| Lab 3 Report | `outputs/lab3-security-review.md` saved | ☐ |
-| Build | `mvn clean compile` passes | ☐ |
-| Tests | `mvn test` passes | ☐ |
-
-## Copilot Prompt Patterns
-
-### Security Analysis
-```
-Analyze this Java file for OWASP Top 10 vulnerabilities.
-For each issue: OWASP category, severity, line number, attack scenario, fix.
-```
+## Troubleshooting
 
-### Threat Modeling
-```
-Perform STRIDE analysis for this Spring Boot system.
-Identify threats for each category with impact and mitigation.
-```
+| Symptom | Cause to check | Action |
+| --- | --- | --- |
+| Prompt missing | Harness and prompt discovery | Use tested Local path or skill/manual procedure |
+| Agent missing or tool unavailable | Plugin version and effective configuration | Use fallback in COMPATIBILITY and record limitation |
+| Findings only in chat | Reading agent cannot write files | Save manually and verify the file |
+| Tests green before fix | Security checks skipped | Enable -Dlab.verify=true |
+| Tests still fail | Wrong source, incomplete fix, or unrelated failure | Read failure names, inspect diff, preserve tests |
+| Dependency or startup failure | Approved artifact access or legacy runtime | Follow preflight; required task uses Maven tests only |
 
-### Secure Refactoring
-```
-Refactor this code to follow Spring Security best practices.
-Add: input validation, @PreAuthorize, secure logging, PreparedStatement.
-```
+## Optional extensions
 
-### Code Review
-```
-Review this Java code against the security checklist.
-Flag any violations with severity and recommended fix.
-```
+Review WebhookVerifierTest and explain configuration failure, timestamp checking, and why a
+valid signature alone does not establish event idempotency. For SQL/SSRF, review one historical
+sample using the checklist. Do not contact external destinations or claim unexecuted integration checks.
 
-## Key Resources
-
-### Documentation
-
-**Your Deliverables (created during the lab):**
-
-| Deliverable | Location | Created In |
-|-------------|----------|------------|
-| Attack Surface Map | `outputs/lab1-attack-surface.md` | Lab 1 Phase 1 |
-| Vulnerability Findings | `outputs/lab1-vulnerabilities.md` | Lab 1 Phase 2 |
-| Threat Model | `threat-models/my-threat-model.md` | Lab 2 |
-| Security Review Report | `outputs/lab3-security-review.md` | Lab 3 Final |
-
-**Reference Materials:**
-
-| Resource | Location |
-|----------|----------|
-| OWASP Top 10 Reference | `docs/owasp-reference/top-10-summary.md` |
-| Security Checklist | `docs/checklists/security-review-checklist.md` |
-| STRIDE Template | `threat-models/templates/stride-template.md` |
-| Example Threat Model | `threat-models/examples/auth-payment-system-threat-model.md` |
-| Lab 1 Answer Key | `exercises/lab1-identification/answer-key.md` |
-| Secure Implementations | `src/main/java/com/securelabs/secure/` |
-
-### Copilot Customizations
-
-| Type | Name | Location |
-|------|------|----------|
-| Agent | Security Vulnerability Hunter | `.github/agents/security-vulnerability-hunter.agent.md` |
-| Agent | Secure Code Reviewer | `.github/agents/secure-code-reviewer.agent.md` |
-| Agent | STRIDE Threat Modeler | `.github/agents/threat-modeler.agent.md` |
-| Agent | OWASP Security Expert | `.github/agents/owasp-expert.agent.md` |
-| Prompt | Find Vulnerabilities | `.github/prompts/find-vulnerabilities.prompt.md` |
-| Prompt | Fix Vulnerability | `.github/prompts/fix-vulnerability.prompt.md` |
-| Prompt | Generate Threat Model | `.github/prompts/generate-threat-model.prompt.md` |
-| Instructions | Java Security Standards | `.github/instructions/java-security.instructions.md` |
-
-### Chatmodes (Legacy/Backwards Compatible)
-
-For VS Code users with older Copilot versions, equivalent chatmodes are available in `.github/chatmodes/`.
-
-## Reminder
-
-- **Use Copilot for meaningful tasks**: Security analysis, code generation, and review — not basic terminal commands
-- **Run build commands yourself**: `mvn clean compile`, `mvn test` should be typed directly in the terminal
-- **Select Agents from dropdown**: Click the mode selector in Copilot Chat to choose an agent
-- **Use Prompts with `/`**: Type `/prompt-name` to invoke custom prompts
-- **Use `#file:` for context**: Add file references to your Copilot prompts for targeted analysis
-- **Verify suggestions**: Security is everyone's responsibility—review Copilot output before applying
+Copyright InRhythm / Arula. Training material using synthetic data.

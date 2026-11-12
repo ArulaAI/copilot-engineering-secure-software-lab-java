@@ -1,3 +1,5 @@
+/* Historical vulnerable review corpus. OWASP category IDs in comments use the 2021 edition.
+ * Optional static review only. See docs/SCENARIO.md for the required exercise. */
 package com.securelabs.vulnerable.auth;
 
 import org.springframework.http.ResponseEntity;
@@ -62,7 +64,7 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("error", "Invalid password"));
         }
 
-        // VULNERABLE: Weak session token generation
+        // Random UUID uses strong randomness; session lifecycle and token exposure still need review
         String token = UUID.randomUUID().toString();
         sessions.put(token, user.getId());
 

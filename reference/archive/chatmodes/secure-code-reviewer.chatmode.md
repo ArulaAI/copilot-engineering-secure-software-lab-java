@@ -1,3 +1,5 @@
+<!-- ARCHIVED AND UNVALIDATED. See reference/README.md. Not active course instructions. -->
+
 ---
 name: Secure Code Reviewer
 description: Reviews and validates security fixes against OWASP secure coding standards

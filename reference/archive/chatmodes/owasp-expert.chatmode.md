@@ -1,3 +1,5 @@
+<!-- ARCHIVED AND UNVALIDATED. See reference/README.md. Not active course instructions. -->
+
 ---
 name: OWASP Expert
 description: OWASP Top 10 specialist providing vulnerability guidance and remediation patterns

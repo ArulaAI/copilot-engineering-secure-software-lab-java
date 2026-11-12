@@ -1,248 +1,35 @@
-# OWASP Top 10 (2021) Quick Reference
-
-## Overview
-
-The OWASP Top 10 represents the most critical web application security risks. Use this reference during labs to identify and categorize vulnerabilities.
-
----
-
-## A01: Broken Access Control (↑ from #5)
-
-**What:** Failures in enforcing user permissions and access restrictions.
-
-**Common Patterns:**
-- Missing authorization checks on endpoints
-- Insecure Direct Object Reference (IDOR)
-- Bypassing access controls via URL manipulation
-- Mass assignment vulnerabilities
-- CORS misconfiguration
-
-**Detection Prompts:**
-```
-Review this code for access control vulnerabilities:
-- Are authorization checks present on all endpoints?
-- Can users access other users' data by changing IDs?
-- Are role checks properly enforced?
-```
-
-**CWEs:** CWE-200, CWE-201, CWE-352, CWE-639
-
----
-
-## A02: Cryptographic Failures (↑ from #3)
-
-**What:** Failures related to cryptography that expose sensitive data.
-
-**Common Patterns:**
-- Plain text password storage
-- Weak hashing algorithms (MD5, SHA1)
-- Hardcoded secrets/keys
-- Missing encryption for sensitive data
-- Weak random number generation
-
-**Detection Prompts:**
-```
-Review this code for cryptographic issues:
-- Are passwords properly hashed (bcrypt/argon2)?
-- Are secrets hardcoded?
-- Is sensitive data encrypted at rest?
-```
-
-**CWEs:** CWE-259, CWE-327, CWE-328, CWE-330
-
----
-
-## A03: Injection (↓ from #1)
-
-**What:** User input interpreted as commands or queries.
-
-**Common Patterns:**
-- SQL injection via string concatenation
-- Command injection
-- NoSQL injection
-- LDAP injection
-- Template injection
-
-**Detection Prompts:**
-```
-Review this code for injection vulnerabilities:
-- Are queries parameterized?
-- Is user input ever concatenated into SQL/commands?
-- Are all inputs validated and sanitized?
-```
-
-**CWEs:** CWE-79, CWE-89, CWE-94, CWE-78
-
----
-
-## A04: Insecure Design (NEW)
-
-**What:** Flaws in design and architecture, not implementation bugs.
-
-**Common Patterns:**
-- Missing threat modeling
-- No rate limiting design
-- Trust assumptions about client
-- Insufficient business logic validation
-- Missing security requirements
-
-**Detection Prompts:**
-```
-Review this design for security flaws:
-- What could go wrong in this flow?
-- Are there rate limits?
-- What happens if input is malicious?
-```
-
-**CWEs:** CWE-209, CWE-256, CWE-501
-
----
-
-## A05: Security Misconfiguration (↓ from #6)
-
-**What:** Insecure default settings or missing security hardening.
-
-**Common Patterns:**
-- Debug mode in production
-- Default credentials
-- Verbose error messages
-- Missing security headers
-- Unnecessary features enabled
-
-**Detection Prompts:**
-```
-Review this configuration for security issues:
-- Are there debug endpoints?
-- Are default settings changed?
-- Are error messages sanitized?
-```
-
-**CWEs:** CWE-16, CWE-611, CWE-1004
-
----
-
-## A06: Vulnerable and Outdated Components
-
-**What:** Using components with known vulnerabilities.
-
-**Common Patterns:**
-- Outdated npm packages
-- Unpatched frameworks
-- End-of-life libraries
-- Missing security updates
-
-**Detection Prompts:**
-```
-Review dependencies for vulnerabilities:
-- Run: npm audit
-- Run: npx snyk test
-- Check last update dates
-```
-
-**CWEs:** CWE-1104
-
----
-
-## A07: Identification and Authentication Failures (↓ from #2)
-
-**What:** Broken authentication mechanisms.
-
-**Common Patterns:**
-- Weak password policies
-- Missing brute force protection
-- Session fixation
-- Token leakage
-- Credential stuffing vulnerability
-
-**Detection Prompts:**
-```
-Review authentication for security issues:
-- Is there account lockout?
-- Are sessions properly invalidated?
-- Are tokens cryptographically secure?
-```
-
-**CWEs:** CWE-287, CWE-384, CWE-613
-
----
-
-## A08: Software and Data Integrity Failures (NEW)
-
-**What:** Code and data integrity not verified.
-
-**Common Patterns:**
-- No signature verification on webhooks
-- Insecure deserialization
-- Missing integrity checks on updates
-- CI/CD pipeline vulnerabilities
-
-**Detection Prompts:**
-```
-Review code for integrity issues:
-- Are webhook signatures verified?
-- Is serialized data validated?
-- Are CI/CD pipelines secured?
-```
-
-**CWEs:** CWE-502, CWE-829
-
----
-
-## A09: Security Logging and Monitoring Failures (↓ from #10)
-
-**What:** Insufficient logging for detecting attacks.
-
-**Common Patterns:**
-- No logging of security events
-- Sensitive data in logs
-- No alerting on suspicious activity
-- Logs not protected
-
-**Detection Prompts:**
-```
-Review logging for security issues:
-- Are auth events logged?
-- Is sensitive data excluded from logs?
-- Are logs tamper-proof?
-```
-
-**CWEs:** CWE-117, CWE-223, CWE-532, CWE-778
-
----
-
-## A10: Server-Side Request Forgery (NEW)
-
-**What:** Server makes requests to attacker-controlled destinations.
-
-**Common Patterns:**
-- Unvalidated URL fetch
-- Access to internal services
-- Cloud metadata exposure
-- DNS rebinding
-
-**Detection Prompts:**
-```
-Review for SSRF vulnerabilities:
-- Are URLs validated against an allowlist?
-- Can internal IPs be accessed?
-- Are redirects followed blindly?
-```
-
-**CWEs:** CWE-918
-
----
-
-## Quick Reference Table
-
-| Code | Category | Copilot Detection | Lab Files |
-|------|----------|-------------------|-----------|
-| A01 | Access Control | High | AuthController.java, ResourceController.java |
-| A02 | Cryptography | Medium | PasswordHandler.java, TokenManager.java |
-| A03 | Injection | High | UserRepository.java, QueryBuilder.java |
-| A04 | Insecure Design | Low | PaymentHandler.java |
-| A05 | Misconfiguration | Medium | UserApi.java, ResourceController.java |
-| A06 | Components | Low | pom.xml (log4j, jackson) |
-| A07 | Authentication | High | AuthController.java, SessionManager.java |
-| A08 | Integrity | Medium | TokenManager.java, PaymentHandler.java |
-| A09 | Logging | High | AuthController.java, PaymentHandler.java |
-| A10 | SSRF | Medium | ResourceController.java, UserRepository.java |
+# OWASP Top 10 2025 course reference
+
+OWASP Top 10 is an awareness taxonomy. Use evidence and behavioral acceptance criteria to
+verify a fix. Category IDs require an edition. Historical source comments retain 2021 IDs.
+
+| 2025 category | Course relevance | Previous 2021 category where applicable |
+| --- | --- | --- |
+| A01 Broken Access Control | Object ownership, REFUND-01, SSRF | A01 and A10 |
+| A02 Security Misconfiguration | Missing configuration and unsafe defaults | A05 |
+| A03 Software Supply Chain Failures | Dependency manifests and approved artifact provenance | A06, expanded scope |
+| A04 Cryptographic Failures | Keys, hashing, signature primitives | A02 |
+| A05 Injection | SQL values versus identifiers | A03 |
+| A06 Insecure Design | Business rules and trust assumptions | A04 |
+| A07 Authentication Failures | Trusted upstream identity, session lifecycle | A07 |
+| A08 Software or Data Integrity Failures | Webhook integrity and verification | A08 |
+| A09 Security Logging and Alerting Failures | Sensitive data exposure and security events | A09 |
+| A10 Mishandling of Exceptional Conditions | Fail-open errors and resource handling | New category |
+
+For REFUND-01, A01:2025 and CWE-862/CWE-639 are useful candidates. Explain the concrete missing
+object-authorization control before assigning a category. Do not infer severity from category alone.
+For ASVS, use a supplied versioned requirement and explain applicability. No blanket compliance claim.
+
+UUID.randomUUID uses a cryptographically strong pseudorandom generator. That does not establish
+session lifecycle security. HMAC verification does not establish event idempotency. A PreparedStatement
+does not bind table or column names, so approved identifiers need an allowlist. A vulnerable version
+in a manifest requires applicability analysis and current approved advisory evidence.
+
+Sources checked for this release:
+
+- [OWASP Top 10 2025](https://owasp.org/Top10/2025/)
+- [OWASP ASVS](https://asvs.owasp.org/)
+- [OWASP SSRF prevention](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html)
+- [Java UUID API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html)
+
+No unsupported Copilot detection-accuracy rating or fixed vulnerability total is used.

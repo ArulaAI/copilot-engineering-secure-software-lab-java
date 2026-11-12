@@ -1,3 +1,5 @@
+/* ARCHIVED UNSAFE TRAINING EXAMPLE. Original security claims are unverified.
+ * Outside compilation. See reference/README.md. Do not use as a solution. */
 package com.securelabs.secure;
 
 import org.junit.jupiter.api.DisplayName;
