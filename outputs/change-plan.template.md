@@ -3,8 +3,8 @@ stage: 3-fix
 fixes: [SQLI-01, PATH-01]
 scope_agreed: ""          # yes | no; yes only after the learner agreed in chat
 files_changed: []         # files in the actual diff
-acceptance: ""            # pass | fail, read from outputs/evidence/acceptance.txt
-evidence: [outputs/evidence/reproduce.txt, outputs/evidence/acceptance.txt, outputs/evidence/fix.diff]
+acceptance: ""            # pass | fail, from the after-fix summary line
+evidence: [outputs/findings.md, outputs/threat-model.md]
 gate: ""                  # pass | fail
 ---
 
@@ -23,21 +23,23 @@ Learner's agreement: {{quote or summarize the learner's reply}}
 
 ## Acceptance criteria
 
-| Fix | Criterion | Proving test | Before | After | Evidence |
-| --- | --- | --- | --- | --- | --- |
-| SQLI-01 | {{criterion}} | {{test name}} | {{fail}} | {{pass / fail}} | outputs/evidence/acceptance.txt |
-| PATH-01 | {{criterion}} | {{test name}} | {{fail}} | {{pass / fail}} | outputs/evidence/acceptance.txt |
+| Fix | Criterion | Proving test | Before fix | After fix |
+| --- | --- | --- | --- | --- |
+| SQLI-01 | {{criterion}} | {{test name}} | {{fail}} | {{pass / fail}} |
+| PATH-01 | {{criterion}} | {{test name}} | {{fail}} | {{pass / fail}} |
 
 ## Runs
 
-| Run | Command | Totals (run / failed / skipped) | Evidence |
+Copy each summary line exactly as Maven or git printed it.
+
+| Run | Command | Summary line as printed | Failing tests |
 | --- | --- | --- | --- |
-| Before fix | Reproduce command from docs/SCENARIO.md | {{totals}} | outputs/evidence/reproduce.txt |
-| After fix | Acceptance command from docs/SCENARIO.md | {{totals}} | outputs/evidence/acceptance.txt |
-| Diff | `git diff --output=outputs/evidence/fix.diff -- src/main/java` | {{files and lines}} | outputs/evidence/fix.diff |
+| Before fix | Reproduce command from docs/SCENARIO.md | {{Tests run: 6, Failures: 6, ...}} | {{names}} |
+| After fix | Acceptance command from docs/SCENARIO.md | {{Tests run: 10, Failures: 0, ...}} | {{none or names}} |
+| Changed files | `git diff --stat -- src/main/java` | {{files and line counts}} | |
 
 ## Gate
 
 - [ ] The learner agreed the scope before the first edit.
 - [ ] The diff touches only UserRepository.java and FileHandler.java; no test or pom.xml changed.
-- [ ] acceptance.txt shows every test passing with none skipped.
+- [ ] The after-fix summary line shows every test passing with none skipped.

@@ -21,24 +21,39 @@ requires its existing approved service connectivity.
 
 ## VS Code
 
-Record the actual VS Code version, Copilot extension version, selected harness, and model.
-The primary route to qualify is Copilot Chat with the Copilot harness. Confirm seven agents in
-the picker (Package Explorer is a hidden subagent) and seven skills (five stage commands,
-/hand-off, /security-review). Select the intended agent
-first, then type / and choose the stage skill; the skill reads its inputs by path, so learners
-attach nothing on this route. Inspect skill loading and tool activity during rehearsal.
-Check chat.useAgentSkills and actual skill discovery. The documented
-github.copilot.chat.cli.customAgents.enabled setting may need enabling in supported versions
-and defaults to false in the current reference. Use only settings allowed by the organization.
-These are environment qualification checks, not automatic configuration changes.
+Record the actual VS Code version, Copilot extension version, selected harness and model. The
+primary route is Copilot Chat with the Copilot harness. Confirm six agents in the picker (Package
+Explorer is a hidden subagent) and six skills (five stage commands and /security-review). Learners
+pick an agent, type the command and attach nothing: each skill reads its inputs by path. Check
+chat.useAgentSkills and actual skill discovery. The github.copilot.chat.cli.customAgents.enabled
+setting may need enabling in supported versions. Use only settings the organization allows.
 
-Skills do not preserve a prompt's agent/model/tools fields. Confirm the implementation role
-can execute approved commands. Mapper, Hunter, Threat Modeler and OWASP Expert must not edit or
-execute. Reviewer has execute but not edit, while Recorder has edit but not execute. File-scope rules
-remain instructions, not an access-control guarantee. Inspect actual activity and diffs.
-All course skills use explicit invocation. Their procedures can call the named subagents.
-A separate subagent context is not process/OS isolation or a guarantee of independent judgment. No forked skill, experimental
-skill-tool setting, Copilot CLI, or additional runtime is required.
+Expected tools, to confirm in observed activity:
+
+| Agent | Tools | Writes |
+| --- | --- | --- |
+| Codebase Mapper | read, search, edit, agent | outputs/codebase-map.md, outputs/handoff.md |
+| Package Explorer (hidden) | read, search | nothing |
+| Security Vulnerability Hunter | read, search, edit | outputs/findings.md, outputs/handoff.md |
+| STRIDE Threat Modeler | read, search, edit | outputs/threat-model.md, outputs/handoff.md |
+| Secure Remediation Engineer | read, search, edit, execute | the assigned methods, outputs/change-plan.md, outputs/handoff.md |
+| Secure Code Reviewer | read, search, edit, execute | outputs/review.md, outputs/handoff.md, one DataRedTeamCheck class |
+| OWASP Security Expert | read, search | nothing |
+
+The "writes" column is an instruction, not something the harness enforces: an agent with edit
+can technically change any file. Learners check Source Control after each stage; only the listed
+files should change. No forked skill, experimental setting, Copilot CLI or extra runtime is required.
+
+The workflow depends on two platform behaviors:
+
+1. **Subagents.** Codebase Mapper calls Package Explorer once per package (`agents:` plus the
+   `agent` tool). If the organization blocks subagents, the Mapper reads each package itself,
+   one at a time, and says so in its report. Mapping then takes longer.
+2. **Running commands from chat.** Secure Remediation Engineer and Secure Code Reviewer run Maven
+   and git with the learner's approval. If that is blocked, learners run the commands themselves.
+
+`OutputsCheck` and `*RedTeamCheck` classes do not end in `Test`, so the default build never runs
+them and the documented counts (10 run, 6 skipped; 10 run, 0 skipped) are unchanged.
 
 ## Limits to know (facilitator only)
 
@@ -50,39 +65,17 @@ These are kept out of the learner guide on purpose. Raise them in the debrief or
   does not prove independent judgment.
 - Approving a command is a human checkpoint. It complements, and does not replace, host
   restrictions.
-- A hand-off is selective and can omit facts. The stage files remain the source of truth.
+- Agents record command results as summary lines in their reports. The reviewer rerunning the
+  tests itself is the check against a misreported result.
+- A hand-off section is selective and can omit facts. The stage reports remain the source of truth.
 - `/compact` summarizes; details from earlier turns can be lost.
 
-The workflow depends on three platform behaviors to qualify on the target installation:
+## Manual fallback
 
-1. **Subagents.** Codebase Mapper calls Package Explorer (once per package) and Secure
-   Remediation Engineer calls Secure Code Reviewer. Both list `agents:` and the `agent` tool.
-   Confirm each call works and that the organization allows it. If not, the mapper reads packages
-   itself and the learner opens a new chat for the review.
-2. **Agent switching within a chat.** Hand-off Recorder must see the stage's conversation.
-3. **Tool limits.** Secure Code Reviewer has execute but not edit; Hand-off Recorder has edit
-   but not execute. Confirm both in observed activity.
-
-`OutputsCheck` and `*RedTeamCheck` classes do not end in `Test`, so the default build never runs
-them and the documented counts (10 run, 6 skipped; 10 run, 0 skipped) are unchanged.
-
-The four phase skills use the course's original command names. The earlier prompt files with
-the same names were removed so each name resolves to one entrypoint. Skills run in both the
-Copilot and the deprecated Local harness; an installation without skill support uses the
-qualified one-line manual fallback below.
-
-If native invocation is unavailable, attach the relevant phase SKILL.md and send the single
-line `Follow the attached procedure.` The skill links the shared contract and
-its inputs, so no longer prompt text is needed. Rehearse this route and label it accurately.
-Check saved Recorder reports against the stage output. If Recorder is unavailable, participants
-save reports manually and record the route. A compact hand-off is selective and can omit facts. Match tool names to the selected harness
-using diagnostics and observed activity.
-
-Participants never paste prompts or logs. Maven writes each run with `-l` into
-`outputs/evidence/`, and the skills read those files by path. Qualify that each role can read
-that folder on the target installation. Maven writes no log if the folder is missing, so the
-release must ship `outputs/evidence/README.md`. Custom-agent handoff buttons are not used:
-VS Code supports them only in the Local harness, which is scheduled for removal in February 2027.
+If skills are unavailable, attach the relevant phase SKILL.md and send the single line
+`Follow the attached procedure.` The skill links the shared contract and its inputs. Rehearse this
+route and label it. Custom-agent handoff buttons are not used: VS Code supports them only in the
+Local harness, which is scheduled for removal in February 2027.
 
 ## IntelliJ IDEA
 
@@ -92,9 +85,8 @@ Check actual attachments before submitting. Do not rely on VS Code #file or @wor
 If custom agents or skills are unavailable, stop for the facilitator and use the rehearsed
 one-line fallback with the existing phase SKILL.md and role instructions attached. Attachment
 alone does not enforce permissions. Keep analysis non-editing, use participant-run Maven when
-required, and save reports manually if Recorder is unavailable. Qualify the reviewer's limited
-execution route separately. If its tools or separate context cannot be established, use
-facilitator-led review and label unverified checks. No long replacement prompt or new CLI is needed.
+required, and save reports manually if the agent cannot write them. If the reviewer's tools
+cannot be established, use facilitator-led review and label unverified checks.
 
 ## Model and result expectations
 

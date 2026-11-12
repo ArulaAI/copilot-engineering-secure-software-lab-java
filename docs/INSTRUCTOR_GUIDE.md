@@ -11,8 +11,8 @@ DO pin the release SHA and complete docs/COMPATIBILITY.md for each supported env
 DO run the baseline, the reproduce command (six failures) and acceptance with the reference
 solutions using docs/VERIFICATION.md. Check Maven artifacts using the organization's approved route.
 DO confirm repository access, the approved model, chat permissions, and breakout-room support.
-DO copy the six report templates (five stage reports plus handoff). Confirm role selection, phase skill discovery,
-and that agents can read outputs/evidence/. Use docs/WORKFLOW_REHEARSAL.md to record time, quality,
+DO confirm each stage's agent creates its report from the template and adds a hand-off section.
+Confirm role selection and skill discovery. Use docs/WORKFLOW_REHEARSAL.md to record time, quality,
 corrective turns, and usage where exposed. Do not claim savings from the format change alone.
 DO assign one facilitator to the parallel help room during the introduction.
 DO validate the 90-minute rehearsal. Environment readiness is a separate gate from code checks.
@@ -25,14 +25,13 @@ and facilitator docs. Do not claim a prompt restriction prevents access to publi
 
 SAY You have inherited a service nobody on the team wrote. We will map it before judging it,
 rank before fixing, and attack our own fixes.
-DO demonstrate the full rhythm: pick the agent, type the command from the / list, read the
-report, tick the gate, switch to Hand-off Recorder in the same chat and type /hand-off, glance
-at the saved report, then open a new chat. Learners never attach files or paste prompts.
-SAY A hand-off is a short summary that points to files; open the files when you need detail.
+DO demonstrate the rhythm once: new chat, pick the agent, type the command from the / list,
+open the report the agent wrote in outputs/, tick the gate. Learners never attach files, paste
+prompts or switch agents mid-stage.
+SAY Each report ends with a short hand-off in outputs/handoff.md; the next stage reads it first.
 TIP a prepared same-code comparison with and without its requirement/test can replace part of
 this demonstration. Discuss evidence quality without adding required minutes or tooling.
-DO show that `mvn -l` writes to outputs/evidence/ and prints nothing to the terminal.
-CHECK-IN current baseline.txt matches the unchanged starter and shows 10 run, 6 skipped. Route setup issues to the help room.
+CHECK-IN `mvn clean test` shows 10 run, 6 skipped. Route setup issues to the help room.
 
 ## 10 to 22 minutes. Map the codebase
 
@@ -67,25 +66,24 @@ DO confirm the reproduce run shows six failing exploit tests before any edit.
 DO require scope agreement before the first edit, and command approval for each run.
 SAY Inspect the exact command before approval. This human checkpoint complements host permissions.
 WATCH FOR edits to tests or pom.xml, fixes spreading to variant methods, or a copied solution.
-CHECK-IN acceptance.txt shows 10 run, 0 skipped; fix.diff touches only UserRepository.java and
-FileHandler.java; the Stage 3 hand-off is written and the chat is still open.
+CHECK-IN change-plan.md records the six failures before and 10 run, 0 skipped after, and the
+diff stat lists only UserRepository.java and FileHandler.java.
 
-## 70 to 85 minutes. Verify, then red-team
+## 70 to 85 minutes. Review and red-team
 
-DO confirm learners switched back to Secure Remediation Engineer in the Stage 3 chat before
-running /review-security-fix. The reviewer runs as a subagent and reruns acceptance itself.
-SAY Verify first. Red-team follows only after the assigned fixes pass verification. The reviewer
-must rerun acceptance itself and inspect its log. Do not substitute the author's old result.
+DO confirm learners opened a new chat with Secure Code Reviewer for /review-security-fix.
+SAY Verify first. Red-team follows only after the fixes pass verification, and the reviewer
+reruns the tests itself rather than trusting the author's recorded result.
 DO expect red-team to hold against a careful fix and to catch common naive ones (unescaped LIKE
 wildcards, String.startsWith on paths). See reference/threat-model.md.
 WATCH FOR red-team classes ending in Test (they join the acceptance count) or loops beyond one
 correction.
 CHECK-IN review.md has section A with evidence, a decision for every successful attack, a
-verdict, and the final hand-off. This stage is NEVER CUT.
+verdict, and a final hand-off section. This stage is NEVER CUT.
 
 ## 85 to 90 minutes. Debrief
 
-DO ask the four debrief questions and walk the Copilot-safety table. NEVER CUT.
+DO ask the three debrief questions and walk the Copilot-safety table. NEVER CUT.
 SAY On your own codebase: map it, rank it, fix the top items with tests, attack your fixes.
 
 ## Common room issues
@@ -94,9 +92,9 @@ SAY On your own codebase: map it, rank it, fix the top items with tests, attack 
 | --- | --- |
 | Slash command missing | Stop for facilitator, check discovery and qualify the existing-skill fallback |
 | Different findings or severity | Compare evidence and preconditions, not raw counts |
-| No report file | Check /hand-off ran in the stage's chat and inspect Recorder output |
-| Subagent not called | Qualify sequential mapping or a new reviewer chat and record the route |
-| Agent asks for pasted logs | Check the evidence path, source revision and missing/stale run before rerunning |
+| No report file | The agent may lack edit rights; check its tools, or have the learner save the chat output |
+| Subagent not called | Mapping falls back to reading packages one at a time; allow extra minutes |
+| Agent asks for pasted logs | Ask it to run the command itself and record the summary line |
 | Baseline green before fix | Show the skipped checks and enable security.verify |
 | Model pinned/unavailable | Confirm approved selected model and reload repository agents |
 | New package requested | Decline scope expansion and use existing Java/Maven features |

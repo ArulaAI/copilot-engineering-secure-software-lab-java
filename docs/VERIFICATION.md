@@ -206,3 +206,12 @@ Each class now has a neutral one-line description. A comment-insensitive compari
 files against the previous revision shows no code changes. The reference solutions were stripped
 the same way and differ from the source only in the assigned methods.
 
+## Simplified flow (November 12, 2026)
+
+Hand-off Recorder, `/hand-off` and `outputs/evidence/` were removed. Each stage's agent writes its
+own report and hand-off section; agents that run commands record the summary line as printed,
+and the reviewer reruns acceptance itself. Stage 4 is a new chat with Secure Code Reviewer, which
+also writes the `DataRedTeamCheck` attack tests; it no longer runs as a subagent. Commands no
+longer use `mvn -l`. The action guide was rewritten in a What's happening / Run / Look for format
+with three diagrams in docs/lab-guide/.
+

@@ -2,7 +2,7 @@
 
 ## Evidence and scope
 
-- [ ] Every claim cites a file and line or a log in outputs/evidence/, with a basis.
+- [ ] Every claim cites a file and line or a recorded command result, with a basis.
 - [ ] Discovery is independent of facilitator answers, code comments and prior model conclusions.
 - [ ] Only the assigned methods changed; variants are recorded, not fixed.
 

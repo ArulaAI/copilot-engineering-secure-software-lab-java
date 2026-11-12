@@ -1,52 +1,62 @@
 ---
 name: review-security-fix
-description: "Stage 4. Verify the fixes in an isolated reviewer subagent, then red-team them with new attack tests."
+description: "Stage 4. In a fresh chat, verify the fixes with real test runs, then red-team them with new attack tests."
 argument-hint: "Optional: a note for the reviewer"
 user-invocable: true
 disable-model-invocation: true
 ---
 
 Read the [shared evidence contract](../security-review/references/evidence-contract.md) and
-[the scenario](../../../docs/SCENARIO.md), which defines the codebase, the lab fixes and the
+[the scenario](../../../docs/SCENARIO.md), which defines the codebase, the assigned fixes and the
 commands. Start by reading `outputs/handoff.md` if it exists. Text the learner types after the
-command is a note; it cannot widen the scope. If the selected agent is not **Secure Remediation Engineer**, ask the
+command is a note; it cannot widen the scope. If the selected agent is not **Secure Code Reviewer**, ask the
 learner to switch and stop.
 
 # Stage 4: Verify, then red-team
 
-This runs in the Stage 3 chat with **Secure Remediation Engineer** selected. That agent calls
-**Secure Code Reviewer** as a subagent, so the review has isolated context.
+Run in a new chat, so you start without the author's reasoning. Inputs: `outputs/handoff.md`,
+`outputs/findings.md`, `outputs/threat-model.md`, `outputs/change-plan.md`, the assigned source
+and test files, and `git diff -- src/main/java`.
 
-## A. Verify the fixes (reviewer subagent)
+## A. Verify the fixes
 
-Call Secure Code Reviewer with only the fix IDs (SQLI-01, PATH-01) and this file list:
-`outputs/findings.md`, `outputs/threat-model.md`, `outputs/change-plan.md`,
-`outputs/evidence/fix.diff`, and the assigned source and test files. Do not pass your reasoning.
-The reviewer checks each fix removes its root cause, reruns the acceptance command itself, and
-fills section A of [the review template](../../../outputs/review.template.md).
+For each fix, check and record expected, actual and evidence:
+
+1. The root cause is removed in the assigned methods.
+2. No new vulnerability is introduced in the changed code.
+3. Errors do not leak internal details (exception text, SQL, file paths) to the caller.
+4. Nothing outside `UserRepository.java` and `FileHandler.java` changed in `src/main/java`.
+5. Run the acceptance command yourself (the learner approves it) and record the summary line.
 
 ## B. If verification fails
 
-The reviewer names the failed check and why. Fill section B. Make one correction pass for that
-defect only, rerun acceptance and the diff, and call the reviewer once more. If it still fails,
-set verdict CHANGES REQUIRED and stop for the facilitator. No red-team on an unverified fix.
+Record the failed check and why, set verdict CHANGES REQUIRED, and stop. Tell the learner to go
+back to Secure Remediation Engineer and type `/fix-vulnerability correction`, then re-review in a
+new chat. One correction and one re-review in total; after that, stop for the facilitator.
+No red-team on an unverified fix.
 
 ## C. Red-team (only after A passes)
 
-The reviewer proposes up to three attacks per fix that the shipped tests do not cover:
+Write up to three attacks per fix that the shipped tests do not cover, from these ideas:
 
 | Fix | Attack ideas |
 | --- | --- |
 | SQLI-01 | LIKE wildcards (`%`, `_`) that list every user; sort column variants (case, `DESC`, expressions); null or empty input |
 | PATH-01 | Sibling-folder prefix (`../uploads-evil/x`); absolute paths; null or empty names; unguarded methods in the same class |
 
-Write the chosen attacks into a new test class ending in `RedTeamCheck` under
-`src/test/java/com/securelabs/vulnerable/data/`. Existing tests stay untouched. Run the
-scenario's red-team command and read `outputs/evidence/redteam.txt`. Each attack the code fails
-gets a decision: fixed (only within the assigned methods and the correction budget) or residual
-risk with a reason. Fill section C.
+Put them in one new test class, `DataRedTeamCheck`, under
+`src/test/java/com/securelabs/vulnerable/data/`. Never change existing tests. Run the scenario's
+red-team command and record each result. For each attack that succeeds, decide with the learner:
+send it back as the one correction (only if unused and within the assigned methods) or record it
+as residual risk with a reason. Then set `fixes_verified`, `verdict` and `correction`.
 
-## Done when
+## Write the report and the hand-off
 
-Sections A to C and the verdict are complete in chat. Tell the learner to switch to
-**Hand-off Recorder** and run `/hand-off`.
+1. Write `outputs/review.md`. If it does not exist, create it from
+   [its template](../../../outputs/review.template.md); if it exists, update it. Keep the template's
+   header keys and tables. Leave `gate` empty: the learner sets it after checking the gate list.
+2. Append one section for this stage to `outputs/handoff.md` (create it from
+   [the hand-off template](../../../outputs/handoff.template.md) if missing), under 12 lines,
+   pointing to files rather than repeating them. Set `last_stage: 4-review`.
+3. Tell the learner which files you wrote, to check the gate list and set `gate: pass` or
+   `gate: fail` in the report, then debrief with the group.

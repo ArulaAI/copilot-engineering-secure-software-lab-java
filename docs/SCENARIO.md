@@ -36,23 +36,23 @@ Shipped tests in `src/test/java/com/securelabs/vulnerable/data/`:
 - `UserRepositorySecurityTest`, `FileHandlerSecurityTest`: exploit tests. They fail on the
   unfixed code and must pass after it. They run only with `-Dsecurity.verify=true`.
 
-Never change these tests or `pom.xml`. In Stage 4 you may add one new test class ending in
-`RedTeamCheck` in the same folder.
+Never change these tests or `pom.xml`. In Stage 4 the reviewer adds one new test class,
+`DataRedTeamCheck`, in the same folder.
 
 ## Commands
 
 | Purpose | Command |
 | --- | --- |
-| Baseline (setup) | `mvn -l outputs/evidence/baseline.txt clean test` |
-| Reproduce | `mvn -l outputs/evidence/reproduce.txt -Dsecurity.verify=true "-Dtest=*SecurityTest" test` |
-| Acceptance | `mvn -l outputs/evidence/acceptance.txt -Dsecurity.verify=true clean test` |
-| Diff | `git diff --output=outputs/evidence/fix.diff -- src/main/java` |
-| Red-team | `mvn -l outputs/evidence/redteam.txt "-Dtest=*RedTeamCheck" test` |
-| Check report forms | `mvn -l outputs/evidence/forms.txt -Dtest=OutputsCheck test` |
+| Baseline (setup) | `mvn clean test` |
+| Reproduce | `mvn -Dsecurity.verify=true "-Dtest=*SecurityTest" test` |
+| Acceptance | `mvn -Dsecurity.verify=true clean test` |
+| Changed files | `git diff --stat -- src/main/java` |
+| Red-team | `mvn "-Dtest=*RedTeamCheck" test` |
+| Check report forms | `mvn -Dtest=OutputsCheck test` |
 
 Expected results: baseline 10 run, 0 failed, 6 skipped. Reproduce 6 run, 6 failed.
-Acceptance 10 run, 0 failed, 0 skipped. With `-l`, Maven prints nothing to the terminal; open
-the file to read the result.
+Acceptance 10 run, 0 failed, 0 skipped. Agents that run a command record its summary line in
+their report.
 
 ## Out of scope
 

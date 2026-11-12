@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * Checks that the learner's stage reports are complete forms. It checks form, not truth:
  * header values are allowed values, no {{placeholder}} is left, and cited evidence files exist.
  * The class name does not end in Test, so the normal build never runs it. Run it by name:
- * mvn -l outputs/evidence/forms.txt -Dtest=OutputsCheck test
+ * mvn -Dtest=OutputsCheck test
  * A report that has not been started shows as skipped, not failed.
  */
 class OutputsCheck {

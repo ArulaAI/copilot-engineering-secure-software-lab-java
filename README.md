@@ -10,7 +10,7 @@ mitigate, fix two of them with test evidence, and red-team your own fixes.
 2. Read [the scenario](docs/SCENARIO.md): the codebase, the two assigned fixes and the commands.
 3. Follow [the participant action guide](LAB_ACTION_GUIDE.md).
 
-The baseline `mvn -l outputs/evidence/baseline.txt clean test` passes with six exploit tests
+The baseline `mvn clean test` passes with six exploit tests
 skipped. Passing does not mean the code is secure; the exploit tests are switched on in Stage 3.
 
 ## Prerequisites
@@ -41,10 +41,11 @@ the lab.
 
 - `src/main/java/com/securelabs/vulnerable/` is the legacy codebase under study.
 - `src/test/java/com/securelabs/vulnerable/data/` holds the shipped behavior and exploit tests.
-- `.github/` holds eight custom agents (one is a hidden subagent), the stage skills, `/hand-off`,
+- `.github/` holds seven custom agents (one is a hidden subagent), the stage skills,
   repository instructions and scoped Java instructions.
-- `outputs/` holds the report templates (YAML header, evidence tables, gate list);
-  `outputs/evidence/` holds run logs.
+- `outputs/` holds the report templates (YAML header, evidence tables, gate list); each stage
+  writes its report there.
+- `docs/lab-guide/` holds the diagrams used in the action guide.
 - `docs/` holds the scenario, compatibility steps and facilitator material.
 - `reference/` holds facilitator solutions, the finding catalog and an unsafe historical archive,
   outside compilation. Do not consult it during the lab.

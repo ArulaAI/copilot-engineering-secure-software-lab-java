@@ -3,26 +3,25 @@ stage: 4-review
 fixes_verified: ""        # yes | no, from section A
 verdict: ""               # ACCEPTED | CHANGES REQUIRED | NEEDS EVIDENCE
 correction: 0             # 0 | 1; at most one correction pass
-evidence: [outputs/evidence/fix.diff, outputs/evidence/acceptance.txt, outputs/evidence/redteam.txt]
+evidence: [outputs/change-plan.md]
 gate: ""                  # pass | fail
 ---
 
 # Review
 
-The reviewer runs as a subagent with isolated context. It reads files, not the authoring chat.
+Written in a fresh chat by Secure Code Reviewer. It reads files and runs the tests itself; it never sees the authoring chat.
 
 ## A. Do the fixes fix it?
 
 | Fix | Check | Expected | Actual | Evidence | Pass/Fail |
 | --- | --- | --- | --- | --- | --- |
-| SQLI-01 | Root cause removed in the changed methods | {{root cause}} | {{what the diff does}} | outputs/evidence/fix.diff | {{pass / fail}} |
-| SQLI-01 | Exploit tests now pass | pass | {{result}} | outputs/evidence/acceptance.txt | {{pass / fail}} |
-| PATH-01 | Root cause removed in the changed methods | {{root cause}} | {{what the diff does}} | outputs/evidence/fix.diff | {{pass / fail}} |
-| PATH-01 | Exploit tests now pass | pass | {{result}} | outputs/evidence/acceptance.txt | {{pass / fail}} |
-| Both | Full suite, nothing skipped | all pass | {{totals}} | outputs/evidence/acceptance.txt | {{pass / fail}} |
-| Both | Nothing outside agreed scope changed | two files | {{files in diff}} | outputs/evidence/fix.diff | {{pass / fail}} |
-
-Execution: {{tests the reviewer ran itself / logs only inspected}}.
+| SQLI-01 | Root cause removed in the changed methods | {{root cause}} | {{what the change does}} | {{file:line}} | {{pass / fail}} |
+| SQLI-01 | No new vulnerability introduced | none | {{observation}} | {{file:line}} | {{pass / fail}} |
+| PATH-01 | Root cause removed in the changed methods | {{root cause}} | {{what the change does}} | {{file:line}} | {{pass / fail}} |
+| PATH-01 | No new vulnerability introduced | none | {{observation}} | {{file:line}} | {{pass / fail}} |
+| Both | Errors do not leak internal details (exception text, SQL, paths) | no leak | {{observation}} | {{file:line}} | {{pass / fail}} |
+| Both | Only UserRepository.java and FileHandler.java changed | two files | {{git diff --stat output}} | git diff | {{pass / fail}} |
+| Both | Acceptance rerun by the reviewer | Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 | {{summary line as printed}} | acceptance command | {{pass / fail}} |
 
 ## B. What failed the critic
 
@@ -34,11 +33,11 @@ Fill only if a check in A failed. One correction pass, then one re-verification.
 
 ## C. Red-team
 
-Run only after every check in A passes. Attacks go into a separate `*RedTeamCheck` test class.
+Run only after every check in A passes. Attacks go into one new `DataRedTeamCheck` test class.
 
 | # | Fix | Attack | Expected (attacker refused) | Actual | Evidence | Decision |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | {{fix}} | {{attack}} | {{result}} | {{result}} | outputs/evidence/redteam.txt | {{held / fixed / residual risk: reason}} |
+| 1 | {{fix}} | {{attack}} | {{result}} | {{result}} | {{red-team summary line or test name}} | {{held / sent back as correction / residual risk: reason}} |
 
 ## Verdict
 
