@@ -16,8 +16,9 @@ identity. Tests supply a trusted Principal fixture. This does not implement HTTP
 - Preserve the exercise scope, public contract, and legitimate behavior. Do not change tests to obtain green results.
 - Facilitator audits must verify reference code independently. Participant work must not consult
   facilitator references. A name such as "secure" does not establish correctness.
-- No package additions, dependency upgrades, external services, Python, hooks, CLI installation,
-  or Spring application startup are needed for the required exercise.
+- Do not add packages, upgrade dependencies, contact external APIs, or start Spring Boot for
+  the required exercise. Do not install Python, hooks, a CLI, SDK, workers, or integrations.
+  Existing approved Copilot connectivity and approved Maven artifact resolution remain allowed.
 - Keep implementation edits limited to the selected finding. Explain proposed scope changes first.
 
 ## Invocation and context budget
