@@ -8,7 +8,7 @@ The course mappings below are our instructional application, not an official OWA
 
 | Reference | Verified edition | Course use |
 | --- | --- | --- |
-| Web Application Top 10 | 2025 | Java refund authorization and other application-code findings |
+| Web Application Top 10 | 2025 | Java application-code findings in the lab codebase |
 | Top 10 for Agentic Applications | 2026, released December 9, 2025 | Goals, tools, authority, context, and consequences in the engineering workflow |
 | Top 10 for LLM Applications | 2026 | Untrusted model inputs, generated output, disclosure and consumption |
 | Securing Agentic Applications | V2, PDF dated October 2026, resource published November 10, 2026 | Architecture, action authorization, trust boundaries and assurance guidance |
@@ -56,28 +56,22 @@ and Embedding Weaknesses remain additional applicability questions. No training/
 RAG store, hidden-prompt security test or embedding pipeline is implemented by this lab.
 Absence from the fixture is not proof that a real deployment is protected.
 
-## Threat-model enhancements
+## Use in this course
 
-Create two small views. View A maps the Java caller, trusted Principal fixture, ownership
-decision and refund state. View B maps the learner's selected task, repository/context inputs,
-Copilot role/model boundary, configured tools, proposed code/commands, review and approval.
-Mark components implemented, assumed or proposed. Treat native model-provider behavior,
-tool enforcement and storage as unverified unless observed in the approved environment.
+The course does not threat-model the AI workflow as a separate exercise. The Java threat model
+covers the application. These OWASP GenAI risks appear in the debrief as habits for using
+Copilot on the learners' own code, mapped to controls they practiced in the lab:
 
-For View B record input provenance and trust, the principal on whose behalf a tool acts,
-permitted target/operation, effective tool evidence, output destination and potential blast
-radius. Record whether a control is advisory instruction, host-enforced restriction,
-application check or human review. Attach evidence for any claimed enforcement and leave
-unknowns open. Schema/format conformance or human agreement does not authorize an action.
-Use least agency for the exercise, with one selected phase, minimum necessary tools and an
-explicit gate for side effects. Existing host/application policies must authorize the actual
-operation and resource at the action sink. Approval of a plan does not authorize changed targets
-or parameters. The course records those enforcement boundaries rather than installing a policy engine.
+| Risk | Practiced control |
+| --- | --- |
+| LLM01:2026 Prompt Injection | Repository text treated as data; diff checked by the learner |
+| LLM03:2026 Excessive Agency | Scope agreed before edits; each command approved |
+| LLM02:2026 Sensitive Information Disclosure | Synthetic data only; files shared instead of dumps |
+| LLM04:2026 Supply Chain | No dependency changes; customization files reviewed like code |
+| LLM07:2026 Misinformation | Evidence read from log files, never from an agent's claim |
+| LLM10:2026 Improper Output Handling | Gates, isolated review and red-team before acceptance |
 
-Use AI-01 / T-AI-01 for the synthetic context challenge. It is a threat hypothesis until observed.
-Trace the entry surface, attacker influence, possible goal change, action sink, consequence,
-control and evidence. The required Java implementation remains REFUND-01 only. Its nine
-acceptance checks do not establish prompt-injection resistance or other AI security properties.
+Verify identifiers against the official documents below before each delivery.
 
 ## Official sources
 

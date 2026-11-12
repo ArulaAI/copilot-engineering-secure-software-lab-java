@@ -1,5 +1,3 @@
-/* Historical vulnerable review corpus. OWASP category IDs in comments use the 2021 edition.
- * Optional static review only. See docs/SCENARIO.md for the required exercise. */
 package com.securelabs.vulnerable.api;
 
 import org.springframework.http.ResponseEntity;
@@ -11,23 +9,10 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-/**
- * VULNERABLE: Resource Controller
- *
- * This file contains INTENTIONAL security vulnerabilities for training purposes.
- * DO NOT use these patterns in production code.
- *
- * Vulnerabilities:
- * - A10: Server-Side Request Forgery (SSRF)
- * - A01: Broken Access Control (missing auth, IDOR)
- * - A05: Security Misconfiguration (CORS wildcard)
- * - Open Redirect vulnerability
- */
 @RestController
 @RequestMapping("/api/resources")
-@CrossOrigin(origins = "*", allowCredentials = "true") // VULNERABLE: Wildcard CORS with credentials
+@CrossOrigin(origins = "*", allowCredentials = "true")
 public class ResourceController {
-
     private static final Map<String, Resource> resources = new HashMap<>();
 
     static {
@@ -35,14 +20,8 @@ public class ResourceController {
         resources.put("res-2", new Resource("res-2", "user-2", "Resource 2 data"));
     }
 
-    /**
-     * VULNERABLE: Get resource without authorization check (IDOR)
-     */
     @GetMapping("/{resourceId}")
     public ResponseEntity<?> getResource(@PathVariable String resourceId) {
-        // VULNERABLE: No authentication check
-        // VULNERABLE: No authorization check - anyone can access any resource
-
         Resource resource = resources.get(resourceId);
 
         if (resource == null) {
@@ -56,27 +35,18 @@ public class ResourceController {
         ));
     }
 
-    /**
-     * VULNERABLE: SSRF - fetches arbitrary URLs
-     */
     @GetMapping("/fetch")
     public ResponseEntity<?> fetchExternalResource(@RequestParam String url) {
-        // VULNERABLE: No URL validation
-        // VULNERABLE: Allows access to internal network
-        // VULNERABLE: No protocol restriction
-
         System.out.println("Fetching URL: " + url);
 
         try {
             URL targetUrl = new URL(url);
 
-            // VULNERABLE: No check for internal IP addresses (169.254.x.x, 10.x.x.x, etc.)
-            // VULNERABLE: Follows redirects to internal resources
             HttpURLConnection connection = (HttpURLConnection) targetUrl.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
-            connection.setInstanceFollowRedirects(true); // VULNERABLE: Follows redirects
+            connection.setInstanceFollowRedirects(true);
 
             int responseCode = connection.getResponseCode();
 
@@ -96,7 +66,6 @@ public class ResourceController {
             }
 
         } catch (Exception e) {
-            // VULNERABLE: Exposing internal error details
             return ResponseEntity.status(500).body(Map.of(
                 "error", "Failed to fetch URL",
                 "details", e.getMessage(),
@@ -105,25 +74,17 @@ public class ResourceController {
         }
     }
 
-    /**
-     * VULNERABLE: SSRF via POST body
-     */
     @PostMapping("/proxy")
     public ResponseEntity<?> proxyRequest(@RequestBody Map<String, String> request) {
         String targetUrl = request.get("url");
         String method = request.getOrDefault("method", "GET");
-
-        // VULNERABLE: Same SSRF issues as above
-        // Plus: allows arbitrary HTTP methods
 
         try {
             URL url = new URL(targetUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
 
-            // VULNERABLE: Passes through all headers
             if (request.containsKey("headers")) {
-                // Could inject arbitrary headers
             }
 
             int responseCode = connection.getResponseCode();
@@ -134,65 +95,40 @@ public class ResourceController {
         }
     }
 
-    /**
-     * VULNERABLE: Open Redirect
-     */
     @GetMapping("/redirect")
     public void handleRedirect(@RequestParam String returnUrl, HttpServletResponse response) throws IOException {
-        // VULNERABLE: No validation of redirect URL
-        // Allows redirecting to malicious sites
-
         System.out.println("Redirecting to: " + returnUrl);
 
-        // VULNERABLE: Direct redirect without validation
         response.sendRedirect(returnUrl);
     }
 
-    /**
-     * VULNERABLE: Update resource permissions without proper checks
-     */
     @PutMapping("/{resourceId}/permissions")
     public ResponseEntity<?> updatePermissions(@PathVariable String resourceId,
                                                @RequestBody Map<String, Object> permissions) {
-        // VULNERABLE: No authentication
-        // VULNERABLE: No authorization - anyone can change any resource's permissions
-
         Resource resource = resources.get(resourceId);
         if (resource == null) {
             return ResponseEntity.status(404).body(Map.of("error", "Resource not found"));
         }
 
-        // VULNERABLE: Accepts and applies arbitrary permissions
         resource.setPermissions(permissions);
 
         return ResponseEntity.ok(Map.of("message", "Permissions updated"));
     }
 
-    /**
-     * VULNERABLE: Debug endpoint exposing internal state
-     */
     @GetMapping("/debug")
     public ResponseEntity<?> debugInfo(HttpServletRequest request) {
-        // VULNERABLE: Debug endpoint accessible in production
-        // VULNERABLE: Exposes sensitive configuration
-
         Map<String, Object> debug = new HashMap<>();
         debug.put("resources", resources);
-        debug.put("environment", System.getenv()); // VULNERABLE: Exposes env vars
-        debug.put("properties", System.getProperties()); // VULNERABLE: Exposes system props
+        debug.put("environment", System.getenv());
+        debug.put("properties", System.getProperties());
         debug.put("clientIp", request.getRemoteAddr());
         debug.put("headers", Collections.list(request.getHeaderNames()));
 
         return ResponseEntity.ok(debug);
     }
 
-    /**
-     * VULNERABLE: Delete without authorization
-     */
     @DeleteMapping("/{resourceId}")
     public ResponseEntity<?> deleteResource(@PathVariable String resourceId) {
-        // VULNERABLE: No authentication or authorization
-
         Resource removed = resources.remove(resourceId);
 
         if (removed == null) {
@@ -202,15 +138,10 @@ public class ResourceController {
         return ResponseEntity.ok(Map.of("deleted", true));
     }
 
-    /**
-     * VULNERABLE: File inclusion via URL parameter
-     */
     @GetMapping("/include")
     public ResponseEntity<?> includeFile(@RequestParam String file) {
-        // VULNERABLE: Local/Remote file inclusion
         try {
             if (file.startsWith("http")) {
-                // VULNERABLE: Remote file inclusion
                 URL url = new URL(file);
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
                     StringBuilder content = new StringBuilder();
@@ -221,7 +152,6 @@ public class ResourceController {
                     return ResponseEntity.ok(Map.of("content", content.toString()));
                 }
             } else {
-                // VULNERABLE: Local file inclusion with path traversal
                 return ResponseEntity.ok(Map.of("content",
                     new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(file)))));
             }

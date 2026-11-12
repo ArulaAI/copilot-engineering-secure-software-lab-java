@@ -1,237 +1,278 @@
-# Lab Action Guide — Secure Software Development
+# Lab Action Guide — Secure Software Development (Java)
 
-Use the existing Java refund case to investigate, explain, fix and verify one authorization
-failure. You choose the role, supply context, inspect evidence and decide when to advance.
-The versioned skills carry the procedure. Short clarification and scope-agreement replies are normal.
+You have inherited a legacy Java service nobody on the team wrote. With GitHub Copilot you will
+map it, find and rank its security problems, decide what to mitigate first, fix two of them with
+evidence, and attack your own fixes. The codebase, the two assigned fixes and every command are
+in [docs/SCENARIO.md](docs/SCENARIO.md).
 
-## Your 90-minute route
+## How you drive Copilot
 
-| Clock | Phase | Minutes | Outcome |
-| --- | --- | --- | --- |
-| 0 to 20 | Introduction and demonstration | 20 | Understand context, roles and evidence |
-| 20 to 35 | Investigate | 15 | Reproduce and classify REFUND-01 |
-| 35 to 45 | Threat model | 10 | Seven minutes Java, three minutes AI workflow |
-| 45 to 70 | Plan and implement | 25 | Agree scope, patch and collect acceptance |
-| 70 to 85 | Verify and review | 15 | Inspect current results and obtain fresh review |
-| 85 to 90 | Debrief | 5 | Transfer the procedure |
+Use the stored procedures rather than copied stage prompts. Every stage has the same rhythm.
 
-Complete setup before the session using [compatibility](docs/COMPATIBILITY.md). Extra findings are FLEX. Verification and debrief are never cut.
-## Use the same operating loop in each phase
+1. **Select the role** from the Copilot Chat Agent dropdown. Check its effective tools separately.
+   A role name or skill does not grant permissions. Inspect actual tool activity and workspace changes.
+2. **Choose context and skill.** Use Add Context or drag the stage files listed below into chat.
+   Check attachments, type `/` and choose the existing stage skill from the picker, such as
+   `/map-codebase`. The stored procedure identifies its inputs and expected output. Inspect skill
+   loading and tool activity. Read files by path instead of pasting prompts, logs or summaries.
+3. **Pass the gate.** Check the result against the gate list at the end of the report.
+4. **Hand off.** Switch to **Hand-off Recorder** in the same chat and type `/hand-off`. It saves
+   the stage report to `outputs/` and appends a short summary to `outputs/handoff.md`.
+5. **Start a new chat** for the next stage. Check that `handoff.md` points to the current saved
+   report and evidence. Stage 4 continues in the Stage 3 chat. A new context reduces carryover
+   but does not establish process isolation, remove workspace access or guarantee independent judgment.
 
-1. Open Copilot Chat in the qualified environment. Select the named role from the **Agent dropdown**.
-2. Inspect its effective tools. Reading roles need read/search. Only remediation needs edit/execute.
-3. Use **Add Context** or drag the selected files into chat. Check the visible attachments.
-4. Type `/` and choose the existing phase skill from the picker. Confirm the selected skill name.
-5. Submit the skill with those attachments. The stored procedure supplies the task instructions.
-6. Inspect skill-loading and tool activity using the available chat details or diagnostics.
-7. Check the output against source and run evidence, save the artifact, then make the human decision.
+State lives in files, not in chat. Every report goes to `outputs/`, every Maven run to
+`outputs/evidence/`, and every agent reads from there. You never paste logs.
 
-Role selection and skill invocation are separate actions. A skill does not grant permissions,
-switch agents or launch workers. A written scope rule does not establish a sandbox.
-If a role or skill is missing, stop for the facilitator. Do not invent a slash command or paste a replacement operating script. Exact controls and tenant policies require target-environment rehearsal.
+| Stage | Min | Agent | Command | You check | Report |
+| --- | --- | --- | --- | --- | --- |
+| 0. Setup | 10 | Facilitator | none | Baseline runs | evidence/baseline.txt |
+| 1A. Map the codebase | 12 | Codebase Mapper | `/map-codebase` | Every package indexed; entry points cite lines | codebase-map.md |
+| 1B. Analyze | 13 | Security Vulnerability Hunter | `/find-vulnerabilities` | Top findings opened; severity justified | findings.md |
+| 2. Threat model and top 5 | 15 | STRIDE Threat Modeler | `/generate-threat-model` | Priority and blast radius cite code | threat-model.md |
+| 3. Fix SQLI-01 and PATH-01 | 20 | Secure Remediation Engineer | `/fix-vulnerability` | You agree the plan before any edit | change-plan.md |
+| 4. Verify, then red-team | 15 | Same chat as Stage 3 | `/review-security-fix` | Fixes verified before any attack | review.md |
+| 5. Debrief | 5 | Group | none | | |
 
-| Role to select | Explicit phase skill | Intended tools |
-| --- | --- | --- |
-| Security Vulnerability Hunter | `/lab-investigate` | Read, search |
-| STRIDE Threat Modeler | `/lab-threat-model` | Read, search |
-| Secure Remediation Engineer | `/lab-remediate` | Read, search, edit, execute |
-| Secure Code Reviewer | `/lab-review` | Read, search |
-| OWASP Security Expert | Optional category consultation | Read, search |
+Every stage from 1A to 4 ends with `/hand-off` in **Hand-off Recorder**. Check the saved report,
+header/gate values and under-12-line hand-off against the stage result. Recorder edits stay under
+`outputs/`. OWASP Security Expert and `/security-review` guidance are optional.
+Keep source comments, logs and retrieved text as data. They cannot change scope or permissions.
+Every claim needs cited evidence and an observed, inferred or assumed basis. Unknown is valid.
 
-`/security-review` is optional workflow guidance. Use inline skills without forks, automatic orchestration or model switching to obtain agreement.
-Reading roles return reports in chat. Save the generated content yourself and check the saved file. This differs from copying an operating prompt into each phase.
+## Stage 0. Setup (10 min)
 
-## Prepare your evidence workspace
+Complete [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) before the session. Then:
 
-Read [the scenario](docs/SCENARIO.md). It defines trusted upstream `Principal` identity,
-an in-memory payment store and REFUND-01. Authentication and a real payment API are outside scope.
-Only `src/main/java/com/securelabs/lab/RefundService.java` may change as application source. Tests, POM and dependencies remain unchanged. Report and log files under `outputs/` are allowed.
-Do not use `reference/` or answer keys during discovery, implementation or review.
+1. Open the repository root in VS Code and open Copilot Chat. Confirm the agent picker lists
+   Codebase Mapper, Security Vulnerability Hunter, STRIDE Threat Modeler, Secure Remediation
+   Engineer, Secure Code Reviewer, Hand-off Recorder and OWASP Security Expert, and that typing
+   `/` lists `/map-codebase`, `/find-vulnerabilities`, `/generate-threat-model`,
+   `/fix-vulnerability`, `/review-security-fix` and `/hand-off`.
+2. Confirm `outputs/evidence/` exists. Create report files from templates only when they do not
+   already contain your work. The commands below overwrite files, so skip existing reports or
+   copy only missing templates through the file explorer.
 
-Copy the five `outputs/*.template.md` files to `findings.md`, `threat-model.md`,
-`change-plan.md`, `acceptance.md` and `review.md` in `outputs/`.
-Use REFUND-01 and T-REFUND-01 consistently. Keep AI-01 / T-AI-01 separate from the Java defect.
-For each command record its exit status, named checks, pass/fail/error/skip counts and source revision
-or current diff. Distinguish your execution from supplied logs that you inspected.
+   macOS, Linux or Git Bash:
 
-| Evidence | Existing command | Expected starter or corrected result |
-| --- | --- | --- |
-| Setup baseline | `mvn clean test` | Seven pass, two skipped |
-| Starter reproduction | `mvn -Dlab.verify=true -Dtest=RefundSecurityTest test` | Two expected assertion failures |
-| Corrected acceptance | `mvn -Dlab.verify=true clean test` | Nine pass, zero skipped |
+   ```bash
+   for f in codebase-map findings threat-model change-plan review handoff; do cp outputs/$f.template.md outputs/$f.md; done
+   ```
 
-Reuse current setup or reproduction logs when tied to the current unchanged source.
-Run only missing, stale or relevant failing checks. A green setup baseline is not security acceptance.
-Use existing approved Maven/IDE facilities. No standalone Copilot CLI or new installation is required.
+   PowerShell:
 
-## Introduction card — 20 minutes
+   ```powershell
+   foreach ($f in 'codebase-map','findings','threat-model','change-plan','review','handoff') { Copy-Item "outputs/$f.template.md" "outputs/$f.md" }
+   ```
 
-**Observe** the facilitator select a read-only role, attach files, invoke a phase skill and save a report.
-Identify which part supplies the role, which supplies the procedure and which supplies the evidence.
-See where tool activity and effective permissions can be inspected on your supported route.
+3. Run the baseline, or inspect current setup evidence tied to the unchanged starter revision
+   when the facilitator has approved reuse. Missing or stale evidence requires a current run.
 
-**Optional context comparison** uses at most five minutes inside this introduction.
-The facilitator shows the same refund diff alone and with the scenario rule and relevant tests.
-Compare which claim becomes supportable and which still needs evidence. Prepared paired outputs
-can replace live calls. This is context-triage practice, not a model benchmark or promised response.
-It requires no API key, Chroma, MCP, Docker or application-code changes.
+   ```bash
+   mvn -l outputs/evidence/baseline.txt clean test
+   ```
 
-**Your readiness gate** confirms setup evidence, the four phase skills, five roles and context controls.
-If qualification is incomplete, use the facilitator route in the appendix and record the limitation.
+   With `-l`, Maven prints nothing to the terminal. Open the file and expect
+   `Tests run: 10, Failures: 0, Errors: 0, Skipped: 6` and `BUILD SUCCESS`. The six skipped
+   tests are exploit tests you will meet in Stage 3. A green baseline proves setup, not security.
+4. Do not open `reference/` during the lab. If a role or skill is missing, stop for the facilitator.
+   Do not invent a command or continue under an unqualified default role.
 
-## Phase 1 card — Investigate for 15 minutes
+The facilitator can replace part of this demonstration with a prepared context comparison using
+the same code excerpt alone and with its requirement/test. Discuss which claim becomes supportable.
+This adds no required minutes, tooling, API key or model-performance claim.
 
-**Outcome** is a demonstrated authorization finding and a reasoned classification of another concern.
-**Role and skill** select Security Vulnerability Hunter, verify read/search tools, then choose
-`/lab-investigate` from the slash picker.
-**Attach the required context** using these exact repository paths.
+## Stage 1A. Map the codebase (12 min)
 
-- `docs/SCENARIO.md` supplies the refund rules and trusted identity boundary.
-- `src/main/java/com/securelabs/lab/RefundService.java` supplies the decision and state transition.
-- `src/test/java/com/securelabs/lab/RefundSecurityTest.java` supplies the negative checks.
-- Current reproduction output supplies observed behavior. Add `RefundServiceTest.java` from the
-  same test package when checking preserved valid behavior.
+**Goal** understand a codebase you have never seen before judging it.
 
-**Act** by inspecting current reproduction evidence or running the existing reproduction command.
-On the starter, both assertions expect FORBIDDEN and receive REFUNDED. Unexpected compilation,
-artifact-resolution failures or unrelated exceptions are setup problems. Preserve their actual output.
-Submit the selected skill with the context. Answer a short clarification if a specific fact is missing.
-Add files only to resolve a named gap. Explain why each added attachment is relevant.
+1. New chat. Select **Codebase Mapper**, check read/search/agent capability, attach
+   `docs/SCENARIO.md` and current `outputs/handoff.md` if present, then choose `/map-codebase`.
+   The skill discovers packages under `src/main/java`. Do not attach the entire source tree.
+2. It lists the packages and sends only each package path to a **Package Explorer** subagent. Each subagent
+   reads one package in its own context and returns a short summary, so your chat holds
+   summaries instead of every source file.
+3. It stitches them into an index, a list of entry points with their untrusted inputs, the data
+   stores and external calls, the trust boundaries, and a Mermaid architecture diagram.
+4. Open two or three entry points it lists and check the lines. Then hand off.
 
-**Inspect** the finding's path, symbol, current lines, trusted principal, payment owner and mutation.
-Classify candidates as confirmed, rejected or needs evidence. Check one plausible false positive
-against the scenario and source. Finding count and model confidence are not acceptance criteria.
+**Gate** every package appears in the index; entry points cite file and line; the diagram shows
+nothing as implemented that the code does not contain.
 
-**Save evidence** in `outputs/findings.md`, including actual failures, preconditions, uncertainty
-and the rejected hypothesis. Check the file exists and the claims match the source.
+## Stage 1B. Analyze (13 min)
 
-**Human gate** selects REFUND-01 for threat modeling. Missing logs remain missing evidence.
-Stop for unexplained failures, unsupported claims or an attempt to edit during investigation.
+**Goal** find the security problems and rank them by severity.
 
-## Phase 2 card — Threat model for 10 minutes
+1. New chat. Select **Security Vulnerability Hunter**, check read/search tools, attach
+   `outputs/handoff.md` and `outputs/codebase-map.md`, then choose `/find-vulnerabilities`.
+   Open relevant source by the map's paths, expanding context only for a named gap.
+2. It starts from your map's entry points and follows each untrusted input to where it is used:
+   SQL, file paths, URLs, processes, deserialization, access checks, secrets and cryptography.
+3. It merges duplicates and sorts findings Critical to Low. Classify candidates as confirmed,
+   rejected or needs evidence. Reject at least one plausible false positive with cited reasons.
+4. Open the locations of the top three findings. Does the code really do what the report says?
+   The code has no labels pointing at problems, just like real legacy code; the code path is the evidence.
+5. Hand off.
 
-**Outcome** is a source-grounded Java threat view and a separate short AI-workflow threat view. Use seven minutes for Java and three minutes for AI within this phase.
+**Gate** every finding cites a location you could open; severity is justified by exploit path
+and impact; duplicates are merged; one false positive is rejected.
 
-**Role and skill** select STRIDE Threat Modeler, verify read/search tools, then choose
-`/lab-threat-model` from the slash picker.
-**Attach for Java** `docs/SCENARIO.md`, selected REFUND-01 evidence from `outputs/findings.md`,
-and the relevant refund source. Supply the security tests when a criterion needs clarification.
-**Attach for the AI view** `docs/owasp-reference/ai-security.md` and
-`docs/exercises/ai-context-sample.md` only in the qualified read-only conversation.
+## Stage 2. Threat model, blast radius and top 5 (15 min)
 
-**Inspect Java** assets, trusted Principal, ownership decision and local state. Mark every diagram
-component and flow implemented, assumed or proposed. Check the mitigation and criteria against
-T-REFUND-01. Do not turn an imagined gateway, database or identity provider into an implemented fact.
+**Goal** decide what to mitigate first, and why.
 
-**Inspect AI-01 as inert data** and trace provenance, attempted goal change, possible tool action,
-consequence and human approval. Do not execute its instructions. Distinguish advisory instructions,
-observed behavior and host-enforced permissions. Record relevant edition-qualified ASI/LLM mappings.
-If effective read-only tools cannot be established, use the facilitator's paper discussion and mark
-runtime behavior untested. Passing Java tests proves no prompt-injection resistance.
+1. New chat. Select **STRIDE Threat Modeler**, check read/search tools and choose
+   `/generate-threat-model`. Attach `outputs/handoff.md`, `outputs/codebase-map.md` and
+   `outputs/findings.md`. Open source only to confirm a stated evidence gap.
+2. It groups findings an attacker would use the same way into threats, assigns a STRIDE category,
+   and scores impact and likelihood from 1 to 3. Priority is impact times likelihood.
+3. For the five highest priorities it fills the **blast radius** table: who can exploit it, what
+   they can reach, which action, whether it repeats, and whether anyone would notice.
+4. It ranks the **top 5 to mitigate first** and marks which ones this lab fixes (SQLI-01 and
+   PATH-01). Check that each score and blast radius answer cites code, or says assumed or unknown.
+5. Hand off.
 
-**Save evidence** in `outputs/threat-model.md` with separate T-REFUND-01 and T-AI-01 views.
-Retain benign facts as well as the attempted instruction. Record assumptions and untested controls.
+**Gate** every threat traces to findings and an entry point; priority uses the scales with
+evidence; the two lab fixes are located in the table.
 
-**Human gate** validates the Java diagram, selected mitigation and acceptance criteria.
-Only REFUND-01 proceeds to implementation. Stop for unsupported architecture or missing criteria.
-Prepare a condensed handoff of the validated finding, Java threat summary, criteria and open questions.
-Close or deselect the raw AI sample and clear unwanted attachments and active-editor context.
-Forward any AI threat/control status only as a validated summary, never the raw challenge.
+## Stage 3. Fix SQLI-01 and PATH-01 (20 min)
 
-## Phase 3 card — Plan and implement for 25 minutes
+**Goal** the smallest change that removes each root cause, with legitimate behavior intact.
 
-**Outcome** is the smallest agreed refund fix with preserved legitimate behavior and actual acceptance.
-**Start a fresh implementation chat** after the AI-injection discussion. Select Secure Remediation
-Engineer and verify the effective tools separately. Choose `/lab-remediate` from the slash picker.
-Fresh chat reduces carryover. It is not process/OS isolation and does not remove workspace read access.
-**Attach** the scenario, validated REFUND-01 finding, condensed Java threat summary and criteria,
-current `RefundService.java`, `RefundServiceTest.java`, `RefundSecurityTest.java` and current
-reproduction logs. Use the exact source/test paths above. Exclude the raw AI-01 sample and full
-threat-modeling conversation. Add context only for a stated gap.
+1. New chat. Select **Secure Remediation Engineer**, check edit/execute/agent tools separately
+   and choose `/fix-vulnerability`. Attach `outputs/handoff.md`, `outputs/findings.md`,
+   `outputs/threat-model.md`, `docs/SCENARIO.md` and the two assigned source files and their
+   shipped tests under `src/test/java/com/securelabs/vulnerable/data/`. Use current files, not
+   the full analysis conversation. Read current evidence files by path.
+2. It first asks to run the reproduce command. Approve it. The shipped exploit tests should fail,
+   six of them. Read the assertion failures to establish the two assigned defects. A compile
+   error or unexpected result stops the stage for the facilitator.
 
-**Inspect the proposed plan** before editing. It must name the root cause, allowed source file,
-preserved rules, acceptance checks and commands. Confirm owner success, denial of non-owners,
-no admin-name privilege, validation and atomic duplicate/concurrent handling.
+   ```bash
+   mvn -l outputs/evidence/reproduce.txt -Dsecurity.verify=true "-Dtest=*SecurityTest" test
+   ```
 
-**Human gate** agrees to the bounded scope in a short natural reply. Save `outputs/change-plan.md`.
-If selection, evidence or criteria are missing, supply them before allowing edits.
-A new dependency, changed test expectation or broader source change requires a facilitator pause.
+3. It proposes a plan for both fixes and **does not edit yet**. Check it changes only the methods
+   the scenario assigns, leaves tests and `pom.xml` alone, and lists the variants it will leave
+   unfixed. Reply in your own words: agree, or narrow it.
+4. It edits, then asks to run the acceptance and diff commands. Approve each only if it matches
+   [the scenario's commands](docs/SCENARIO.md#commands). Approving commands is how you
+   inspect each action. Approval is a human checkpoint and does not replace host restrictions.
+5. Open `outputs/evidence/fix.diff` and `outputs/evidence/acceptance.txt` yourself. Match the
+   logs and diff to the current source. Inspect the full changed-file list for prohibited edits.
+   Only assigned source methods and `outputs/` artifacts may change at this stage.
+6. If the qualified environment supports `/compact`, keep the agreed scope and test results.
+   Inspect the resulting context. Do not invent the command when unavailable.
+7. Hand off (switch to **Hand-off Recorder**, type `/hand-off`). Keep this chat open.
 
-**Implement and inspect** the actual diff. Only `RefundService.java` may change as source.
-Preserve tests and POM. Inspect reproduction logs matching the unchanged starter before rerunning.
-After the patch, run full enabled acceptance through the permitted execution route.
-If the role cannot execute, run the command yourself and attach actual output with its provenance.
+**Gate** scope agreed before the first edit; the diff touches only `UserRepository.java` and
+`FileHandler.java`; acceptance shows `Tests run: 10, Failures: 0, Errors: 0, Skipped: 0`.
 
-**Save evidence** in `outputs/acceptance.md`. Link each criterion to its threat, code decision,
-test name, current run/result and review status. Keep all failures and skips visible with full-log access.
-Nine passing checks and zero skipped establish review readiness for this fixture.
-Keep this implementation chat for clarifications or a permitted correction. Do not rescan the whole
-repository, switch models for agreement or repeat unchanged successful checks without a reason.
+## Stage 4. Verify, then red-team (15 min)
 
-**Stop** for unexplained failures, prohibited edits or scope expansion. A patch is not self-certification.
+**Goal** prove the fixes work, then try to break them.
 
-## Phase 4 card — Verify and review for 15 minutes
+1. In the Stage 3 chat, switch back to **Secure Remediation Engineer** and type
+   `/review-security-fix`. The engineer calls **Secure Code Reviewer** as a subagent. The
+   reviewer receives only SQLI-01, PATH-01 and the canonical file list, not author conclusions.
+   Check the subagent call and effective read/search/execute tools. Separate context is not an OS
+   sandbox. If unavailable, use the qualified fresh-review-chat route with the facilitator.
+2. **A. Verify.** The reviewer reads the current findings, threat model, change plan, diff, source
+   and tests by path. It checks each fix removes its root cause and reruns acceptance
+   itself. Approve its Maven command.
+3. **B. If verification fails**, the review names the failed check and why. The engineer makes
+   one correction and the reviewer verifies once more. If it still fails, stop and call the
+   facilitator. No attacks on an unverified fix.
+4. **C. Red-team.** Once verified, the reviewer proposes attacks the shipped tests do not cover,
+   such as LIKE wildcards or a sibling folder name. The engineer writes them into a new
+   `DataRedTeamCheck` test class and runs them separately, so the acceptance suite is unchanged:
 
-**Outcome** is a human-checked evidence chain and a qualified fresh review.
-**Inspect execution first** using the current full enabled acceptance output from phase 3.
-Reuse it when it matches the current source/diff. Run missing or stale checks and relevant failures.
-Require nine pass and zero skipped. Inspect the whole changed-file list, not only a selected diff.
-Use `git diff -- src/main/java/com/securelabs/lab/RefundService.java` for the bounded source diff.
-Confirm tests/POM are unchanged and any report/log changes stay under `outputs/`.
+   ```bash
+   mvn -l outputs/evidence/redteam.txt "-Dtest=*RedTeamCheck" test
+   ```
 
-**Start a fresh review chat** and select Secure Code Reviewer. Verify read/search tools separately,
-then choose `/lab-review` from the slash picker.
-**Attach a compact review packet** containing the scenario, validated finding, selected Java threat,
-agreed plan, current source/tests, actual diff, acceptance matrix and current command evidence.
-Include every failure/skip and access to full logs. Do not import the full authoring history or raw AI-01.
+   Inspect failures before classifying them. A failed security assertion can demonstrate an
+   attack, while compile/setup errors require diagnosis. Decide with the engineer whether an
+   observed defect gets the remaining in-scope correction or a residual-risk entry.
+   This new `*RedTeamCheck` class is permitted only now. Existing tests and POM stay unchanged.
+5. Check ACCEPTED, CHANGES REQUIRED or NEEDS EVIDENCE against current files and logs, then
+   hand off. Missing evidence stays missing. After one correction and one re-review, pause
+   unresolved defects for the facilitator. Do not rerun or switch models to obtain agreement.
 
-**Inspect the verdict** and each claim against source, checks and evidence. A read-only reviewer
-inspects supplied logs and cannot claim to have executed Maven. Reject unsupported findings with
-reasons. Request evidence for uncertainty. A fresh chat does not guarantee independent judgment.
+**Gate** every verify check cites a file; red-team ran only after verification passed; every
+successful attack has a decision; the verdict covers the two assigned fixes only.
 
-| Review disposition | Required human action |
+## Check your reports (any time)
+
+```bash
+mvn -l outputs/evidence/forms.txt -Dtest=OutputsCheck test
+```
+
+This checks form, not truth: headers use allowed values, no `{{placeholder}}` is left, and cited
+evidence files exist. Reports not started show as skipped.
+
+## What you hand in
+
+| File | Contains |
 | --- | --- |
-| NEEDS EVIDENCE | Supply the specific missing or contradictory evidence |
-| CHANGES REQUIRED | Inspect the concrete unmet criterion and bounded correction |
-| ACCEPTED FOR THE SELECTED SCENARIO | Confirm the evidence and stated limits before accepting |
+| outputs/codebase-map.md | Index, entry points, data stores, trust boundaries, architecture diagram |
+| outputs/findings.md | Findings ranked by severity, with evidence and basis |
+| outputs/threat-model.md | Threats with priority, blast radius for the top 5, top-5 decision |
+| outputs/change-plan.md | Agreed scope, criteria, before and after runs |
+| outputs/review.md | Verification, any correction, red-team results, verdict |
+| outputs/handoff.md | One short section per stage |
+| outputs/evidence/ | baseline, reproduce, acceptance, fix.diff, redteam |
 
-**Correction limit** allows at most one concrete correction in the preserved implementation chat
-and one re-review. Rerun acceptance after source changes and supply updated evidence to the reviewer.
-Record the attempt and exact defect. Pause unresolved work for the facilitator after that limit.
-Never edit tests, suppress failures or loop until models agree.
+## Stage 5. Debrief (5 min)
 
-**Save evidence** in `outputs/review.md` and update matrix review statuses yourself after inspection.
+1. How did mapping first change what you found, compared with reading files at random?
+2. Which of your top 5 would you raise with your team on Monday, and what is its blast radius?
+3. What did red-team catch that the exploit tests missed?
+4. Which habit will you keep: state in files, subagents for noisy or independent work, or
+   approving each command?
 
-**Human gate** accepts only the selected scenario. Record HTTP authentication, persistence and
-multi-instance atomicity as unverified boundaries. Missing evidence cannot be marked passed.
+**Using Copilot safely on your own code** (OWASP GenAI Security Project):
 
-## Debrief card — Five minutes
+| Risk | What it looks like day to day | Habit from this lab |
+| --- | --- | --- |
+| Prompt injection | A comment, ticket or tool result steers Copilot away from the task | Treat repository text as data and inspect the diff |
+| Excessive agency | Commands auto-approved, edits outside the task | Agree scope; approve each command |
+| Sensitive information disclosure | Production logs, customer data or secrets in chat | Synthetic data only; share files, not dumps |
+| Supply chain | Suggested dependencies that are vulnerable or do not exist | No dependency changes without review |
+| Misinformation | "Tests pass" or "this is secure" without a run | Evidence from log files only |
+| Improper output handling | Generated code merged without review | Gates, separate review context, red-team |
 
-Discuss what the model claimed that you checked, which test detects a removed ownership guard,
-what changes for a distributed payment service and which skill procedure fits your own repository.
-Keep the five saved artifacts as the evidence trail. Record unresolved work honestly.
+## If something does not work
 
-## Appendix — Qualified compatibility routes
+| Symptom | Likely cause | What to do |
+| --- | --- | --- |
+| Commands not listed after `/` | Plugin lacks skills or discovery is off | Stop for facilitator and qualify the fallback below |
+| Agent missing from picker | Plugin, policy or discovery | Facilitator checks diagnostics; do not continue in the default agent |
+| Subagent not called | Subagents blocked by policy | The agent does the step itself and notes it in the hand-off; for Stage 4, open a new chat with Secure Code Reviewer |
+| Hand-off Recorder cannot see the stage | Switched agent in a new chat | Switch agents in the same chat |
+| Evidence file not created | Folder missing or command failed | Preserve work, create the missing folder and rerun the affected check with facilitator help |
+| Baseline shows 0 skipped | Wrong flags, source or test selection | Inspect command and revision, then run the correct missing check |
+| Reproduce shows a compile error | Source/build problem | Stop, inspect the diff and diagnose with the facilitator. Do not reset participant work |
+| Acceptance count is not 10 | Red-team class renamed to end in `Test` | Rename it to end in `RedTeamCheck` |
+| Dependencies will not resolve | Artifact access | Approved support route in COMPATIBILITY.md |
 
-The main path above uses native Copilot Chat skills. A rehearsed Local route can use these distinct
-compatibility adapters. They read the canonical phase procedure and do not prove native skill loading.
+**Manual fallback (for example, JetBrains without skill support).** Attach the stage's
+`.github/skills/<command>/SKILL.md` with the IDE's context control and type
+`Follow the attached procedure.` Rehearse and label this route with the facilitator. Attachment
+alone does not enforce tool limits. Use qualified non-editing analysis and participant-run Maven
+when required. Save reports yourself if Recorder is unavailable. If review authority cannot be
+established, use facilitator-led review and record unverified checks. No new CLI is required.
 
-| Native phase skill | Qualified Local adapter |
-| --- | --- |
-| `/lab-investigate` | `/find-vulnerabilities` |
-| `/lab-threat-model` | `/generate-threat-model` |
-| `/lab-remediate` | `/fix-vulnerability` |
-| `/lab-review` | `/review-security-fix` |
+## Optional extensions
 
-IDEA support depends on the approved plugin, harness and tenant. Use its qualified attachment
-controls and feature set without assuming VS Code syntax. If native agents/skills are unavailable,
-stop for the facilitator's rehearsed walkthrough of the existing phase skill and shared contract.
-Use non-editing analysis where qualified, participant-run Maven and manual report saving.
-If read-only behavior cannot be established, use facilitator-led or paper review and label the limit.
-No long replacement chat scripts or CLI installation are required. Record the route in compatibility.
+- Pick one deferred threat from your top 5 and ask Secure Remediation Engineer for a change plan
+  only. Do not apply it.
+- Ask OWASP Security Expert how your top threat maps to OWASP Top 10 2025 and what evidence would
+  show the mitigation works.
 
-Official references explain [skills](https://code.visualstudio.com/docs/agent-customization/agent-skills),
-[context attachments](https://code.visualstudio.com/docs/chat/copilot-chat-context) and
-[custom agents](https://code.visualstudio.com/docs/agent-customization/custom-agents).
+Official guidance covers [skills](https://code.visualstudio.com/docs/agent-customization/agent-skills),
+[context](https://code.visualstudio.com/docs/chat/copilot-chat-context) and
+[agents](https://code.visualstudio.com/docs/agent-customization/custom-agents). Rehearse exact UI and policy.
 
 Copyright InRhythm / Arula. Training material using synthetic data.

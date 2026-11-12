@@ -38,12 +38,12 @@ HTTP security, a real payment integration, or event-delivery deduplication.
 
 ## Documentation and customization checks
 
-- Five active .github/agents/*.agent.md files, four .github/prompts/*.prompt.md files,
-  and five .github/skills/*/SKILL.md files. Four lab-* phase skills and one security-review
+- Five active .github/agents/*.agent.md files and five .github/skills/*/SKILL.md files,
+  with no .github/prompts/ files. Four phase skills and one security-review
   overview all require explicit invocation and use inline context. No active duplicate chatmodes.
-- All five participant output templates are used in the guide. The acceptance matrix links
+- The superseded acceptance matrix links
   scenario criteria to code, named behavioral checks, actual execution evidence, and review status.
-- Local adapters select roles and refer to the canonical phase procedures. Skill frontmatter
+- Each command name maps to exactly one skill; no prompt file shares it. Skill frontmatter
   contains no agent/model/tools selection. Native role/tool enforcement is verified separately.
 - Shared evidence and repair limits are canonical in the linked contract. Core scope and
   untrusted-content guardrails remain in repo instructions if skill discovery fails.
@@ -77,7 +77,7 @@ improvements must be measured rather than inferred from conversion to skills.
 ## Target-environment gates
 
 Complete docs/COMPATIBILITY.md. Rehearse both required and fallback paths in the supported
-Fidelity installation, including context attachment, saved artifacts, and review output.
+client installation, including context attachment, saved artifacts, and review output.
 Code checks alone do not qualify an IDE/plugin/harness. A timed rehearsal must fit 90 minutes.
 
 | State | Delivery decision |
@@ -107,11 +107,11 @@ existing local Maven cache. No dependencies or plugins were added or upgraded.
 
 The instruction behavior checks used a separate Codex agent. They do not demonstrate Copilot
 IDE discovery or permission enforcement. Java 17 API compilation is established, but execution
-in this implementation environment used Java 21. Target Fidelity rehearsal remains pending.
+in this implementation environment used Java 21. Target client rehearsal remains pending.
 
 ## Phase skill migration checks
 
-The migration adds four explicit lab-* entrypoints and changes security-review to an explicit
+The migration adds four explicit phase-skill entrypoints and changes security-review to an explicit
 overview. Consuming-agent roleplays exercised five cases per phase, covering wrong role,
 missing evidence, instruction-bearing source/log content, excessive context or rescans, and
 normal bounded work with a correction-limit challenge. These 20 hypothetical responses
@@ -122,7 +122,7 @@ Baseline remains seven passing checks with two intentional skips. In a disposabl
 starter still fails the two expected ownership assertions, and the corrected solution passes
 all nine enabled checks with no skips. Source, tests, and POM are unchanged by this migration.
 Active links resolve, YAML parses, all five skill names match their directories, native skills
-require explicit invocation, and Local adapter slash names are distinct from skill names.
+require explicit invocation, and no prompt file duplicates a skill command name.
 The guide reuses current stage-3 acceptance in stage 4 and reruns only for justified evidence gaps.
 
 No token, credit, time, or quality improvement has been measured. Complete the target-environment
@@ -137,7 +137,7 @@ Confirm identifiers against the edition-qualified source, not older standalone r
 - Agent and phase skill require separate Java-system and engineering-workflow views.
 - Threat template records source/input provenance, configured versus observed authority,
   action target/consequence, control type, validation evidence and residual risk.
-- AI-01 is a hypothesis or observed challenge outcome, not a confirmed Java vulnerability.
+- The separate AI-01 workflow view was retired in the stage redesign below.
 - Synthetic content is read-only inert data. Lack of qualified tools uses paper discussion,
   with runtime behavior untested. Benign facts still receive a source-backed assessment.
 - No native RAG, persistent memory, A2A, model training, or external agent deployment is invented.
@@ -159,3 +159,50 @@ two-view analysis with inert untrusted content. No challenge payload was execute
 instruction consumption only. Native Copilot observation and the revised timing remain pending.
 The Java baseline passes with seven checks passed and two explicitly skipped security checks.
 Source, tests and POM are unchanged by the AI threat-model enhancement.
+
+## Stage redesign checks (November 12, 2026)
+
+Changes: six agents (Hand-off Recorder added; reviewer can now run tests but still cannot edit);
+subagent variant search and isolated subagent review; verify-then-red-team Stage 4; /hand-off at
+the end of every stage; four YAML-headed report templates plus handoff, replacing five prose
+templates and the acceptance matrix; the separate AI workflow view replaced by a debrief table.
+
+Verified in a disposable copy with Maven offline:
+
+- Baseline: 9 run, 0 failed, 2 skipped, with OutputsCheck present (not picked up by default).
+- Reproduce: two `expected FORBIDDEN but was REFUNDED` failures.
+- Reference fix: acceptance 9 run, 0 failed, 0 skipped, with a RefundRedTeamCheck class present.
+- `-Dtest=*RedTeamCheck` runs only the red-team class; an existence-probe attack fails on the
+  reference fix (expected residual risk).
+- A fix placed after validation passes all nine acceptance checks; an amount-probe red-team test
+  catches it.
+- OutputsCheck: untouched copies skip; filled reports pass 6/6; an invalid verdict, a leftover
+  placeholder, a missing evidence file and mismatched finding IDs each fail.
+
+Not verified: any Copilot behavior (skill discovery, subagent calls, agent switching, tool limits,
+report quality) on the target installation. See docs/WORKFLOW_REHEARSAL.md platform checks.
+
+## Codebase-first redesign checks (November 12, 2026)
+
+The refund scenario is removed. Sections above that cite refund or webhook counts describe the
+earlier version. Current design: Stage 1A map (Package Explorer subagents), 1B analyze and rank,
+2 threat model and top 5, 3 fix SQLI-01 and PATH-01, 4 verify then red-team, /hand-off each stage.
+
+Verified with Maven offline in a disposable copy:
+
+- Baseline: 10 run, 0 failed, 6 skipped.
+- Reproduce (`-Dsecurity.verify=true -Dtest=*SecurityTest`): 6 run, 6 failed, each with an attack
+  message (injected OR clause returned a user; path accepted or reached the file system).
+- Reference solutions: 10 run, 0 failed, 0 skipped.
+- Red-team probes against the reference fixes held: `%` search term, `EMAIL DESC` sort,
+  `../uploads-evil/` sibling prefix, `/etc/passwd` absolute path.
+
+Not verified: Copilot behavior on the target installation (skill discovery, subagent fan-out,
+agent switching, tool limits, report quality, stage timing).
+
+Giveaway comments removed from the codebase under study: the per-file header, each class's
+"Vulnerabilities" list, 329 `VULNERABLE:` lines and about 15 hint comments (712 lines in all).
+Each class now has a neutral one-line description. A comment-insensitive comparison of all 11
+files against the previous revision shows no code changes. The reference solutions were stripped
+the same way and differ from the source only in the assigned methods.
+

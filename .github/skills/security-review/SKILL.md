@@ -1,28 +1,23 @@
 ---
 name: security-review
-description: Use when the learner explicitly asks which security workflow phase or agent role to select.
+description: "Overview of the lab workflow. Use when the learner asks which stage, agent or command comes next."
 user-invocable: true
 disable-model-invocation: true
 ---
 
-# Security workflow overview
+# Lab workflow overview
 
-Read the [shared evidence contract](references/evidence-contract.md) and
-[course scenario](../../../docs/SCENARIO.md). Help the learner select a phase without performing
-all phases automatically. This skill is an explicitly invoked overview, not an orchestrator.
+Read `outputs/handoff.md` to see the last completed stage, then tell the learner the next step.
+Do not perform any stage yourself.
 
-| Learner task | Select agent first | Invoke phase skill |
-| --- | --- | --- |
-| Investigate a candidate | Security Vulnerability Hunter | /lab-investigate |
-| Model flow and prioritize | STRIDE Threat Modeler | /lab-threat-model |
-| Plan and implement selected fix | Secure Remediation Engineer | /lab-remediate |
-| Review current patch in a fresh chat | Secure Code Reviewer | /lab-review |
+| Stage | Agent | Command | Report |
+| --- | --- | --- | --- |
+| 1A Map the codebase | Codebase Mapper | /map-codebase | codebase-map.md |
+| 1B Analyze | Security Vulnerability Hunter | /find-vulnerabilities | findings.md |
+| 2 Threat model, blast radius, top 5 | STRIDE Threat Modeler | /generate-threat-model | threat-model.md |
+| 3 Fix SQLI-01 and PATH-01 | Secure Remediation Engineer | /fix-vulnerability | change-plan.md |
+| 4 Verify, then red-team | Secure Remediation Engineer (calls the reviewer subagent) | /review-security-fix | review.md |
 
-Selecting or reading a skill does not configure an agent, tools, or a model. Verify the role
-and tools in the approved harness. Keep inline execution. If native invocation is unavailable,
-use the rehearsed manual procedure described in [compatibility](../../../docs/COMPATIBILITY.md).
-The four Local prompts are compatibility adapters with distinct names from these skills.
-
-Do not load the whole source corpus or every reference. Each phase links the small set of
-inputs it needs. Missing evidence, unsafe scope expansion, or unverified role permissions must
-be surfaced before proceeding. Refer to the shared contract for acceptance and repair limits.
+Every stage ends with **Hand-off Recorder** and `/hand-off`. Stages 1A, 1B, 2 and 3 each start
+in a new chat; Stage 4 continues in the Stage 3 chat. The
+[shared evidence contract](references/evidence-contract.md) defines evidence, basis values and limits.

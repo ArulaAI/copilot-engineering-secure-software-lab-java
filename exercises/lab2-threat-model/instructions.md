@@ -1,8 +1,5 @@
-# Exercise 2. Model
+# Exercise 2. Threat model and top 5
 
-The canonical participant steps are in [LAB_ACTION_GUIDE](../../LAB_ACTION_GUIDE.md).
-Read [the scenario](../../docs/SCENARIO.md) and complete stages in order.
-
-Required exercise scope is REFUND-01 in RefundService.java. Preserve the tests and POM.
-Use the evidence templates in outputs/. Do not use reference/ as discovery evidence or a
-source for your fix. Historical full-controller exercises are superseded by this bounded workflow.
+The participant steps are in [LAB_ACTION_GUIDE](../../LAB_ACTION_GUIDE.md), and the codebase,
+assigned fixes and commands are in [the scenario](../../docs/SCENARIO.md). This file is kept as a
+pointer for earlier links.

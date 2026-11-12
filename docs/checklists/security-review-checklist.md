@@ -2,49 +2,36 @@
 
 ## Evidence and scope
 
-- [ ] Selected finding, threat, plan, diff, and tests share an identifier.
-- [ ] Claims distinguish observed behavior, inference, assumptions, and coverage limits.
-- [ ] Discovery is independent of facilitator answers and prior model conclusions.
+- [ ] Every claim cites a file and line or a log in outputs/evidence/, with a basis.
+- [ ] Discovery is independent of facilitator answers, code comments and prior model conclusions.
+- [ ] Only the assigned methods changed; variants are recorded, not fixed.
 
-## Identity and authorization
+## Injection (SQLI-01 and variants)
 
-- [ ] Trusted identity comes from an explicit upstream boundary.
-- [ ] Caller-controlled IDs, bearer text, or admin-looking names confer no privilege.
-- [ ] Object ownership is checked before state mutation.
-- [ ] Valid owner behavior remains available after a rejected attack.
+- [ ] Values are bound parameters, never concatenated.
+- [ ] Identifiers such as sort columns come from an allow-list; anything else is rejected.
+- [ ] LIKE wildcards in user input are escaped or the behavior is a recorded decision.
 
-## Business behavior and state
+## Paths (PATH-01 and variants)
 
-- [ ] Amount, precision, currency, and full-refund rules are enforced.
-- [ ] Duplicate/concurrent calls cannot produce multiple refunds.
-- [ ] Fixture atomicity is distinguished from a production database transaction.
+- [ ] Paths are resolved against the base folder, normalized and checked with Path.startsWith.
+- [ ] Rejection happens before any file-system call; absolute and null paths are rejected.
+- [ ] Symbolic links and races are stated as limits, not claimed as handled.
 
 ## Verification and review
 
-- [ ] The relevant acceptance check failed before the change for the expected reason.
-- [ ] Actual implementation methods are tested, with legitimate and unauthorized cases.
-- [ ] Full enabled acceptance passes, with commands, exit status, and skipped counts recorded.
-- [ ] Tests, dependencies, and unrelated source are unchanged by the participant fix.
-- [ ] A fresh review inspects source and evidence and states a qualified verdict.
+- [ ] The exploit tests failed before the change for the expected reason.
+- [ ] Legitimate-behavior tests still pass.
+- [ ] Full acceptance passes with none skipped; tests and pom.xml are unchanged.
+- [ ] An isolated review verified the fixes before red-team, and gave a qualified verdict.
 
-## Optional review topics
+## Other topics in this codebase
 
-- [ ] SQL values are parameterized and dynamic identifiers allowlisted.
-- [ ] Cryptographic configuration errors fail closed and signatures bind exact payloads.
-- [ ] Time windows and event deduplication are assessed separately.
-- [ ] SSRF policy applies at connection time, retries, and redirects with resource limits.
-- [ ] Session expiry is enforced server-side and path checks consider symlink assumptions.
+- [ ] Endpoints that read or change another user's data check identity and ownership.
+- [ ] Outbound URLs are restricted at connection time, including redirects.
+- [ ] Tokens use strong secrets, fixed algorithms and verified signatures.
+- [ ] Passwords use a slow, salted hash from an established library.
+- [ ] Logs exclude passwords, tokens and card numbers.
 
 Use version-qualified OWASP mappings from the adjacent reference. This checklist does not
-establish full ASVS compliance or certify the historical application.
-
-## AI-assisted workflow threat view
-
-- [ ] Java application and engineering assistant are separate modeled subjects.
-- [ ] Relevant ASI/LLM identifiers include the verified edition and mapping rationale.
-- [ ] Input provenance, trusted task, tool authority, action sink and consequence are explicit.
-- [ ] Intended tool restrictions are distinguished from observed host enforcement.
-- [ ] Control type and actual observation or untested status are recorded.
-- [ ] Absent features are not invented and passing Java tests are not AI-security evidence.
-
-Use the [AI reference](../owasp-reference/ai-security.md) for definitions and official sources.
+establish ASVS compliance or certify the application.

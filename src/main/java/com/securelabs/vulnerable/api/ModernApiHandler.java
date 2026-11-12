@@ -1,5 +1,3 @@
-/* Historical vulnerable review corpus. OWASP category IDs in comments use the 2021 edition.
- * Optional static review only. See docs/SCENARIO.md for the required exercise. */
 package com.securelabs.vulnerable.api;
 
 import org.springframework.http.ResponseEntity;
@@ -16,39 +14,19 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
 
-/**
- * VULNERABLE: Modern API Handler (Java 17+ Patterns)
- *
- * This file contains INTENTIONAL security vulnerabilities using Java 17+ features.
- * DO NOT use these patterns in production code.
- *
- * Vulnerabilities:
- * - A03: SQL injection via text blocks
- * - A10: SSRF via Java 11+ HttpClient
- * - A08: Insecure deserialization with records
- * - A01: Race conditions with parallel streams
- * - A03: Command injection via ProcessBuilder
- * - A01: Path traversal with Files API
- */
 @RestController
 @RequestMapping("/api/modern")
 public class ModernApiHandler {
-
     private static final HttpClient httpClient = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(10))
-        .followRedirects(HttpClient.Redirect.ALWAYS) // VULNERABLE: Follows all redirects
+        .followRedirects(HttpClient.Redirect.ALWAYS)
         .build();
 
-    /**
-     * VULNERABLE: SQL injection via Java text blocks
-     * Text blocks make multi-line SQL easier to write but injection is still possible
-     */
     @PostMapping("/search")
     public ResponseEntity<?> searchWithTextBlock(@RequestBody SearchRequest request) {
         String searchTerm = request.term();
         String sortField = request.sortBy();
 
-        // VULNERABLE: Text block SQL with string concatenation
         String query = """
             SELECT id, name, email, role
             FROM users
@@ -67,16 +45,8 @@ public class ModernApiHandler {
         ));
     }
 
-    /**
-     * VULNERABLE: SSRF using Java 11+ HttpClient
-     * Modern HttpClient API but same SSRF risks
-     */
     @GetMapping("/proxy")
     public ResponseEntity<?> proxyRequest(@RequestParam String targetUrl) {
-        // VULNERABLE: No URL validation
-        // VULNERABLE: No internal IP blocking
-        // VULNERABLE: Follows redirects automatically
-
         try {
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(targetUrl))
@@ -87,7 +57,6 @@ public class ModernApiHandler {
             HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-            // VULNERABLE: Returns full response including potential internal data
             return ResponseEntity.ok(Map.of(
                 "statusCode", response.statusCode(),
                 "headers", response.headers().map(),
@@ -95,7 +64,6 @@ public class ModernApiHandler {
             ));
 
         } catch (Exception e) {
-            // VULNERABLE: Exposes internal error details
             return ResponseEntity.status(500).body(Map.of(
                 "error", e.getClass().getName(),
                 "message", e.getMessage(),
@@ -104,15 +72,8 @@ public class ModernApiHandler {
         }
     }
 
-    /**
-     * VULNERABLE: Async SSRF with CompletableFuture
-     * Can be used for blind SSRF attacks
-     */
     @PostMapping("/async-fetch")
     public ResponseEntity<?> asyncFetch(@RequestBody List<String> urls) {
-        // VULNERABLE: Fetches multiple URLs without validation
-        // VULNERABLE: Can be used for port scanning, DDOS amplification
-
         List<CompletableFuture<Map<String, Object>>> futures = urls.stream()
             .map(url -> CompletableFuture.supplyAsync(() -> {
                 try {
@@ -144,22 +105,16 @@ public class ModernApiHandler {
         return ResponseEntity.ok(results);
     }
 
-    /**
-     * VULNERABLE: Race condition with parallel stream and mutable state
-     */
     @PostMapping("/process-batch")
     public ResponseEntity<?> processBatch(@RequestBody List<String> items) {
-        // VULNERABLE: Shared mutable state with parallel stream
         List<String> processed = new ArrayList<>(); // Not thread-safe!
         Map<String, Integer> counts = new HashMap<>(); // Not thread-safe!
 
         items.parallelStream()
             .filter(item -> item != null && !item.isEmpty())
             .forEach(item -> {
-                // VULNERABLE: Race condition - ArrayList is not thread-safe
                 processed.add(item.toUpperCase());
 
-                // VULNERABLE: Race condition on HashMap
                 counts.merge(item.substring(0, 1), 1, Integer::sum);
             });
 
@@ -170,15 +125,11 @@ public class ModernApiHandler {
         ));
     }
 
-    /**
-     * VULNERABLE: Command injection via ProcessBuilder
-     */
     @PostMapping("/execute")
     public ResponseEntity<?> executeCommand(@RequestBody CommandRequest request) {
         String command = request.command();
         List<String> args = request.arguments();
 
-        // VULNERABLE: Direct command execution with user input
         try {
             List<String> fullCommand = new ArrayList<>();
             fullCommand.add(command);
@@ -197,7 +148,6 @@ public class ModernApiHandler {
 
             int exitCode = process.waitFor();
 
-            // VULNERABLE: Returns command output
             return ResponseEntity.ok(Map.of(
                 "command", String.join(" ", fullCommand),
                 "exitCode", exitCode,
@@ -209,17 +159,12 @@ public class ModernApiHandler {
         }
     }
 
-    /**
-     * VULNERABLE: Path traversal with modern Files API
-     */
     @GetMapping("/files/{filename}")
     public ResponseEntity<?> readFile(@PathVariable String filename) {
-        // VULNERABLE: Path traversal - filename can contain ../
         Path basePath = Path.of("/var/app/data");
-        Path filePath = basePath.resolve(filename); // VULNERABLE: No normalization check
+        Path filePath = basePath.resolve(filename);
 
         try {
-            // VULNERABLE: No check if resolved path is within basePath
             String content = Files.readString(filePath);
 
             return ResponseEntity.ok(Map.of(
@@ -233,18 +178,13 @@ public class ModernApiHandler {
         }
     }
 
-    /**
-     * VULNERABLE: Arbitrary file write with Files API
-     */
     @PostMapping("/files/{filename}")
     public ResponseEntity<?> writeFile(@PathVariable String filename,
                                        @RequestBody String content) {
-        // VULNERABLE: Path traversal in write operation
         Path basePath = Path.of("/var/app/uploads");
         Path filePath = basePath.resolve(filename);
 
         try {
-            // VULNERABLE: Can write to arbitrary locations
             Files.writeString(filePath, content);
 
             return ResponseEntity.ok(Map.of(
@@ -257,16 +197,10 @@ public class ModernApiHandler {
         }
     }
 
-    /**
-     * VULNERABLE: Record with sensitive data exposure
-     * Records auto-generate toString() which can leak sensitive data
-     */
     @PostMapping("/user/create")
     public ResponseEntity<?> createUser(@RequestBody UserRecord user) {
-        // VULNERABLE: Record's toString() exposes password
         System.out.println("Creating user: " + user); // Logs password!
 
-        // VULNERABLE: Returning entire record including password
         return ResponseEntity.ok(Map.of(
             "message", "User created",
             "user", user.toString() // Exposes password in response
@@ -274,46 +208,34 @@ public class ModernApiHandler {
     }
 
     /**
-     * VULNERABLE: Type checking with unchecked casts
      * Java 17 pattern matching in instanceof
      */
     @PostMapping("/process")
     public ResponseEntity<?> processObject(@RequestBody Map<String, Object> data) {
         Object value = data.get("payload");
 
-        // VULNERABLE: Type confusion - trusting client-provided type info
         String result;
         if (value == null) {
             result = "null value";
         } else if (value instanceof String s) {
-            // VULNERABLE: Processing untrusted string input
             result = "String: " + s;
         } else if (value instanceof Integer i) {
             result = "Integer: " + i;
         } else if (value instanceof List<?> list) {
-            // VULNERABLE: Processing untrusted list data
             result = "List size: " + list.size();
         } else if (value instanceof Map<?, ?> map) {
-            // VULNERABLE: Processing untrusted nested data without validation
             result = "Map: " + map.toString();
         } else {
-            // VULNERABLE: Exposing class name of arbitrary objects
             result = "Unknown: " + value.getClass().getName();
         }
 
         return ResponseEntity.ok(Map.of("result", result));
     }
 
-    /**
-     * VULNERABLE: Stream with resource leak and path traversal
-     */
     @GetMapping("/logs")
     public ResponseEntity<?> readLogs(@RequestParam String logFile) {
-        // VULNERABLE: Path traversal - logFile can contain ../
-        // VULNERABLE: Resource leak - stream not properly closed
         Stream<String> lines = null;
         try {
-            // VULNERABLE: Stream not properly closed in all code paths
             lines = Files.lines(Path.of("/var/log/" + logFile));
 
             List<String> errorLines = lines
@@ -321,44 +243,34 @@ public class ModernApiHandler {
                 .limit(100)
                 .toList();
 
-            // VULNERABLE: Stream only closed on success path
             lines.close();
 
             return ResponseEntity.ok(Map.of("errors", errorLines));
 
         } catch (IOException e) {
-            // VULNERABLE: Stream not closed on exception path (resource leak)
-            // VULNERABLE: Exposing internal error message
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
-    /**
-     * VULNERABLE: Var type hiding security-relevant info
-     */
     @PostMapping("/config")
     public ResponseEntity<?> updateConfig(@RequestBody Map<String, String> config) {
-        // VULNERABLE: var hides that this is user-controlled input
         var dbHost = config.get("database.host");
         var dbPort = config.get("database.port");
         var adminPassword = config.get("admin.password");
 
-        // VULNERABLE: Logging sensitive config including password
         System.out.println("Config update - host: " + dbHost +
                           ", port: " + dbPort +
                           ", admin password: " + adminPassword);
 
-        // VULNERABLE: Exposing all config in response
         return ResponseEntity.ok(Map.of(
             "updated", config,
             "status", "Configuration applied"
         ));
     }
 
-    // Record definitions - auto-generate potentially dangerous toString()
+    // Record definitions
     public record SearchRequest(String term, String sortBy) {}
     public record CommandRequest(String command, List<String> arguments) {}
 
-    // VULNERABLE: Record exposes password in auto-generated toString()
     public record UserRecord(String username, String email, String password, String role) {}
 }

@@ -1,33 +1,30 @@
 # Facilitator run sheet
 
-| Clock | Activity | Cue |
+| Clock | Stage | Cue |
 | --- | --- | --- |
-| 0 to 20 | Introduction and demo | Evidence chain, roles, context, save report |
-| 20 to 35 | Investigate | Two expected failed ownership checks, FLEX on extra findings |
-| 35 to 45 | Model | Seven minutes Java T-REFUND-01, three minutes AI workflow T-AI-01 |
-| 45 to 70 | Implement | Agreed plan, only RefundService.java changes |
-| 70 to 85 | Verify | Nine passing enabled checks, fresh review, NEVER CUT |
-| 85 to 90 | Debrief | Transfer questions, NEVER CUT |
+| 0 to 10 | Setup and demo | Agent, command, gate, `/hand-off`, new chat. Baseline 10 run, 6 skipped |
+| 10 to 22 | 1A Map | Package Explorer subagents per package. Every package indexed; entry points cite lines |
+| 22 to 35 | 1B Analyze | Findings ranked Critical to Low. Open the top three. Evidence is the code path |
+| 35 to 50 | 2 Threat model and top 5 | Impact x likelihood with evidence. Blast radius for top 5. SQLI-01 and PATH-01 located |
+| 50 to 70 | 3 Fix | Reproduce first (6 failures). Agree scope. Approve each command. Acceptance 10 run, 0 skipped |
+| 70 to 85 | 4 Verify, then red-team | Same chat. Reviewer subagent verifies first. RedTeamCheck runs separately. NEVER CUT |
+| 85 to 90 | Debrief | Four questions and the Copilot-safety table. NEVER CUT |
 
-Before the room opens, complete the environment record and release verification. Assign
-one person to help-room support during introduction. Confirm chat and breakout controls.
+Commands are in docs/SCENARIO.md. Every run writes to outputs/evidence/ with `mvn -l`, which
+prints nothing to the terminal.
 
-Commands. Baseline `mvn clean test`. Reproduce `mvn -Dlab.verify=true -Dtest=RefundSecurityTest test`.
-Final `mvn -Dlab.verify=true clean test`. Offline option is -o with existing cached artifacts.
+Rhythm per stage. Select the role, inspect effective tools, attach phase files, choose the existing
+skill from /, inspect loading/activity, pass the gate, then switch to Hand-off Recorder and choose
+`/hand-off`. Check the saved report and selective summary before starting a new chat. After Stage 3's hand-off, stay in that chat and switch back
+to Secure Remediation Engineer for Stage 4. Learners never paste prompts or logs.
 
-Tools. Hunter investigates. Threat Modeler explains flow. Remediation Engineer edits after the
-participant selects scope. Reviewer reads fresh evidence. OWASP Expert explains mappings.
-Select the role in the Agent dropdown, attach context and choose the existing phase skill from /.
-Use /lab-investigate, /lab-threat-model, /lab-remediate, or /lab-review. Inspect attachments and activity.
-Local adapters read the same procedures on a qualified route. A missing skill stops for facilitator
-help. Save reading-role output manually. Start a fresh implementation chat after AI-01 with a compact
-validated Java handoff, excluding the raw challenge. Keep the implementation chat for corrections
-and start a fresh review chat with current diff/tests/evidence.
-Permit one correction pass/re-review, then escalate unresolved work. Keep acceptance.md with the evidence.
+Limits. One correction pass and one re-review, then escalate. Reviewer reruns acceptance itself.
+Fresh/subagent context is not OS isolation. Qualify subagents, permissions and timing on target IDEs. No red-team before verification.
+`mvn -Dtest=OutputsCheck test` shows which learners have complete report forms.
+Assessment aids are reference/finding-catalog.md and reference/threat-model.md.
 
-If asked why findings differ, compare source, assumptions, and behavior. Never promise complete
-or identical discovery. If asked whether the application is secure, state the selected scenario
-and untested boundaries. If blocked on packages, use the approved support route and the existing
-validated test path. Do not introduce an installation during the session.
+If findings differ, compare evidence and reasoning, never counts. If asked whether the
+application is secure, point to the deferred items in their top 5. Do not introduce
+installations during the session.
 
-Closing sentence. Apply the procedure to your own trust boundaries and require evidence for each fix.
+Closing sentence. map before you judge, rank before you fix, and attack your own fix.
