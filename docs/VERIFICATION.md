@@ -11,8 +11,7 @@ POM changes, scanner, service startup or external requests. Preserve distributed
 | Optional completed-report diagnostic, not a Stage 3 step | `mvn -Dtest=OutputsCheck test` | Five checks skipped if generated reports are absent |
 
 The nine retired ledger tests no longer run. Existing generated ledger/plan files do not participate
-in form checks or task acceptance. Pending analysis gates may fail optional completion diagnostics,
-but do not trigger a Stage 3 repair loop. No form result proves security or changes a test verdict.
+in form checks or task acceptance. Legacy gate fields are ignored by optional diagnostics; generated reports need no approval field. No form result proves security or changes a test verdict.
 
 Create and Critique use the requested task's actual criteria and focused tests plus ordinary regression.
 New tests change counts. Relevant skipped/unrun checks cannot prove acceptance; unrelated unselected
@@ -36,3 +35,10 @@ Final deliverable: Stage 4 generates one structured outputs/security-review.md f
 with verdict, scope, fixed/open findings, ASVS/control-area gaps and actual build/test results. Stage 3
 review.md remains a short per-task input. No duplicate final append, new whole-service scan or metadata
 loop is required. The report is scoped evidence, not production/ASVS certification.
+
+Approval-removal authoring checks: ordinary offline Maven regression discovered 16 tests: ten passed,
+six skipped, zero failures/errors. A disposable form-only fixture run passed all five OutputsCheck
+cases with missing, pending and failed legacy gate fields. These synthetic checks establish validator
+behavior, not security findings. Seven Local prompt agent names, seven skill headers, six bundled
+template paths, Markdown links and diagram XML were checked. Native Local routing, argument handling
+and model behavior still require the timed IDE rehearsal; no native execution is claimed here.

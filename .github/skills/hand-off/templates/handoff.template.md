@@ -13,7 +13,7 @@ approve anything or decide whether the next stage may start.
 ## <what this covers> · <date or revision>
 - Goal:
 - Done (files, commits):
-- In progress or pending (decisions, gates, approvals still open):
+- In progress or pending (open decisions and unfinished work):
 - Evidence (commands and actual results):
 - Repository state (branch, revision, changed and untracked files):
 - Open questions and risks:

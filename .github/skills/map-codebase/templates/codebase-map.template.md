@@ -3,7 +3,6 @@ stage: 1a-map
 packages_mapped: ""       # number of packages in the index, e.g. 4
 entry_points: ""          # number of externally reachable entry points found
 evidence: []              # files you want the next stage to open first
-gate: ""                  # pass | fail
 ---
 
 # Codebase map
@@ -47,11 +46,11 @@ Label each component and edge **implemented** (cite source), **assumed** or **pr
 
 {{What the code does not show: deployment, configuration, real authentication.}}
 
-## Gate
+## Quality notes
 
-- [ ] Every package in src/main/java appears in the index.
-- [ ] Entry points cite file and line; inputs are named.
-- [ ] The diagram shows nothing as implemented that the code does not contain.
+- Every package in src/main/java appears in the index.
+- Entry points cite file and line; inputs are named.
+- The diagram shows nothing as implemented that the code does not contain.
 
 ## Stage entry state
 

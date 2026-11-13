@@ -33,7 +33,7 @@ current fixture counts; selected tasks define their own acceptance checks.
 | 5 Debrief | 3 | Transfer to participants' work |
 | Total | 60 | |
 
-Each stage closes with a separate /hand-off that records the current state; it never blocks. Review and debrief are never cut; the facilitator narrows
+Handoff is optional: `/handoff` records current state whenever needed. No stage requires approval fields or transition sign-off. Review and debrief are never cut; the facilitator narrows
 live implementation scope rather than reporting incomplete work as passed. Five completed fixes
 within this schedule are not promised. Stage 3 has no mandatory plan, ledger, cycle counter or artifact validator.
 
@@ -41,8 +41,8 @@ within this schedule are not promised. Stage 3 has no mandatory plan, ledger, cy
 
 - src/main/java/ contains the synthetic vulnerable service and helpers.
 - src/test/java/ contains behavior, opt-in exploit and workflow-form checks.
-- .github/ contains seven visible profiles and seven explicit skills.
-- outputs/ contains map/findings/model templates, task critique, final security-review and handoff formats.
+- .github/ contains seven visible profiles, seven skills and seven thin Local prompt entry points.
+- outputs/ is reserved for generated reports. Each skill bundles its relevant templates.
 - docs/ contains the scenario, security references and [facilitator guide](docs/INSTRUCTOR_GUIDE.md).
 
 Participant-generated architecture and findings belong in outputs/. No completed answer key or
@@ -55,5 +55,9 @@ Native IDE behavior and session timing require target-environment rehearsal.
 
 Copyright InRhythm / Arula. Training material using synthetic data.
 
-Final deliverable: [structured security-review template](outputs/security-review.template.md),
+Final deliverable: [structured security-review template](.github/skills/review-security-fix/templates/security-review.template.md),
 used by Stage 4 to generate outputs/security-review.md.
+
+VS Code Local entry commands: `/map`, `/investigate`, `/threat-model`, `/create-fix`,
+`/critique-fix` (or `/critique-fix final`), `/handoff` and optional `/lab-workflow`.
+Each selects its agent automatically. See [routing and formats](docs/WORKFLOW_ARCHITECTURE.md).

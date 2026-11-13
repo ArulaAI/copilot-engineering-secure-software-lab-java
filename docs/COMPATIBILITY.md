@@ -16,8 +16,8 @@ from method-level tests or claim dependency vulnerabilities have been removed.
 
 ## VS Code qualification
 
-Record IDE, plugin, harness and model. Confirm seven visible profiles; seven explicit skills include /hand-off and the optional /security-review overview.
-Select role separately from skill. Confirm native skill discovery and inspect actual tools/activity.
+Record IDE, plugin, harness and model. Confirm seven visible profiles; seven skills remain available, with seven Local prompt entry points listed in the Lab Action Guide.
+For VS Code Local, confirm seven prompt entry points select their named agents and load the linked skills/templates. Direct skill invocation still requires manual role selection. Inspect actual tools/activity.
 Use only organization-permitted settings and models. No model pin, paid upgrade or CLI is required.
 
 | Role | Intended tools | Permitted writes |
@@ -36,7 +36,7 @@ can technically edit more than its report. Inspect all actual changes. Execute-c
 exact command approval and observed restrictions; a role name alone is not proof.
 
 Rehearse direct mapping, focused implementation/testing, fresh task review,
-separate same-chat Recorder invocation and cumulative final review. The mapper reads source and configuration directly without delegation. New chat reduces context carryover but provides no
+optional same-chat `/handoff` invocation and cumulative final review. The mapper reads source and configuration directly without delegation. New chat reduces context carryover but provides no
 OS isolation or guarantee of independent judgment.
 
 ## IntelliJ and manual routes
@@ -67,3 +67,8 @@ rehearsal, and record any missing features or fallback limits before claiming re
 
 Stage 3 does not depend on task/plan files, artifact validators or earlier gate approval. Preserve old
 rehearsal artifacts without reading or repairing them. Native runtime tests remain required for acceptance.
+
+The Local prompt-file `agent` field provides routing; inline skill metadata does not. Prompt commands
+are Local-specific, so IntelliJ must qualify its manual route separately. See
+[VS Code prompt files](https://code.visualstudio.com/docs/agent-customization/prompt-files) and
+[skills](https://code.visualstudio.com/docs/agent-customization/agent-skills).

@@ -69,7 +69,7 @@ Copilot on the learners' own code, mapped to controls they practiced in the lab:
 | LLM02:2026 Sensitive Information Disclosure | Synthetic data only; files shared instead of dumps |
 | LLM04:2026 Supply Chain | No dependency changes; customization files reviewed like code |
 | LLM07:2026 Misinformation | Actual tool output linked to the tested source state, not an unsupported agent claim |
-| LLM10:2026 Improper Output Handling | Gates, fresh task critique and cumulative review |
+| LLM10:2026 Improper Output Handling | Evidence checks, fresh task critique and cumulative review |
 
 Verify identifiers against the official documents below before each delivery.
 

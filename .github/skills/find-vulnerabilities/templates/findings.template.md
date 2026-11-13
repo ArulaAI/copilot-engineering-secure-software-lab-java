@@ -3,7 +3,6 @@ stage: 1b-analyze
 findings_total: ""
 top_severity: ""          # Critical | High | Medium | Low, with qualifications in the rationale
 evidence: [outputs/codebase-map.md]
-gate: ""                  # pass | fail; pending until the human decides
 ---
 
 # Original findings
@@ -47,11 +46,10 @@ Inventory every application class and relevant configuration, including standalo
 
 {{Base revision, tracked/untracked changes and inspected content identity. Distinguish supplied evidence from actual execution.}}
 
-## Gate
+## Quality notes
 
-- [ ] Accepted mapping gate and stage handoff were checked before discovery.
-- [ ] Whole-service coverage includes standalone components and configuration, with gaps explicit.
-- [ ] Code defects, reachability and verification are assessed separately.
-- [ ] Severity is justified with impact and prerequisites; remote exposure is not invented.
-- [ ] Findings cite inspected evidence and duplicates share a root cause.
-- [ ] Unsupported hypotheses are explained without erasing separately supported risks.
+- Whole-service coverage includes standalone components and configuration, with gaps explicit.
+- Code defects, reachability and verification are assessed separately.
+- Severity is justified with impact and prerequisites; remote exposure is not invented.
+- Findings cite inspected evidence and duplicates share a root cause.
+- Unsupported hypotheses are explained without erasing separately supported risks.

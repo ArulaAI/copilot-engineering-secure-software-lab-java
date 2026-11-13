@@ -5,7 +5,7 @@ COMPATIBILITY.md and VERIFICATION.md. Known-risk material stays outside the part
 
 | Clock | Action |
 | --- | --- |
-| 0 to 5 | Baseline and demonstrate role/skill selection |
+| 0 to 5 | Baseline and demonstrate Local command routing |
 | 5 to 10 | Map source and configuration; inspect actual connections |
 | 10 to 18 | Investigate whole-service findings; separate defects and reachability |
 | 18 to 28 | STRIDE, scenario prerequisites, blast radius and top five |

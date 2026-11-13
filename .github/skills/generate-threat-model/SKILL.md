@@ -6,13 +6,13 @@ user-invocable: true
 disable-model-invocation: true
 ---
 
-Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts. Skill invocation does not switch roles or grant tools.
+Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts. In VS Code Local, run `/threat-model` to select **STRIDE Threat Modeler** automatically. Direct `/generate-threat-model` uses the current agent; select **STRIDE Threat Modeler** first.
 
-Select STRIDE Threat Modeler or stop.
+
 
 ## Input readiness
 
-Read the architecture, ALL original findings, their accepted human gate and corresponding discovery handoff. If acceptance or required transition evidence is absent, identify the specific gap and ask whether to continue provisionally. Record an explicit user override without labelling the earlier gate approved; otherwise wait. Do not write handoff. Check whole-service class/configuration coverage and the assessment/reachability/verification dimensions. If the supplied report omits supported component risks or those dimensions, identify the reconciliation needed; do not claim a complete top five from an incomplete input. Retain useful work rather than automatically repeating the whole scan.
+Read the available architecture and ALL original findings; use handoff only when present. Check coverage and preserve assessment, reachability and verification as separate dimensions. Fill small source-evidence gaps directly. State missing inputs and qualify priorities when coverage is incomplete; do not pause for approval or require a handoff. Retain useful work rather than repeating the entire scan. Do not write handoff.
 
 ## Model and score
 
@@ -29,4 +29,4 @@ For each selected threat, define a concrete remediation objective with allowed c
 
 ## Consistency and output
 
-Write outputs/threat-model.md from its template. Check all finding/threat/scenario references, top-five membership and arithmetic. Check that scoring, blast radius, proposed scope and concluding disposition agree. A finding mapped to a selected threat cannot also be called wholly lower-ranked/deferred without identifying its remaining sub-scope. No proposed mitigation is implemented yet. Record source state and verification limits. Ask the participant to inspect priorities and gate. They may invoke the generic /hand-off with Hand-off Recorder to capture any current state, including pending approval; do not update handoff yourself.
+Write outputs/threat-model.md from [its template](templates/threat-model.template.md). Check all finding/threat/scenario references, top-five membership and arithmetic. Check that scoring, blast radius, proposed scope and concluding disposition agree. A finding mapped to a selected threat cannot also be called wholly lower-ranked/deferred without identifying its remaining sub-scope. No proposed mitigation is implemented yet. Record source state and verification limits. Summarize priorities and uncertainty without an approval request. Handoff is optional; do not update handoff yourself.

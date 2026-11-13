@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  */
 class OutputsCheck {
     private static final Path OUTPUTS = Path.of("outputs");
-    private static final Set<String> GATE = Set.of("pass", "fail");
 
     private record Rule(String key, Set<String> allowed, boolean number) {
         static Rule any(String key) { return new Rule(key, Set.of(), false); }
@@ -37,13 +36,12 @@ class OutputsCheck {
 
     private static final List<Report> REPORTS = List.of(
         new Report("codebase-map.md", "packages_mapped", List.of(
-            Rule.number("packages_mapped"), Rule.number("entry_points"), Rule.oneOf("gate", GATE))),
+            Rule.number("packages_mapped"), Rule.number("entry_points"))),
         new Report("findings.md", "findings_total", List.of(
             Rule.number("findings_total"),
-            Rule.oneOf("top_severity", Set.of("Critical", "High", "Medium", "Low")),
-            Rule.oneOf("gate", GATE))),
+            Rule.oneOf("top_severity", Set.of("Critical", "High", "Medium", "Low")))),
         new Report("threat-model.md", "threats_total", List.of(
-            Rule.number("threats_total"), Rule.any("top5"), Rule.oneOf("gate", GATE))),
+            Rule.number("threats_total"), Rule.any("top5"))),
         new Report("review.md", "verdict", List.of(
             Rule.oneOf("verdict", Set.of("PASS", "PARTIALLY FIXED", "FAIL", "NOT VERIFIED")))),
         new Report("handoff.md", "last_stage", List.of(

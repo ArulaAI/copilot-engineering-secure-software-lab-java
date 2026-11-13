@@ -11,7 +11,9 @@ elapsed time; do not assume instruction simplification proves a speed or usage g
 - Fresh Critique independently tests, gives a concise verdict and writes one short review entry.
 - Concrete correction returns to Create without counters, metadata repair or repeated successful runs.
 - Old tasks.md/change-plan.md/task-reviews.md never trigger validation or repairs.
-- Missing irrelevant earlier gates do not block the requested implementation/review.
+- All stages proceed without approval fields or mandatory handoff, including absent/stale earlier reports. State evidence gaps honestly.
+- Each Local command selects the intended agent, preserves accompanying instructions (including `final`) and loads the bundled format.
+- Generated reports are written to outputs, never back into skill templates.
 - Unstarted priorities remain open without questions or formal deferral.
 - Blocked integration is disclosed once, not retried through multiple harnesses.
 - Final review closes out completed changes without new audits/tests, reuses matching current accepted evidence or runs one needed regression, and writes one structured final report. Advanced topics stay verbal; handoff captures any state when requested.

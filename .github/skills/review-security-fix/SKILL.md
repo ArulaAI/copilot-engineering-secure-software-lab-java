@@ -6,6 +6,8 @@ user-invocable: true
 disable-model-invocation: true
 ---
 
+Local entry point: `/critique-fix` selects **Secure Code Reviewer** and loads this procedure. Direct `/review-security-fix` requires that agent to be selected first.
+
 Use Secure Code Reviewer in a fresh chat. Resolve the requested scope from the prompt, guide and
 actual changes. No internal ID, saved plan/ledger, prior gate or formal deferral is required.
 
@@ -19,7 +21,7 @@ repeat the task-critique procedure.
 2. Independently run focused security/behavior tests and ordinary regression once. Add a detecting
    test only for a concrete in-scope gap, then run it. No new full-service audit or optional hardening.
 3. Start the final response with **Verdict: PASS / PARTIALLY FIXED / FAIL / NOT VERIFIED**, choosing one status using the reviewer profile definitions, then actual commands/results and specific required changes.
-   Append one short task result to outputs/review.md and stop. Return defects to Create through the
+   Use [the task format](templates/review.template.md). Append one short task result to outputs/review.md and stop. Return defects to Create through the
    participant; never fix application source, start another agent or select another task.
 
 ## Final security review report (Stage 4)
@@ -33,7 +35,7 @@ repeat the task-critique procedure.
    Do not rerun a separate clean compile just to duplicate compilation already established by Maven
    test. No new tests, red-team campaign, dependencies or service startup in final mode.
 3. Generate ONE standalone report at outputs/security-review.md using
-   [the final report structure](../../../outputs/security-review.template.md). Start with the
+   [the final report structure](templates/security-review.template.md). Start with the
    verdict, then Executive Summary and Scope, Vulnerabilities Fixed, Remaining Issues and Required
    Changes, ASVS Gaps and Production Assurance, Build Status and Test Evidence, Final Decision and
    Next Steps. Fill with actual source/results; state missing evidence instead of inventing it.

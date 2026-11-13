@@ -6,6 +6,8 @@ user-invocable: true
 disable-model-invocation: true
 ---
 
+Local entry point: `/lab-workflow` selects **OWASP Security Expert** and loads this procedure. Direct `/security-review` requires that agent to be selected first.
+
 Explain the next action from available context: map, investigate, threat-model, Create the named fix,
 Critique it, or final review. The guide supplies implementation and review prompts. No task ledger,
 plan, cycle counter or metadata repair is required. Participants choose tasks; agents do not auto-start

@@ -3,7 +3,6 @@ stage: 2-threat-model
 threats_total: ""
 top5: []
 evidence: [outputs/codebase-map.md, outputs/findings.md]
-gate: ""                  # human decision; pending drafts are not completed reports
 ---
 
 # Threat model
@@ -14,7 +13,7 @@ exposure or executed verification. Use Web Top 10 2025 where application mapping
 
 ## Input coverage and assumptions
 
-{{Accepted inputs, class/configuration coverage, missing evidence and explicit exposure/caller assumptions.}}
+{{Available inputs, class/configuration coverage, missing evidence and explicit exposure/caller assumptions.}}
 
 ## Finding traceability and current disposition
 
@@ -79,12 +78,12 @@ implementation claims. Reconcile this text with the traceability table and top5 
 
 {{Revision, tracked/untracked changes, source identity and actual verification level.}}
 
-## Gate
+## Quality notes
 
-- [ ] Whole-service findings are consumed or coverage gaps explicitly block a completeness claim.
-- [ ] Every finding and selected threat has consistent traceability and disposition.
-- [ ] Scenario scores match prerequisites, controls, assumptions and arithmetic.
-- [ ] Blast radius uses the same actor/conditions as the scored scenario.
-- [ ] Priorities are evidence-ranked without prescribed vulnerability types.
-- [ ] Proposed tasks are bounded; partial work cannot close a whole multi-control threat.
-- [ ] No fix, test result or human approval is invented.
+- Whole-service findings are consumed or coverage gaps explicitly block a completeness claim.
+- Every finding and selected threat has consistent traceability and disposition.
+- Scenario scores match prerequisites, controls, assumptions and arithmetic.
+- Blast radius uses the same actor/conditions as the scored scenario.
+- Priorities are evidence-ranked without prescribed vulnerability types.
+- Proposed tasks are bounded; partial work cannot close a whole multi-control threat.
+- No fix, test result or human approval is invented.
