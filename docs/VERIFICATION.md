@@ -39,6 +39,7 @@ loop is required. The report is scoped evidence, not production/ASVS certificati
 Approval-removal authoring checks: ordinary offline Maven regression discovered 16 tests: ten passed,
 six skipped, zero failures/errors. A disposable form-only fixture run passed all five OutputsCheck
 cases with missing, pending and failed legacy gate fields. These synthetic checks establish validator
-behavior, not security findings. Seven Local prompt agent names, seven skill headers, six bundled
-template paths, Markdown links and diagram XML were checked. Native Local routing, argument handling
-and model behavior still require the timed IDE rehearsal; no native execution is claimed here.
+behavior, not security findings. The earlier prompt routing wrappers have been removed. Seven skill-to-agent profile links, skill
+headers, six bundled template paths, guide references and diagram XML are checked for the skills-only
+route. Native skill execution and model behavior still require the timed IDE rehearsal; no native
+Copilot execution is claimed here.

@@ -6,7 +6,7 @@ user-invocable: true
 disable-model-invocation: true
 ---
 
-Local entry point: `/lab-workflow` selects **OWASP Security Expert** and loads this procedure. Direct `/security-review` requires that agent to be selected first.
+Run with **[OWASP Security Expert](../../agents/owasp-expert.agent.md)** selected in the agent picker, then invoke `/security-review`. The skill runs in the selected agent context; it does not switch agents.
 
 Explain the next action from available context: map, investigate, threat-model, Create the named fix,
 Critique it, or final review. The guide supplies implementation and review prompts. No task ledger,

@@ -25,13 +25,13 @@ rather than removing tests or final review.
 
 ## How to drive each stage
 
-1. Start each stage in a new Copilot **Local** chat and run the command shown below. Its prompt file selects the relevant agent and loads the skill; no manual role switch is needed.
+1. Start each stage in a new Copilot **Local** chat. Select the named agent, then invoke the skill shown below. Each skill identifies its corresponding agent and bundles its report format.
 2. Inspect the generated report and source/test evidence. Reports have no approval fields, and no stage waits for a pass/fail decision or handoff.
-3. Use `/handoff` in the working chat only when you want a continuation snapshot. Start the next stage directly when ready.
+3. Select **Hand-off Recorder** and use `/hand-off` in the working chat only when you want a continuation snapshot. Start the next stage directly when ready.
 
 Inspect effective tools and Source Control, including new files. Scope instructions are not a sandbox;
-a fresh chat does not guarantee independent judgment. Direct skill commands remain available if you
-select their agent manually; the shorter commands below are the recommended Local route.
+a fresh chat does not guarantee independent judgment. Skills run in the selected agent context;
+selecting a skill does not automatically change the agent.
 
 If a skill or role is missing, call the facilitator. Use only the rehearsed fallback in
 [compatibility](docs/COMPATIBILITY.md). No new CLI is required.
@@ -43,12 +43,12 @@ Complete [compatibility](docs/COMPATIBILITY.md) before the session and read [the
 - Confirm seven visible agents: Codebase Mapper, Security Vulnerability Hunter, STRIDE Threat
   Modeler, Secure Remediation Engineer, Secure Code Reviewer, Hand-off Recorder and OWASP Security
   Expert.
-- Confirm seven Local entry commands: `/map`, `/investigate`, `/threat-model`,
-  `/create-fix`, `/critique-fix`, `/handoff` and optional `/lab-workflow`.
+- Confirm seven skills: `/map-codebase`, `/find-vulnerabilities`, `/generate-threat-model`,
+  `/fix-vulnerability`, `/review-security-fix`, `/hand-off` and optional `/security-review`.
 - Run `mvn clean test` in the terminal. It must build successfully. Some shipped security checks
   are intentionally skipped until explicitly enabled. Inspect the actual summary rather than
   treating green as proof of security. Exact release counts are in [verification](docs/VERIFICATION.md).
-- Observe the facilitator demonstrate automatic role selection, skill invocation and optional
+- Observe the facilitator demonstrate agent selection, skill invocation and optional
   handoff. Agents create report files from their templates when needed; you need not copy forms.
 
 ## 1A. Map the codebase (5 minutes)
@@ -57,7 +57,7 @@ Complete [compatibility](docs/COMPATIBILITY.md) before the session and read [the
 
 **Input:** actual source/configuration and the scenario.
 
-1. New Local chat, `/map`.
+1. New Local chat, select **Codebase Mapper**, then `/map-codebase`.
 2. The single mapper inventories packages and reads source plus configuration directly. It retains
    citations while reading, checks actual call edges and writes the map without delegation.
 3. Open `outputs/codebase-map.md`. Inspect representative entry points and call edges in source.
@@ -66,7 +66,7 @@ Complete [compatibility](docs/COMPATIBILITY.md) before the session and read [the
 source supports every implemented diagram edge. Mark unknowns. A standalone helper is not an HTTP
 endpoint merely because it has a public method. No completed architecture is supplied.
 
-Continue to the next stage; `/handoff` is optional.
+Continue to the next stage; `/hand-off` is optional.
 
 ## 1B. Investigate (8 minutes)
 
@@ -74,7 +74,7 @@ Continue to the next stage; `/handoff` is optional.
 
 **Input:** available map, all application classes and relevant configuration. Inspect standalone components too; assess code defects separately from proven external reachability.
 
-1. New Local chat, `/investigate`.
+1. New Local chat, select **Security Vulnerability Hunter**, then `/find-vulnerabilities`.
 2. Read `outputs/findings.md`. Inspect the top findings' input-to-sink paths and preconditions.
 3. Check severity and coverage, merge duplicate root causes, and reject a plausible false positive
    with a reason. Different titles or finding counts are expected; evidence is the assessment.
@@ -83,7 +83,7 @@ Continue to the next stage; `/handoff` is optional.
 reachability and actual verification are separate, with uncertainty retained. Preserve this original discovery record; later resolution belongs in task/review
 artifacts rather than rewriting the original finding away.
 
-Continue to the next stage; `/handoff` is optional.
+Continue to the next stage; `/hand-off` is optional.
 
 ## 2. Threat model and prioritize (10 minutes)
 
@@ -91,7 +91,7 @@ Continue to the next stage; `/handoff` is optional.
 
 **Input:** architecture and available Stage 1 findings. Include supported component risks while preserving caller/exposure uncertainty.
 
-1. New Local chat, `/threat-model`.
+1. New Local chat, select **STRIDE Threat Modeler**, then `/generate-threat-model`.
 2. Read `outputs/threat-model.md`. Check STRIDE categories, severity, existing controls, impact,
    likelihood and the source/assumptions behind each threat.
 3. Inspect scenario-specific account/identifier prerequisites and the score rationale. If a threat
@@ -106,7 +106,7 @@ Continue to the next stage; `/handoff` is optional.
 remain visible. Priority is a decision informed by evidence, not proof that all five are Critical.
 No mitigation is labelled implemented before code and verification exist.
 
-Continue to the next stage; `/handoff` is optional.
+Continue to the next stage; `/hand-off` is optional.
 
 ## 3. Secure Implementation (22 minutes; facilitator selects tasks)
 
@@ -115,8 +115,8 @@ model from Stages 1 and 2. The facilitator decides which tasks to complete live;
 
 For each task:
 
-1. Send the implementation prompt with `/create-fix`. The agent explains its approach, fixes the code and runs tests; no separate plan approval is required.
-2. In a fresh chat, send the review prompt with `/critique-fix`.
+1. Select **Secure Remediation Engineer** and send the implementation prompt with `/fix-vulnerability`. The agent explains its approach, fixes the code and runs tests; no separate plan approval is required.
+2. In a fresh chat, select **Secure Code Reviewer** and send the review prompt with `/review-security-fix`.
 3. If the reviewer finds a gap, return to the implementation chat, ask it to address the review findings,
    then review again. Stop when accepted; ask the facilitator for help after three unsuccessful cycles.
 4. Verify the current task before moving to the next. The agents report actual test results; no task ledger or plan file is required.
@@ -126,7 +126,7 @@ For each task:
 **Implement:**
 
 ```text
-/create-fix
+/fix-vulnerability
 
 Refactor src/main/java/com/securelabs/vulnerable/auth/AuthController.java to:
 1. Replace MD5 with BCryptPasswordEncoder, cost factor 12. Update registration and synthetic seed users consistently.
@@ -142,7 +142,7 @@ Briefly explain your approach, then make the changes. Add tests for valid login,
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
 
 ```text
-/critique-fix
+/review-security-fix
 
 Review my authentication changes in AuthController.java and any supporting files.
 Check BCrypt, lockout timing, session controls, cookie attributes and generic errors.
@@ -155,7 +155,7 @@ Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason
 **Implement:**
 
 ```text
-/create-fix
+/fix-vulnerability
 
 Refactor src/main/java/com/securelabs/vulnerable/api/PaymentHandler.java to:
 1. Validate positive amounts up to $1M with at most 2 decimal places, using decimal-safe handling.
@@ -170,7 +170,7 @@ Briefly explain your approach, then make the changes. Add local tests for legiti
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
 
 ```text
-/critique-fix
+/review-security-fix
 
 Review my payment changes in PaymentHandler.java and any supporting files.
 Check amount/currency validation, refund ownership and repeatability, sensitive-data protection and webhook authenticity.
@@ -183,7 +183,7 @@ Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason
 **Implement:**
 
 ```text
-/create-fix
+/fix-vulnerability
 
 Refactor src/main/java/com/securelabs/vulnerable/data/UserRepository.java to:
 1. Bind values with PreparedStatement in executed queries and updates.
@@ -198,7 +198,7 @@ Briefly explain your approach, then make the changes. Use the existing H2 fixtur
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
 
 ```text
-/critique-fix
+/review-security-fix
 
 Review my repository changes in UserRepository.java and any supporting files.
 Confirm query values are parameterized, identifiers are allow-listed, export inputs cannot select commands and avatar paths stay within their root.
@@ -211,7 +211,7 @@ Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason
 **Implement:**
 
 ```text
-/create-fix
+/fix-vulnerability
 
 Refactor src/main/java/com/securelabs/vulnerable/api/ResourceController.java to:
 1. Restrict outbound HTTPS destinations using an explicit host/address/port policy, enforced at connection and redirect time.
@@ -226,7 +226,7 @@ Briefly explain your approach, then make the changes. Add tests for allowed beha
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
 
 ```text
-/critique-fix
+/review-security-fix
 
 Review my resource changes in ResourceController.java and any supporting files.
 Check connection/redirect destination enforcement, ownership, redirect validation and CORS.
@@ -239,7 +239,7 @@ Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason
 **Implement:**
 
 ```text
-/create-fix
+/fix-vulnerability
 
 Review src/main/java/com/securelabs/vulnerable/api/ModernApiHandler.java and agree a fix scope for:
 1. HttpClient destination/redirect restrictions and bounded network operations.
@@ -254,7 +254,7 @@ Briefly explain your approach, then add local security and legitimate-behavior t
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
 
 ```text
-/critique-fix
+/review-security-fix
 
 Review my agreed changes in ModernApiHandler.java and any supporting files.
 Check outbound-request policy, correct concurrent results, sensitive-data handling and command restrictions where changed.
@@ -264,16 +264,16 @@ Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason
 
 ### Finish implementation
 
-When the facilitator ends live work, continue to Stage 4. Optionally run `/handoff` in the
+When the facilitator ends live work, continue to Stage 4. Optionally select **Hand-off Recorder** and run `/hand-off` in the
 implementation chat to capture completed, unfinished and unresolved work. Remaining
 tasks stay available for follow-up; ending the session does not mark them fixed.
 
 ## 4. Final Security Review (7 minutes)
 
-In a fresh Local chat, send:
+In a fresh Local chat, select **Secure Code Reviewer** and send:
 
 ```text
-/critique-fix final
+/review-security-fix final
 
 Perform a final security review of all application files modified in this session and their supporting changes.
 Compare the changes with the original findings, threat model and completed task reviews.
@@ -291,7 +291,7 @@ Create outputs/security-review.md with:
 6. Build Status and Test Evidence, showing total, passed, failed/errors and skipped separately.
 7. Final Decision and Next Steps, including unverified integration/runtime boundaries.
 
-Use .github/skills/critique-fix/templates/security-review.template.md for the report structure.
+Use .github/skills/review-security-fix/templates/security-review.template.md for the report structure.
 Do not rescan the whole service, add tests, fix more code or run artifact validators.
 ```
 
@@ -299,7 +299,7 @@ Read the report together: **what was fixed, what evidence supports it, and what 
 Stage 3 keeps short critiques in review.md; Stage 4
 creates this separate consolidated deliverable. It is a scoped security review, not certification that
 the whole application is production-ready. Advanced production checks remain verbal discussion topics.
-Run `/handoff` if you want a continuation snapshot.
+Select **Hand-off Recorder** and run `/hand-off` if you want a continuation snapshot.
 
 ## 5. Debrief (3 minutes, never cut)
 

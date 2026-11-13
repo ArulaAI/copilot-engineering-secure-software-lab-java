@@ -6,7 +6,7 @@ user-invocable: true
 disable-model-invocation: true
 ---
 
-Local entry point: `/critique-fix` selects **Secure Code Reviewer** and loads this procedure. Direct `/review-security-fix` requires that agent to be selected first.
+Run with **[Secure Code Reviewer](../../agents/secure-code-reviewer.agent.md)** selected in the agent picker, then invoke `/review-security-fix`. The skill runs in the selected agent context; it does not switch agents.
 
 Use Secure Code Reviewer in a fresh chat. Resolve the requested scope from the prompt, guide and
 actual changes. No internal ID, saved plan/ledger, prior gate or formal deferral is required.

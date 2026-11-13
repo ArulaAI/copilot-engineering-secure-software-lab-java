@@ -4,15 +4,15 @@ Seven visible agents and seven explicit skills. Mapping uses one agent. Discover
 service; Stage 2 models supported findings and ranks five with uncertainty. The guide supplies named
 implementation/review prompts. Agents handle any selected task, not preset source-file restrictions.
 
-| Action | Agent selected by Local command | Local command | Output |
+| Action | Agent to select | Skill command | Output |
 | --- | --- | --- | --- |
-| Map | Codebase Mapper | /map | codebase-map.md |
-| Investigate | Security Vulnerability Hunter | /investigate | findings.md |
-| Threat model | STRIDE Threat Modeler | /threat-model | threat-model.md |
-| Create/correct | Secure Remediation Engineer | /create-fix | source/tests and concise chat result |
-| Task Critique | Secure Code Reviewer | /critique-fix | short review.md entry |
-| Final security review | Secure Code Reviewer | /critique-fix final | structured security-review.md |
-| Capture state | Hand-off Recorder | /handoff | handoff only |
+| Map | Codebase Mapper | /map-codebase | codebase-map.md |
+| Investigate | Security Vulnerability Hunter | /find-vulnerabilities | findings.md |
+| Threat model | STRIDE Threat Modeler | /generate-threat-model | threat-model.md |
+| Create/correct | Secure Remediation Engineer | /fix-vulnerability | source/tests and concise chat result |
+| Task Critique | Secure Code Reviewer | /review-security-fix | short review.md entry |
+| Final security review | Secure Code Reviewer | /review-security-fix final | structured security-review.md |
+| Capture state | Hand-off Recorder | /hand-off | handoff only |
 
 Report paths are under outputs/. Stage 3 has no mandatory plan, ledger, cycle counter, entry-artifact
 snapshot or metadata validator. Existing retired files stay untouched. Create stops after the named
@@ -30,13 +30,12 @@ with verdict, scope, fixed/open findings, ASVS/control-area gaps and actual buil
 review.md remains a short per-task input. No duplicate final append, new whole-service scan or metadata
 loop is required. The report is scoped evidence, not production/ASVS certification.
 
-## Routing and bundled formats
+## Skills and bundled formats
 
-Local `.github/prompts/*.prompt.md` files declare `agent` and link the canonical SKILL.md; they
-contain no duplicate procedure or tool override. Skills contain the procedure and their templates,
-and agent profiles define the role and available tools. Inline skills do not switch agents.
-Direct skill commands remain an optional manual route, with the corresponding agent selected first.
-`/lab-workflow` selects OWASP Security Expert for workflow questions only.
+Each skill identifies its corresponding agent and links its profile. Select that agent before invoking
+the skill. Skills contain procedures and templates; agent profiles define the role and available tools.
+There are no prompt wrappers. Inline skills run in the current agent context and do not switch roles.
+`/security-review` uses OWASP Security Expert for workflow questions only.
 
 | Skill | Bundled templates | Generated output |
 | --- | --- | --- |
@@ -57,5 +56,4 @@ reports with legacy gate fields can be read as historical data; those fields nev
 Missing evidence is described honestly and limits completeness claims. Review verdicts and actual
 security/regression checks remain: removing approval paperwork cannot turn an unverified fix into PASS.
 
-The routing is based on [VS Code prompt files](https://code.visualstudio.com/docs/agent-customization/prompt-files).
 [Inline skills](https://code.visualstudio.com/docs/agent-customization/agent-skills) supply reusable procedures and resources.

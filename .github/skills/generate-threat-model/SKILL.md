@@ -6,7 +6,9 @@ user-invocable: true
 disable-model-invocation: true
 ---
 
-Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts. In VS Code Local, run `/threat-model` to select **STRIDE Threat Modeler** automatically. Direct `/generate-threat-model` uses the current agent; select **STRIDE Threat Modeler** first.
+Run with **[STRIDE Threat Modeler](../../agents/threat-modeler.agent.md)** selected in the agent picker, then invoke `/generate-threat-model`. The skill runs in the selected agent context; it does not switch agents.
+
+Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts.
 
 
 

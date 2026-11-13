@@ -6,9 +6,9 @@ user-invocable: true
 disable-model-invocation: true
 ---
 
-Local entry point: `/handoff` selects **Hand-off Recorder** and loads this procedure. Direct `/hand-off` requires that agent to be selected first.
+Run with **[Hand-off Recorder](../../agents/handoff-recorder.agent.md)** selected in the agent picker, then invoke `/hand-off`. The skill runs in the selected agent context; it does not switch agents.
 
-Use with **Hand-off Recorder** through the Local entry point above. Running in the same chat as the work gives the best record, but if the earlier
+Use with **Hand-off Recorder**. Running in the same chat as the work gives the best record, but if the earlier
 conversation is not available, record that and capture what the files and Git show.
 
 # Hand-off

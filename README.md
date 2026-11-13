@@ -33,7 +33,7 @@ current fixture counts; selected tasks define their own acceptance checks.
 | 5 Debrief | 3 | Transfer to participants' work |
 | Total | 60 | |
 
-Handoff is optional: `/handoff` records current state whenever needed. No stage requires approval fields or transition sign-off. Review and debrief are never cut; the facilitator narrows
+Handoff is optional: `/hand-off` records current state whenever needed. No stage requires approval fields or transition sign-off. Review and debrief are never cut; the facilitator narrows
 live implementation scope rather than reporting incomplete work as passed. Five completed fixes
 within this schedule are not promised. Stage 3 has no mandatory plan, ledger, cycle counter or artifact validator.
 
@@ -41,7 +41,7 @@ within this schedule are not promised. Stage 3 has no mandatory plan, ledger, cy
 
 - src/main/java/ contains the synthetic vulnerable service and helpers.
 - src/test/java/ contains behavior, opt-in exploit and workflow-form checks.
-- .github/ contains seven visible profiles, seven skills and seven thin Local prompt entry points.
+- .github/ contains seven visible agent profiles and seven skills with bundled templates.
 - outputs/ is reserved for generated reports. Each skill bundles its relevant templates.
 - docs/ contains the scenario, security references and [facilitator guide](docs/INSTRUCTOR_GUIDE.md).
 
@@ -58,6 +58,6 @@ Copyright InRhythm / Arula. Training material using synthetic data.
 Final deliverable: [structured security-review template](.github/skills/review-security-fix/templates/security-review.template.md),
 used by Stage 4 to generate outputs/security-review.md.
 
-VS Code Local entry commands: `/map`, `/investigate`, `/threat-model`, `/create-fix`,
-`/critique-fix` (or `/critique-fix final`), `/handoff` and optional `/lab-workflow`.
-Each selects its agent automatically. See [routing and formats](docs/WORKFLOW_ARCHITECTURE.md).
+Skill commands: `/map-codebase`, `/find-vulnerabilities`, `/generate-threat-model`, `/fix-vulnerability`,
+`/review-security-fix` (or `/review-security-fix final`), `/hand-off` and optional `/security-review`.
+Select the corresponding agent before invoking its skill. See [agents and formats](docs/WORKFLOW_ARCHITECTURE.md).

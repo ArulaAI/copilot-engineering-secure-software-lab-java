@@ -12,7 +12,7 @@ elapsed time; do not assume instruction simplification proves a speed or usage g
 - Concrete correction returns to Create without counters, metadata repair or repeated successful runs.
 - Old tasks.md/change-plan.md/task-reviews.md never trigger validation or repairs.
 - All stages proceed without approval fields or mandatory handoff, including absent/stale earlier reports. State evidence gaps honestly.
-- Each Local command selects the intended agent, preserves accompanying instructions (including `final`) and loads the bundled format.
+- Each skill identifies its agent; the participant selects that agent, invokes the skill with accompanying instructions (including `final`) and confirms the bundled format is used.
 - Generated reports are written to outputs, never back into skill templates.
 - Unstarted priorities remain open without questions or formal deferral.
 - Blocked integration is disclosed once, not retried through multiple harnesses.
