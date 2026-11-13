@@ -8,13 +8,13 @@ Record commands, exit codes, named test results, pass/fail/error/skip counts and
 
 ## State and separate handoff
 
-Stage skills write their own report and designated task/run artifacts. outputs/tasks.md holds the selected task state; outputs/task-reviews.md retains each critique and cycle. These files carry state across fresh chats. Only /hand-off with Hand-off Recorder writes outputs/handoff.md. It records the current state whenever asked, including pending gates and unfinished work, and never approves or blocks progress. Readiness to start a stage is checked by that stage's own skill. No stage skill automatically updates the hand-off. Read task state directly during Stage 3; a stage handoff is not required between every task.
+Stage skills write their own report and designated task/run artifacts. outputs/tasks.md holds the selected task state; outputs/task-reviews.md retains each critique and cycle. These files carry state across fresh chats. Only /hand-off with Hand-off Recorder writes the handoff. It can capture any work state, including pending gates and incomplete stages; the lab normally calls it at stage boundaries. No stage skill automatically updates it. Read task state directly during Stage 3; a stage handoff is not required between every task.
 
-Read reports and run evidence instead of asking learners to copy summaries or logs. A participant makes real decisions: priority confirmation, scope agreement, gate and residual-risk acceptance. Missing decisions remain missing. A compact handoff is selective and must point to its source reports.
+Read reports and run evidence instead of asking learners to copy summaries or logs. A participant makes real decisions: priority confirmation, scope agreement, gate and residual-risk acceptance. Missing decisions remain missing. A compact handoff is selective and must point to its available evidence. Recorder never enforces stage gates, invokes another agent or refuses because approval is pending. Stage agents independently check readiness before acting; a saved handoff is not approval.
 
 ## Scope and progression
 
-The scenario selects priorities, not fixed implementation assignments. Agents accept any task IDs and task count. The facilitator chooses how many tasks to complete live. Preserve original findings; record current resolution separately.
+The course guide defines named implementation tasks and their Create/Critique prompts. Stage 2 supplies evidence-ranked priorities and traceability; it does not replace those assignments. Agents resolve the selected task from its prompt/name and referenced scope. Stable IDs are internal records, not participant inputs. Agents support any task type/count. The facilitator chooses how many tasks to complete live. Preserve original findings; record current resolution separately.
 
 Work on one task at a time. Agree its code/test scope and behavioral criteria. Supporting helpers/constants and new tests within that scope are allowed. Do not change the POM, install packages, weaken existing tests, start the service or contact external services. Use local synthetic fixtures and existing dependencies. Changed signatures may require explicitly agreed test adaptation, with original assertions preserved and justification recorded.
 
@@ -29,3 +29,11 @@ Select tests from the current task criteria; there is no fixed security suite or
 ## Roles and limits
 
 Profile tools are intended authority, not file-level sandboxing. Analysis agents edit their own report only and may execute read-only Git inspection for source-state evidence, never builds or source code. Remediation edits the agreed task scope and task state. Reviewer edits critique tests, review artifacts and task status, never application code. Recorder edits handoff only. Inspect effective tools and all changes. A new chat reduces carried-over reasoning; it is not OS isolation or a guarantee of independence. No required extra workers, model switching or repeated agreement-seeking scans.
+
+## Discovery and modeling coverage
+
+The map is an index, not a limit on investigation. Review all application classes and relevant configuration, including standalone helpers. Assess code defects/conditional risks separately from reachability and actual verification. A missing production caller does not erase an unsafe implementation, and a test caller does not prove HTTP exposure. Severity follows impact and prerequisites with uncertainty explicit, never an automatic downgrade or remote-exploit assumption. Keep per-class coverage and explain no-finding outcomes and gaps. Stage 2 consumes all supported findings, preserving their conditions. Discovery requires an accepted map plus its stage handoff; modeling requires accepted findings plus their stage handoff. Missing/pending/stale prerequisites require the specific human decision/action or an explicit recorded instruction to continue provisionally; never infer approval or call incomplete inputs complete.
+
+## Modeling consistency
+
+Consume all supported findings with coverage gaps explicit. Score concrete scenarios with their own actor/access prerequisites; name the representative scenario and reasoning behind a grouped threat's rank. Keep potential impact, likelihood and evidence confidence distinct. Blast radius must use the same conditions. Trace every original finding to threat/disposition; narrative and metadata must agree. Bound remediation tasks and retain parent-threat remainders. Completed subtask scope is not resolution of every control in its parent threat. Handoff records these facts even when incomplete; it does not enforce readiness or approve priorities.

@@ -10,7 +10,7 @@ not automatically connected to controllers. Do not invent infrastructure to comp
 1. Map and investigate: produce architecture/attack-surface evidence and all supported findings.
 2. Apply STRIDE to the service and all findings. Assess severity, impact, likelihood and blast radius.
    Select the top five threats from that evidence. This is an analysis result, not a prescribed list.
-3. Implement selected tasks sequentially. The facilitator normally chooses one or two for the live
+3. Follow the named implementation tasks and Create/Critique prompts in LAB_ACTION_GUIDE.md, linking them to the findings and Stage 2 threats. Implement chosen tasks sequentially. The facilitator normally chooses one or two for the live
    session; participants may continue through all priorities as time permits or afterward. There is
    no implementation count restriction. Agree each task's scope and acceptance, Create, then Critique
    in a fresh reviewer chat. Verify the current task before the next. Up to three complete cycles

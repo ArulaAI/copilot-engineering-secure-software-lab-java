@@ -15,19 +15,19 @@ scope based on observed timing. Keep dependency/POM and environment constraints 
 
 SAY You inherited this service. Understand it, prioritize risks, prove a change and challenge it.
 DO demonstrate role selection, explicit skill, report inspection, gate and same-chat Hand-off Recorder
-with /hand-off. Show that hand-off records state (even with a pending gate) and that the next stage
-checks readiness. Show the distinction between handoff and task state. No repeated learner summaries.
+with /hand-off. Show the distinction between stage handoff and task state. No repeated learner summaries. Recorder can also capture a pending or interrupted stage without
+enforcing approval. The next stage checks its own prerequisites.
 CHECK-IN baseline succeeds with expected skipped seeded checks; customization discovery is qualified.
 
 ## 10 to 22: Map
 
-DO inspect actual entry points and call edges. Package Explorer is optional where qualified; sequential
-mapping is the fallback. WATCH FOR helpers drawn as connected controllers without call evidence.
+DO inspect actual entry points, call edges and declared configuration. The single mapper reads the
+repository directly, keeping citations as it goes without delegation. WATCH FOR helpers drawn as connected controllers without call evidence.
 CHECK-IN map labels implemented, assumed and proposed components/edges and names unknowns.
 
 ## 22 to 35: Investigate
 
-DO compare evidence, preconditions and impact. AI may miss or group findings differently.
+DO check the accepted map and mapping handoff before discovery. Inspect all classes/configuration, including standalone helpers. Separate code defects, caller reachability and actual verification. Compare evidence, preconditions and impact; no automatic severity downgrade for missing HTTP callers. AI may miss or group findings differently.
 WATCH FOR finding quotas, simulated sinks reported as executed exploits and invented authentication policy.
 CHECK-IN original findings saved, severity explained, a false positive rejected and coverage stated.
 FLEX shorten discussion of lower-priority findings; do not force participants to inspect every row live.
@@ -36,12 +36,12 @@ FLEX shorten discussion of lower-priority findings; do not force participants to
 
 DO apply STRIDE to all findings; assess severity, impact, likelihood and blast radius. Confirm the five
 priorities with acceptance criteria. Do not prescribe issue types or assume all five are Critical.
-CHECK-IN selected threats trace to actual findings and source evidence, with uncertainty retained.
+CHECK-IN every finding has a disposition; selected threats trace to evidence and scored scenarios. Actor prerequisites, likelihood and blast radius agree. Grouped controls have bounded tasks and explicit parent remainders. No selected finding is called wholly deferred in the summary.
 FLEX use concise scoring explanations after a worked example, preserving a rationale for each priority.
 
 ## 50 to 70: Create and critique
 
-DO choose how many tasks to attempt live, normally one or two; all priorities remain available.
+DO choose which named guide tasks to attempt live, normally one or two. Use their Create/Critique prompts; participants need not type task IDs. Link assignments to Stage 2 risks without substituting a generated backlog. Remaining cards stay available for follow-up.
 For each task, agree scope, persist Cycle before Create, add relevant behavior/security tests, execute
 checks, and critique in a fresh reviewer chat. Return concrete critique to the preserved implementation
 chat. Three complete cycles maximum per task, including initial Create; stop earlier on acceptance.

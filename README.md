@@ -41,7 +41,7 @@ within this schedule are not promised.
 
 - src/main/java/ contains the synthetic vulnerable service and helpers.
 - src/test/java/ contains behavior, opt-in exploit and workflow-form checks.
-- .github/ contains eight profiles (seven visible and one package subagent) and seven explicit skills.
+- .github/ contains seven visible profiles and seven explicit skills.
 - outputs/ contains templates, the task ledger, per-task critiques and handoff format.
 - docs/ contains the scenario, security references and [facilitator guide](docs/INSTRUCTOR_GUIDE.md).
 

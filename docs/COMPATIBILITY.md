@@ -16,15 +16,13 @@ from method-level tests or claim dependency vulnerabilities have been removed.
 
 ## VS Code qualification
 
-Record IDE, plugin, harness and model. Confirm eight profiles, including seven visible roles and hidden
-Package Explorer; seven explicit skills include /hand-off and the optional /security-review overview.
+Record IDE, plugin, harness and model. Confirm seven visible profiles; seven explicit skills include /hand-off and the optional /security-review overview.
 Select role separately from skill. Confirm native skill discovery and inspect actual tools/activity.
 Use only organization-permitted settings and models. No model pin, paid upgrade or CLI is required.
 
 | Role | Intended tools | Permitted writes |
 | --- | --- | --- |
-| Codebase Mapper | read/search/edit/execute/agent | map report |
-| Package Explorer, hidden | read/search | none |
+| Codebase Mapper | read/search/edit/execute | map report |
 | Vulnerability Hunter | read/search/edit/execute | findings report |
 | STRIDE Threat Modeler | read/search/edit/execute | threat-model report |
 | Remediation Engineer | read/search/edit/execute | agreed task code/new tests and necessary agreed test adaptations, plan, ledger, evidence |
@@ -37,9 +35,8 @@ File-level scope is instructional, not host enforcement. In particular an edit-c
 can technically edit more than its report. Inspect all actual changes. Execute-capable roles need
 exact command approval and observed restrictions; a role name alone is not proof.
 
-Rehearse Mapper calls, report creation, task/cycle persistence, fresh task review, sequential advancement,
-separate same-chat Recorder invocation and cumulative final review. Subagent unavailability uses
-sequential mapping, with timing impact recorded. New chat reduces context carryover but provides no
+Rehearse direct mapping, report creation, task/cycle persistence, fresh task review, sequential advancement,
+separate same-chat Recorder invocation and cumulative final review. The mapper reads source and configuration directly without delegation. New chat reduces context carryover but provides no
 OS isolation or guarantee of independent judgment.
 
 ## IntelliJ and manual routes

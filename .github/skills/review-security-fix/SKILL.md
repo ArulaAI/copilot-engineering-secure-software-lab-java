@@ -1,7 +1,7 @@
 ---
 name: review-security-fix
 description: "Critique a selected task or review cumulative session changes."
-argument-hint: "task <ID> or final"
+argument-hint: "Task name or critique prompt; final for closeout"
 user-invocable: true
 disable-model-invocation: true
 ---
@@ -14,7 +14,7 @@ in_progress and `outputs/change-plan.md` records its agreed scope. Final mode: c
 and ask whether to continue anyway; record their answer in your report. Do not stop silently and do
 not edit earlier reports.
 
-Select Secure Code Reviewer or stop. Start in a fresh chat. Read original findings, threat model, plan, ledger, prior task critiques, actual source/tests, Git status/diff and untracked files. Default to task mode when one task is in_progress; use final only when requested for closeout. Never reset Cycle or earlier evidence.
+Select Secure Code Reviewer or stop. Start in a fresh chat. Read original findings, threat model, plan, ledger, prior task critiques, actual source/tests, Git status/diff and untracked files. Resolve the task from its name, critique prompt or the single active ledger entry; no participant-supplied ID is required. If genuinely ambiguous, ask which named task, not for an internal ID. Default to task mode when one task is in_progress; use final only when requested for closeout. Never reset Cycle or earlier evidence.
 
 ## Task mode: critique before advancing
 
@@ -28,6 +28,6 @@ Select Secure Code Reviewer or stop. Start in a fresh chat. Read original findin
 
 ## Final mode: cumulative closeout
 
-Compare ALL original findings and selected threats with actual changes, per-task evidence and current regression. Review interactions and regressions between fixes, inspect the full changed-file list, and rerun selected-task checks plus ordinary regression. Added test-only files must be included even when untracked. Mark unchanged findings open/deferred and incomplete mitigations partial/unresolved; do not equate a green ordinary build with whole-service security.
+Compare ALL original findings and selected threats with actual changes, per-task evidence and current regression. Reconcile parent-threat subtasks and remaining controls: accepting one bounded task cannot close its whole parent threat unless all parent criteria are verified. Check narrative dispositions against finding/threat/task traceability. Review interactions and regressions between fixes, inspect the full changed-file list, and rerun selected-task checks plus ordinary regression. Added test-only files must be included even when untracked. Mark unchanged findings open/deferred and incomplete mitigations partial/unresolved; do not equate a green ordinary build with whole-service security.
 
 Write outputs/review.md with one disposition per original finding, task traceability, actual run evidence, scope limitations and ACCEPTED, CHANGES REQUIRED or NEEDS EVIDENCE. ACCEPTED covers verified completed scope only; explicitly list tasks not completed. A regression in a verified task blocks acceptance. Return concrete defects to that task's remaining cycle budget; never reset it to obtain a pass. Ask the learner to check the closeout and invoke /hand-off in this chat with Hand-off Recorder. Do not write handoff yourself.

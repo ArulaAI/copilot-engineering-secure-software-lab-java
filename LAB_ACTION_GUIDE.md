@@ -31,9 +31,10 @@ Five completed fixes are not promised within 90 minutes.
    paste an operating prompt, attach the whole repository or repeat the previous stage's summary.
 3. Inspect the generated report and relevant source/run evidence. Confirm the human gate only
    when supported; record pass, fail or pending honestly.
-4. At the end of the stage, or whenever you pause, switch to **Hand-off Recorder in that same chat**
-   and select `/hand-off`. It records where things stand, including anything still pending, and
-   never blocks you. Then start the next stage in a fresh chat; that stage checks its own inputs.
+4. At stage END, switch to **Hand-off Recorder in that same chat** and select `/hand-off`.
+   You can also capture an interrupted or pending stage. Recorder saves the current state without
+   requiring a gate decision; readiness checks belong to the next stage, not the recorder.
+   Check the saved `outputs/handoff.md` section, then start the next stage in a fresh chat.
 
 Role and skill selection are separate. Inspect effective tools and Source Control, including new
 files. A scope instruction is not a sandbox; a fresh chat does not guarantee independent judgment.
@@ -46,7 +47,7 @@ Complete [compatibility](docs/COMPATIBILITY.md) before the session and read [the
 
 - Confirm seven visible agents: Codebase Mapper, Security Vulnerability Hunter, STRIDE Threat
   Modeler, Secure Remediation Engineer, Secure Code Reviewer, Hand-off Recorder and OWASP Security
-  Expert. Package Explorer is a hidden helper.
+  Expert.
 - Confirm seven skills: `/map-codebase`, `/find-vulnerabilities`, `/generate-threat-model`,
   `/fix-vulnerability`, `/review-security-fix`, `/hand-off` and optional `/security-review`.
 - Run `mvn clean test` in the terminal. It must build successfully. Some shipped security checks
@@ -62,8 +63,8 @@ Complete [compatibility](docs/COMPATIBILITY.md) before the session and read [the
 **Input:** actual source/configuration and the scenario.
 
 1. New chat, **Codebase Mapper**, `/map-codebase`.
-2. The mapper discovers packages and asks Package Explorer for compact per-package summaries where
-   supported. With no subagents it reads sequentially and records that route.
+2. The single mapper inventories packages and reads source plus configuration directly. It retains
+   citations while reading, checks actual call edges and writes the map without delegation.
 3. Open `outputs/codebase-map.md`. Inspect representative entry points and call edges in source.
 
 **Gate:** actual packages are indexed, externally controlled inputs and resources are named, and
@@ -76,15 +77,15 @@ Set the report gate, then **Hand-off Recorder**, `/hand-off` in this chat.
 
 **Question:** which weaknesses are supported, and what evidence is still missing?
 
-**Input:** map and actual code paths.
+**Input:** accepted map and mapping handoff, all application classes and relevant configuration. Inspect standalone components too; assess code defects separately from proven external reachability.
 
 1. New chat, **Security Vulnerability Hunter**, `/find-vulnerabilities`.
 2. Read `outputs/findings.md`. Inspect the top findings' input-to-sink paths and preconditions.
 3. Check severity and coverage, merge duplicate root causes, and reject a plausible false positive
    with a reason. Different titles or finding counts are expected; evidence is the assessment.
 
-**Gate:** findings cite current source, distinguish confirmed paths from needs-evidence claims, and
-retain uncertainty. Preserve this accepted discovery record; later resolution belongs in task/review
+**Gate:** findings cite current source and cover all classes/configuration. Code assessment, caller
+reachability and actual verification are separate, with uncertainty retained. Preserve this accepted discovery record; later resolution belongs in task/review
 artifacts rather than rewriting the original finding away.
 
 Set the report gate, then **Hand-off Recorder**, `/hand-off`.
@@ -93,15 +94,17 @@ Set the report gate, then **Hand-off Recorder**, `/hand-off`.
 
 **Question:** which threats deserve attention first, and why?
 
-**Input:** architecture and ALL Stage 1 findings.
+**Input:** architecture, accepted Stage 1 findings and discovery handoff. Include supported component risks while preserving caller/exposure uncertainty.
 
 1. New chat, **STRIDE Threat Modeler**, `/generate-threat-model`.
 2. Read `outputs/threat-model.md`. Check STRIDE categories, severity, existing controls, impact,
    likelihood and the source/assumptions behind each threat.
-3. For the top five, inspect blast radius: who can exploit it, what they reach, the action,
+3. Inspect scenario-specific account/identifier prerequisites and the score rationale. If a threat
+   groups different paths, check which scenario drives its ranking. For the top five, inspect blast radius: who can exploit it, what they reach, the action,
    repeatability and whether it would be noticed. Confirm the priority order.
 4. Check that each selected threat has a remediation objective, scope and positive/negative
-   acceptance criteria. There is no prescribed list of vulnerability types. Do not invent a fifth
+   acceptance criteria. Independent controls may need bounded subtasks; completing one must not close
+   the parent threat while other controls remain open. There is no prescribed list of vulnerability types. Do not invent a fifth
    threat merely to fill a quota if evidence is incomplete; resolve the gap with the facilitator.
 
 **Gate:** five evidence-ranked priorities trace to findings and boundaries. Additional findings
@@ -110,51 +113,171 @@ No mitigation is labelled implemented before code and verification exist.
 
 Set the report gate, then **Hand-off Recorder**, `/hand-off`.
 
-## 3. Create, critique and verify (20 minutes, extend only within facilitator allocation)
+## 3. Secure Implementation (20 minutes; facilitator selects tasks)
 
-**Question:** does this change remove the selected weakness while preserving legitimate behavior?
+Use the tasks below, as in the original lab. Connect your chosen task to the findings and threat
+model from Stages 1 and 2. The facilitator decides which tasks to complete live; the rest are follow-up.
 
-**Input:** selected priorities, original findings, actual code and agreed acceptance criteria.
+For each task:
 
-![The per-task loop and final review](docs/lab-guide/fix-review.svg)
+1. Select **Secure Remediation Engineer** and send the implementation prompt. Approve its plan before edits.
+2. In a fresh chat, select **Secure Code Reviewer** and send the review prompt.
+3. If the reviewer finds a gap, return to the implementation chat, ask it to address the review findings,
+   then review again. Stop when accepted; ask the facilitator for help after three unsuccessful cycles.
+4. Verify the current task before moving to the next. The agents save the task state and test evidence.
 
-1. New implementation chat, **Secure Remediation Engineer**, `/fix-vulnerability`.
-   The skill creates `outputs/tasks.md` and `outputs/change-plan.md` from templates, selecting
-   the next agreed priority. You decide the live scope; one, two or more tasks are supported.
-2. Inspect the proposed root cause, source/helpers/test scope, preserved behavior and checks.
-   Observe actual pre-fix behavior with a relevant negative check. Agree the plan before edits.
-3. **Create:** the agent records Cycle before editing, implements the fix and focused tests,
-   executes task checks and ordinary/previous-task regression, and records actual evidence.
-4. **Critique:** open a fresh chat, select **Secure Code Reviewer**, then invoke
-   `/review-security-fix task <selected-ID>` using the actual task ID. The reviewer reads artifacts,
-   inspects the real diff and untracked files, reruns checks independently and challenges the fix
-   with bounded local adversarial cases. Read `outputs/task-reviews.md` and the ledger status.
-5. If CHANGES REQUIRED, return to the preserved implementation chat and invoke
-   `/fix-vulnerability correction`. Address the specific critique, then review again in a fresh
-   chat. At most **three complete Create/critique cycles per task**, including the initial attempt.
-   Stop earlier when accepted. NEEDS EVIDENCE blocks advancement until supplied.
-6. **Advance only after verified.** Return to implementation and invoke `/fix-vulnerability` for
-   the next task. Keep earlier task checks in regression. Third-cycle failure marks unresolved
-   and pauses for the facilitator; do not silently skip or claim a pass.
-7. At the time checkpoint, the facilitator ends live scope and explicitly defers the remaining
-   tasks for continuation. Preserve any unresolved details. Check task state and the Stage 3 gate,
-   then select **Hand-off Recorder in the implementation chat**, `/hand-off`.
+### Task 1: Secure Authentication
 
-**Evidence rules:** tests come from the chosen task, not a fixed suite/count. Existing opt-in checks
-can support relevant tasks; skipped checks for unselected weaknesses remain unverified. New task
-checks normally join ordinary regression. Do not weaken tests, replace a missing control with a
-fabricated identity, change dependencies or contact real external targets. Record run failures,
-skips, source identity and full output. A compilation error is not an expected security failure.
+**Implement:**
 
-**Gate:** every completed task has independent acceptance, legitimate-behavior and regression evidence.
-The ledger retains all other task states and cycle histories. Creation never self-certifies a fix.
-A participant approves scope and real decisions; agents maintain artifacts without repeated forms.
+```text
+/fix-vulnerability
+
+Refactor src/main/java/com/securelabs/vulnerable/auth/AuthController.java to:
+1. Replace MD5 with BCryptPasswordEncoder, cost factor 12. Update registration and synthetic seed users consistently.
+2. Lock an account after 5 failed attempts for 30 minutes. Make time controllable in tests.
+3. Secure session expiry, rotation and invalidation using trusted identity.
+4. Remove passwords, password hashes and session tokens from unnecessary logs and responses.
+5. Use generic authentication errors to avoid revealing whether an account exists.
+6. Set HttpOnly, Secure and SameSite attributes on session cookies.
+
+Explain the plan before editing. Add tests for valid login, rejected credentials, lockout and expiry, session behavior and sensitive-data protection. Use existing dependencies.
+```
+
+**Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
+
+```text
+/review-security-fix
+
+Review my authentication changes in AuthController.java and any supporting files.
+Check BCrypt, lockout timing, session controls, cookie attributes and generic errors.
+Run the relevant security and regression tests. Confirm legitimate login still works and credentials are not exposed.
+Report concrete gaps before accepting the fix.
+```
+
+### Task 2: Secure Payment Processing
+
+**Implement:**
+
+```text
+/fix-vulnerability
+
+Refactor src/main/java/com/securelabs/vulnerable/api/PaymentHandler.java to:
+1. Validate positive amounts up to $1M with at most 2 decimal places, using decimal-safe handling.
+2. Allow only USD, EUR and GBP.
+3. Verify trusted caller identity and transaction ownership before refunds. Reject excessive or repeated refunds.
+4. Remove card numbers and CVVs from logs and unnecessary responses or storage.
+5. Verify webhook HMAC signatures over the specified raw payload, with timestamp validation and duplicate-event handling.
+
+Explain the plan before editing. Add local tests for legitimate payment/refund/webhook behavior and rejected inputs, wrong owners, invalid signatures and stale or repeated events. No real payment service is required.
+```
+
+**Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
+
+```text
+/review-security-fix
+
+Review my payment changes in PaymentHandler.java and any supporting files.
+Check amount/currency validation, refund ownership and repeatability, sensitive-data protection and webhook authenticity.
+Run the relevant security and regression tests. Verify both permitted operations and rejected attacks without real payment calls.
+Report concrete gaps before accepting the fix.
+```
+
+### Task 3: Fix SQL Injection
+
+**Implement:**
+
+```text
+/fix-vulnerability
+
+Refactor src/main/java/com/securelabs/vulnerable/data/UserRepository.java to:
+1. Bind values with PreparedStatement in executed queries and updates.
+2. Allow-list field and sort identifiers in searchUsers, findByQuery and related methods.
+3. Define and preserve the intended LIKE search behavior.
+4. Remove caller-controlled shell execution from exportUsers; agree a safe supported operation or rejection policy.
+5. Prevent avatar paths from escaping the intended directory.
+
+Explain the plan before editing. Use the existing H2 fixture to test legitimate queries and hostile values/identifiers. Add local tests for export and avatar boundaries. Preserve existing assertions.
+```
+
+**Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
+
+```text
+/review-security-fix
+
+Review my repository changes in UserRepository.java and any supporting files.
+Confirm query values are parameterized, identifiers are allow-listed, export inputs cannot select commands and avatar paths stay within their root.
+Run security and legitimate-behavior tests, including relevant existing opt-in checks, plus regression.
+Report concrete gaps before accepting the fix.
+```
+
+### Task 4: Fix SSRF and Access Control
+
+**Implement:**
+
+```text
+/fix-vulnerability
+
+Refactor src/main/java/com/securelabs/vulnerable/api/ResourceController.java to:
+1. Restrict outbound HTTPS destinations using an explicit host/address/port policy, enforced at connection and redirect time.
+2. Reject disallowed loopback, private, link-local and IPv6 destinations. Bound response size and time.
+3. Require trusted identity and owner/admin authorization on protected resource operations.
+4. Validate redirect destinations against an allow-list.
+5. Replace wildcard credentialed CORS with explicit allowed origins.
+
+Explain the plan before editing. Add tests for allowed behavior and rejected destinations, redirect escapes, wrong owners and origins. Use controlled local fixtures, not real external or internal services.
+```
+
+**Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
+
+```text
+/review-security-fix
+
+Review my resource changes in ResourceController.java and any supporting files.
+Check connection/redirect destination enforcement, ownership, redirect validation and CORS.
+Run tests for authorized behavior and denied attacks, plus regression. Do not treat an annotation or a separate DNS check as proof of enforcement.
+Report concrete gaps before accepting the fix.
+```
+
+### Task 5: Modern Java API Security (Bonus)
+
+**Implement:**
+
+```text
+/fix-vulnerability
+
+Review src/main/java/com/securelabs/vulnerable/api/ModernApiHandler.java and agree a fix scope for:
+1. HttpClient destination/redirect restrictions and bounded network operations.
+2. Shared mutable state in parallel processing.
+3. Password exposure through record toString(), logs and responses.
+4. Unrestricted command execution and other supported findings from discovery.
+
+The search endpoint currently builds and returns SQL text without executing it. Do not label that proven database injection or introduce an executor merely to fix it.
+Explain the plan before editing and add local security and legitimate-behavior tests for the agreed changes.
+```
+
+**Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
+
+```text
+/review-security-fix
+
+Review my agreed changes in ModernApiHandler.java and any supporting files.
+Check outbound-request policy, correct concurrent results, sensitive-data handling and command restrictions where changed.
+Run relevant security and regression tests. Distinguish executed behavior from simulated query construction.
+Report concrete gaps before accepting the fix.
+```
+
+### Finish implementation
+
+When the facilitator ends live work, select **Hand-off Recorder** in the implementation chat and run
+`/hand-off`. Capture completed, unfinished and unresolved work, then continue to Stage 4. Remaining
+tasks stay available for follow-up; ending the session does not mark them fixed.
 
 ## 4. Final cumulative review (15 minutes, never cut)
 
 **Question:** what changed, what is now supported, and what remains open?
 
-**Input:** original findings, selected priorities, cumulative code/test changes, ledger and task critiques.
+**Input:** original findings, Stage 2 priorities, selected course task cards, cumulative code/test changes, ledger and task critiques.
 
 1. New chat, **Secure Code Reviewer**, `/review-security-fix final`.
 2. Inspect `outputs/review.md`. The reviewer compares every original finding with current status,
@@ -185,9 +308,9 @@ habits, not a demonstration that prompt injection or all service risks are elimi
 | Symptom | Action |
 | --- | --- |
 | Agent or skill missing | Stop for facilitator; qualify the existing-procedure fallback |
-| Mapper has no subagents | Sequential reading is supported; record the route and adjust live scope |
+| Mapping is slow | Inspect repeated reads and excessive output; preserve configuration and source coverage |
 | Agent asks for copied logs | Point it to the actual report/evidence path or missing run |
-| New task still sees old handoff | Read current ledger/reviews; run /hand-off again any time to refresh it |
+| New task still sees old handoff | Read current ledger/reviews; handoff happens at stage end |
 | A task needs a correction | Resume its existing cycle history; never reset across chats |
 | Third cycle fails | Mark unresolved and pause for facilitator |
 | Test count changes | Inspect discovered classes and task scope; there is no fixed passing total |

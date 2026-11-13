@@ -51,14 +51,13 @@ missing, and exploit probes must never target host secrets or real user files.
 
 ## Reports and handoff
 
-- Eight profiles exist: seven visible, Package Explorer hidden. Seven explicit skills exist.
+- Seven visible profiles exist; Mapper has no delegation tool or helper profile. Seven explicit skills exist.
 - Profiles and remediation/review skills contain no preset issue IDs, source pair or passing total.
 - Stage 2 derives five priorities from all findings; it does not choose a fixed teaching list.
 - Each stage writes only its designated artifacts. Only explicit /hand-off with Recorder updates handoff.
-- Recorder records the current state whenever asked, in any repository, including pending gates and
-  unfinished work; it never refuses for a missing gate. Stage skills check their own readiness.
+- Recorder captures available context and pending work even without approval, a predefined stage, Git tools or complete reports. It never invokes the next agent or approves progression.
 - Ledger rows preserve task IDs, source scope, cycle, status, tests and evidence; history matches cycles.
-- OutputsCheck validates report form and static ledger consistency, not execution, approval or security.
+- OutputsCheck validates completed report form and static ledger consistency, not execution, approval or security. Populated drafts with blank/pending human gates intentionally fail completion checks until a real pass/fail decision is recorded; never invent approval to satisfy the checker.
 - No completed answer key/solution is present in the working tree. Older Git history is not erased.
 - Active Markdown links resolve. Guides, roles, templates, commands and schedule agree.
 
@@ -82,4 +81,4 @@ proof for a remediation task. Consuming-agent reasoning checks, if used, are lik
 
 This record does not qualify native Copilot behavior or target Java 17 execution. No time, token or
 quality improvement has been measured. Complete COMPATIBILITY.md and WORKFLOW_REHEARSAL.md on the
-actual supported client route, including a timed complete session, before declaring delivery ready.
+actual supported Fidelity route, including a timed complete session, before declaring delivery ready.
