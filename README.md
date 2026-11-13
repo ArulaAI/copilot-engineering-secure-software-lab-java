@@ -1,6 +1,6 @@
 # Secure Software Development with GitHub Copilot
 
-A 90-minute Java lab about inheriting an unfamiliar service, mapping its attack surface, investigating
+A 60-minute Java lab about inheriting an unfamiliar service, mapping its attack surface, investigating
 findings and using STRIDE and blast radius to prioritize five threats. Create and critique selected
 fixes sequentially, then review the cumulative changes against the original findings.
 
@@ -24,25 +24,25 @@ current fixture counts; selected tasks define their own acceptance checks.
 
 | Stage | Minutes | Output |
 | --- | --- | --- |
-| 0 Setup and demonstration | 10 | Baseline and customization readiness |
-| 1A Map | 12 | Source-grounded architecture and attack surface |
-| 1B Investigate | 13 | Supported findings and uncertainty |
-| 2 Threat model and priorities | 15 | STRIDE, blast radius and top five |
-| 3 Create and critique | 20 | As many independently verified tasks as time permits |
-| 4 Final review | 15 | Cumulative verdict and remaining risks |
-| 5 Debrief | 5 | Transfer to participants' work |
-| Total | 90 | |
+| 0 Setup and demonstration | 5 | Baseline and customization readiness |
+| 1A Map | 5 | Source-grounded architecture and attack surface |
+| 1B Investigate | 8 | Supported findings and uncertainty |
+| 2 Threat model and priorities | 10 | STRIDE, blast radius and top five |
+| 3 Create and critique | 22 | Named fix, focused tests and independent review |
+| 4 Final review | 7 | Actual changes and remaining risk |
+| 5 Debrief | 3 | Transfer to participants' work |
+| Total | 60 | |
 
 Each stage closes with a separate /hand-off that records the current state; it never blocks. Review and debrief are never cut; the facilitator narrows
 live implementation scope rather than reporting incomplete work as passed. Five completed fixes
-within this schedule are not promised.
+within this schedule are not promised. Stage 3 has no mandatory plan, ledger, cycle counter or artifact validator.
 
 ## Repository
 
 - src/main/java/ contains the synthetic vulnerable service and helpers.
 - src/test/java/ contains behavior, opt-in exploit and workflow-form checks.
 - .github/ contains seven visible profiles and seven explicit skills.
-- outputs/ contains templates, the task ledger, per-task critiques and handoff format.
+- outputs/ contains map/findings/model templates, concise review and handoff format.
 - docs/ contains the scenario, security references and [facilitator guide](docs/INSTRUCTOR_GUIDE.md).
 
 Participant-generated architecture and findings belong in outputs/. No completed answer key or

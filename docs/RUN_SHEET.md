@@ -2,25 +2,19 @@
 
 | Clock | Stage | Cue |
 | --- | --- | --- |
-| 0 to 10 | Setup/demo | Baseline; roles/skills; separate end-of-stage handoff |
-| 10 to 22 | Map | Verify actual inputs, call edges and assumptions |
-| 22 to 35 | Investigate | Source-backed findings, severity and false-positive judgment |
-| 35 to 50 | STRIDE and top five | All findings, blast radius, selected acceptance criteria |
-| 50 to 70 | Sequential Create/critique | Choose live count; verify each before next; three cycles max per task |
-| 70 to 85 | Final review | Cumulative changes versus original findings; NEVER CUT |
-| 85 to 90 | Debrief | Evidence, critique and remaining work; NEVER CUT |
+| 0 to 5 | Setup | Baseline, tools and prompts |
+| 5 to 10 | Map | Actual source/configuration and connections |
+| 10 to 18 | Investigate | Whole-service coverage, evidence and uncertainty |
+| 18 to 28 | Threat model | STRIDE, blast radius and top five |
+| 28 to 50 | Create/Critique | Named task, fix/tests, fresh review, concrete correction |
+| 50 to 57 | Final review | Completed changes, actual tests and open work |
+| 57 to 60 | Debrief | What evidence changed your decision? |
 
-Stage close: human gate, then Hand-off Recorder in the same chat and /hand-off. The hand-off records
-whatever state exists and never blocks; the next stage's skill checks readiness. Stage skills do not
-write handoff. Reports and the ledger carry state during task loops; no learner summary requests.
+No plan/ledger/cycle records, artifact validators, repeated hashes/logs or automatic next task.
+Three attempts is a facilitator guideline. Old task/plan artifacts stay untouched. The participant
+chooses when to send the next task prompt. Review must run relevant tests, not merely say looks good.
+Generic handoff is optional and captures pending/unfinished work. Preserve tests and completed work;
+shorten discussion/live scope when time is short. No new packages, service startup or external calls.
 
-Task rhythm: agree scope, persist cycle, Create and run, fresh reviewer Critique and run, correct if
-needed. Stop on acceptance or after three cycles. A task is not verified by its author. The facilitator
-usually does one or two live; agents support more. Explicitly defer remaining work at the time check.
-
-FLEX shorten lower-ranked finding discussion and repeated score explanations, then narrow live task
-count. Do not cut review/debrief or rename unresolved work as passed. Ledger consistency checks are
-form checks; native execution and timing need rehearsal. No installations, POM changes or real external probes.
-
-Final check: every original finding has a disposition; completed scope has current evidence; previous
-fixes did not regress; deferred/unresolved tasks and relevant skips remain explicit. /hand-off closes the stage.
+Stage 4 is closeout, not another Critique loop. Discuss production integration, ASVS/scanning and
+operational controls verbally if time permits; do not execute them as extra agent tasks.

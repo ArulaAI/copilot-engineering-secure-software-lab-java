@@ -1,6 +1,6 @@
-# Run evidence
+# Optional diagnostic evidence
 
-Agents save actual command output here and link it from task/review records. Ensure this directory
-exists before using Maven -l. Use task/cycle-specific filenames so later runs do not overwrite earlier
-evidence. Record exit codes and tested source identity in the associated report. No real credentials,
-customer data or fabricated transcripts. Missing evidence stays missing.
+Existing evidence files may be retained. Stage 3 does not require per-cycle logs, source hashes,
+entry-artifact snapshots or artifact validators. Use actual command output and existing Maven test
+reports; summarize results once in chat/review.md. Save extra diagnostics only when needed to explain
+a real failure. Do not repair old report metadata as part of a code fix. No secrets or customer data.

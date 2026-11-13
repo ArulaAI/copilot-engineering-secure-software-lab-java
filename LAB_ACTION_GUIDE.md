@@ -8,19 +8,18 @@ only the beginning. Copilot reads and writes; you decide whether its claims and 
 
 | Clock | Stage | Outcome |
 | --- | --- | --- |
-| 0 to 10 | 0 Setup and demonstration | Tools and baseline ready |
-| 10 to 22 | 1A Map | Source-grounded architecture and attack surface |
-| 22 to 35 | 1B Investigate | Findings, severity and uncertainty |
-| 35 to 50 | 2 Threat model | STRIDE, blast radius and five priorities |
-| 50 to 70 | 3 Create and critique | Selected tasks independently verified one at a time |
-| 70 to 85 | 4 Final review | All changes compared with original findings |
-| 85 to 90 | 5 Debrief | Transfer and next actions |
+| 0 to 5 | 0 Setup and demonstration | Tools and baseline ready |
+| 5 to 10 | 1A Map | Source-grounded architecture and attack surface |
+| 10 to 18 | 1B Investigate | Findings, severity and uncertainty |
+| 18 to 28 | 2 Threat model | STRIDE, blast radius and five priorities |
+| 28 to 50 | 3 Create and critique | Requested fix, tests and independent critique |
+| 50 to 57 | 4 Final review | Actual completed changes and remaining work |
+| 57 to 60 | 5 Debrief | Transfer and next actions |
 
-The facilitator normally chooses one or two tasks for live implementation. Continue through more
-priorities when time permits or after the session. The workflow has no implementation count limit.
-Review and debrief are never cut. The facilitator can shorten discussion of lower-ranked findings
-and repeated scoring explanations to protect implementation time, or end the live scope explicitly.
-Five completed fixes are not promised within 90 minutes.
+This is a 60-minute hands-on allocation, subject to the timed rehearsal. The facilitator chooses
+one main implementation assignment, adding another only if time permits. All five cards remain
+available for follow-up. Do not promise five completed fixes. Shorten discussion or live task count
+rather than removing tests or final review.
 
 ![The lab workflow](docs/lab-guide/overview.svg)
 
@@ -41,7 +40,7 @@ files. A scope instruction is not a sandbox; a fresh chat does not guarantee ind
 If a skill or role is missing, call the facilitator. Use only the rehearsed fallback in
 [compatibility](docs/COMPATIBILITY.md). No new CLI is required.
 
-## 0. Check your setup (10 minutes)
+## 0. Check your setup (5 minutes)
 
 Complete [compatibility](docs/COMPATIBILITY.md) before the session and read [the scenario](docs/SCENARIO.md).
 
@@ -56,7 +55,7 @@ Complete [compatibility](docs/COMPATIBILITY.md) before the session and read [the
 - Observe the facilitator demonstrate role selection, skill invocation, a report gate and separate
   handoff. Agents create report files from their templates when needed; you need not copy forms.
 
-## 1A. Map the codebase (12 minutes)
+## 1A. Map the codebase (5 minutes)
 
 **Question:** what have we inherited, and where does untrusted input enter?
 
@@ -73,7 +72,7 @@ endpoint merely because it has a public method. No completed architecture is sup
 
 Set the report gate, then **Hand-off Recorder**, `/hand-off` in this chat.
 
-## 1B. Investigate (13 minutes)
+## 1B. Investigate (8 minutes)
 
 **Question:** which weaknesses are supported, and what evidence is still missing?
 
@@ -90,7 +89,7 @@ artifacts rather than rewriting the original finding away.
 
 Set the report gate, then **Hand-off Recorder**, `/hand-off`.
 
-## 2. Threat model and prioritize (15 minutes)
+## 2. Threat model and prioritize (10 minutes)
 
 **Question:** which threats deserve attention first, and why?
 
@@ -113,18 +112,18 @@ No mitigation is labelled implemented before code and verification exist.
 
 Set the report gate, then **Hand-off Recorder**, `/hand-off`.
 
-## 3. Secure Implementation (20 minutes; facilitator selects tasks)
+## 3. Secure Implementation (22 minutes; facilitator selects tasks)
 
 Use the tasks below, as in the original lab. Connect your chosen task to the findings and threat
 model from Stages 1 and 2. The facilitator decides which tasks to complete live; the rest are follow-up.
 
 For each task:
 
-1. Select **Secure Remediation Engineer** and send the implementation prompt. Approve its plan before edits.
+1. Select **Secure Remediation Engineer** and send the implementation prompt. The agent explains its approach, fixes the code and runs tests; no separate plan approval is required.
 2. In a fresh chat, select **Secure Code Reviewer** and send the review prompt.
 3. If the reviewer finds a gap, return to the implementation chat, ask it to address the review findings,
    then review again. Stop when accepted; ask the facilitator for help after three unsuccessful cycles.
-4. Verify the current task before moving to the next. The agents save the task state and test evidence.
+4. Verify the current task before moving to the next. The agents report actual test results; no task ledger or plan file is required.
 
 ### Task 1: Secure Authentication
 
@@ -141,7 +140,7 @@ Refactor src/main/java/com/securelabs/vulnerable/auth/AuthController.java to:
 5. Use generic authentication errors to avoid revealing whether an account exists.
 6. Set HttpOnly, Secure and SameSite attributes on session cookies.
 
-Explain the plan before editing. Add tests for valid login, rejected credentials, lockout and expiry, session behavior and sensitive-data protection. Use existing dependencies.
+Briefly explain your approach, then make the changes. Add tests for valid login, rejected credentials, lockout and expiry, session behavior and sensitive-data protection. Use existing dependencies.
 ```
 
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
@@ -169,7 +168,7 @@ Refactor src/main/java/com/securelabs/vulnerable/api/PaymentHandler.java to:
 4. Remove card numbers and CVVs from logs and unnecessary responses or storage.
 5. Verify webhook HMAC signatures over the specified raw payload, with timestamp validation and duplicate-event handling.
 
-Explain the plan before editing. Add local tests for legitimate payment/refund/webhook behavior and rejected inputs, wrong owners, invalid signatures and stale or repeated events. No real payment service is required.
+Briefly explain your approach, then make the changes. Add local tests for legitimate payment/refund/webhook behavior and rejected inputs, wrong owners, invalid signatures and stale or repeated events. No real payment service is required.
 ```
 
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
@@ -197,7 +196,7 @@ Refactor src/main/java/com/securelabs/vulnerable/data/UserRepository.java to:
 4. Remove caller-controlled shell execution from exportUsers; agree a safe supported operation or rejection policy.
 5. Prevent avatar paths from escaping the intended directory.
 
-Explain the plan before editing. Use the existing H2 fixture to test legitimate queries and hostile values/identifiers. Add local tests for export and avatar boundaries. Preserve existing assertions.
+Briefly explain your approach, then make the changes. Use the existing H2 fixture to test legitimate queries and hostile values/identifiers. Add local tests for export and avatar boundaries. Preserve existing assertions.
 ```
 
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
@@ -225,7 +224,7 @@ Refactor src/main/java/com/securelabs/vulnerable/api/ResourceController.java to:
 4. Validate redirect destinations against an allow-list.
 5. Replace wildcard credentialed CORS with explicit allowed origins.
 
-Explain the plan before editing. Add tests for allowed behavior and rejected destinations, redirect escapes, wrong owners and origins. Use controlled local fixtures, not real external or internal services.
+Briefly explain your approach, then make the changes. Add tests for allowed behavior and rejected destinations, redirect escapes, wrong owners and origins. Use controlled local fixtures, not real external or internal services.
 ```
 
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
@@ -253,7 +252,7 @@ Review src/main/java/com/securelabs/vulnerable/api/ModernApiHandler.java and agr
 4. Unrestricted command execution and other supported findings from discovery.
 
 The search endpoint currently builds and returns SQL text without executing it. Do not label that proven database injection or introduce an executor merely to fix it.
-Explain the plan before editing and add local security and legitimate-behavior tests for the agreed changes.
+Briefly explain your approach, then add local security and legitimate-behavior tests for the agreed changes.
 ```
 
 **Verify your fix:** select **Secure Code Reviewer** in a fresh chat and ask:
@@ -273,32 +272,32 @@ When the facilitator ends live work, select **Hand-off Recorder** in the impleme
 `/hand-off`. Capture completed, unfinished and unresolved work, then continue to Stage 4. Remaining
 tasks stay available for follow-up; ending the session does not mark them fixed.
 
-## 4. Final cumulative review (15 minutes, never cut)
+## 4. Final review and closeout (7 minutes)
 
-**Question:** what changed, what is now supported, and what remains open?
+Select **Secure Code Reviewer** in a fresh chat and send:
 
-**Input:** original findings, Stage 2 priorities, selected course task cards, cumulative code/test changes, ledger and task critiques.
+```text
+/review-security-fix final
 
-1. New chat, **Secure Code Reviewer**, `/review-security-fix final`.
-2. Inspect `outputs/review.md`. The reviewer compares every original finding with current status,
-   checks all actual changes and interactions, and runs completed-task checks plus regression.
-3. Inspect ACCEPTED, CHANGES REQUIRED or NEEDS EVIDENCE against the actual evidence. ACCEPTED covers
-   verified completed scope only. Deferred, partial and unresolved work must remain visible.
-4. A regression returns to the affected task's remaining cycle budget; the reviewer cannot reset
-   the budget or edit application code. If time/budget is exhausted, preserve the failing verdict.
+Close out the fixes completed in this session.
+Review their existing critique results and any changes made afterward.
+Reuse passing test results if they still cover the unchanged code; otherwise run the needed regression check once.
+Summarize what was fixed, the test results, any remaining issues and your final verdict in outputs/review.md.
+Do not start another vulnerability scan, add new tests or work on unstarted tasks.
+```
 
-**Gate:** completed scope has matching evidence; original findings have current dispositions; no
-skipped, deferred or unresolved work is misrepresented as fixed. Inspect residual risks and limits.
+Read the result together: **what was fixed, did the checks pass, and what remains open?** A real
+regression must be reported. Further fixes are a facilitator decision, not an automatic loop.
+Run `/hand-off` only if you want a continuation snapshot. Production assurance topics are discussed
+verbally; they are not additional lab tasks.
 
-Set the final gate, then **Hand-off Recorder**, `/hand-off` in the review chat.
-
-## 5. Debrief (5 minutes, never cut)
+## 5. Debrief (3 minutes, never cut)
 
 1. Which model claim changed after you checked the source or ran a test?
 2. Which critique exposed an incomplete fix or broken legitimate behavior?
 3. Which prioritized work remains, and what would be needed to finish it?
 
-Take away the map, findings, threat model, task ledger, plan, per-task critiques, final review and
+Take away the map, findings, threat model, concise review and
 handoff. On your own code, separate evidence from confidence, constrain tool authority, protect
 sensitive context and inspect changes before accepting generated output. These are useful AI-security
 habits, not a demonstration that prompt injection or all service risks are eliminated.
@@ -310,14 +309,14 @@ habits, not a demonstration that prompt injection or all service risks are elimi
 | Agent or skill missing | Stop for facilitator; qualify the existing-procedure fallback |
 | Mapping is slow | Inspect repeated reads and excessive output; preserve configuration and source coverage |
 | Agent asks for copied logs | Point it to the actual report/evidence path or missing run |
-| New task still sees old handoff | Read current ledger/reviews; handoff happens at stage end |
-| A task needs a correction | Resume its existing cycle history; never reset across chats |
-| Third cycle fails | Mark unresolved and pause for facilitator |
+| Old task/plan files appear | Leave them untouched; use the current prompt, source changes and review |
+| A task needs a correction | Give Create the specific review findings, then Critique again |
+| Repeated attempts do not converge | Ask the facilitator; report the unresolved issue honestly |
 | Test count changes | Inspect discovered classes and task scope; there is no fixed passing total |
 | Dependencies or application startup fail | Use the approved support route; do not bypass restrictions |
 
-Optional `mvn -Dtest=OutputsCheck test` checks report form and ledger consistency, not security truth.
-Reports not started are skipped. Existing incomplete reports fail rather than proving completion.
+The optional report-form check is a facilitator diagnostic, not a Stage 3 step. Agents must not
+run it or repair metadata as part of fixing bugs. Existing task/plan files can remain as historical notes.
 
 **IntelliJ/manual route:** use the rehearsed attachment of the existing agent instructions and phase
 SKILL.md, then the one-line request `Follow the attached procedure.` Match roles/tools, save outputs

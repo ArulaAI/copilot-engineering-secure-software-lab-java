@@ -1,13 +1,9 @@
 # Current workflow status
 
-The workflow supports evidence-ranked priorities, any selected implementation task, a maximum of
-three Create/critique cycles per task and a separate end-of-stage handoff. The facilitator chooses
-the live task count. Final review compares original findings with all actual changes and remaining risk.
+Stage 3 is a lean named-task Create/Critique loop. No mandatory ledger, saved plan, cycle history,
+per-cycle snapshots or artifact validation. Create fixes/tests and stops. Critique independently tests,
+gives a short verdict and writes review.md once. No automatic next priority or deferral questions.
 
-Known-risk inventories and corrected solutions are kept outside the participant repository. Historical
-Git objects may still expose old material. No history rewrite is part of this change.
-
-Automated checks validate Java behavior and report/ledger consistency. They cannot establish native
-Copilot role enforcement, skill discovery, independent judgment, throughput or target IDE compatibility.
-Use VERIFICATION.md and WORKFLOW_REHEARSAL.md for evidence and release gates. Do not treat authoring
-checks as a completed client rehearsal.
+Retired bookkeeping templates/helpers are preserved locally outside the repository. Existing generated
+rehearsal files and participant source/tests are not deleted. Known-risk/answer material stays local.
+Native Copilot behavior and the revised 60-minute timing require rehearsal; see VERIFICATION.md.

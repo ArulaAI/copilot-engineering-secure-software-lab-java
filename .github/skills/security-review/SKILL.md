@@ -1,11 +1,12 @@
 ---
 name: security-review
-description: "Explain the current workflow and next action without performing a stage."
+description: "Explain the simple lab workflow without doing extra work."
 argument-hint: "Optional workflow question"
 user-invocable: true
 disable-model-invocation: true
 ---
 
-Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts. Skill invocation does not switch roles or grant tools.
-
-Read the handoff and current task ledger, not only last_stage. Explain the next permitted action: mapping, investigation, threat modeling, one-task Create/critique, or final review. Each stage closes with explicit /hand-off; only Recorder writes it. A selected task must be verified before advancing, with a maximum of three complete cycles. The facilitator decides how many tasks to do live; there is no hardcoded implementation assignment or count. Do not perform a stage or alter state.
+Explain the next action from available context: map, investigate, threat-model, Create the named fix,
+Critique it, or final review. The guide supplies implementation and review prompts. No task ledger,
+plan, cycle counter or metadata repair is required. Participants choose tasks; agents do not auto-start
+others. Generic /hand-off can record any state when requested. Do not perform a stage or alter files.

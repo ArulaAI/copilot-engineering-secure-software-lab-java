@@ -10,7 +10,7 @@
 - [ ] Add bounded adversarial checks with local synthetic fixtures; inspect failures before classifying an exploit.
 - [ ] Preserve existing assertions and disclose skipped or unrun checks.
 - [ ] Record matching source state, full run evidence and verdict. No self-certification.
-- [ ] Preserve the task's Create cycle and history, with no fourth cycle or automatic advancement after failure.
+- [ ] Stop after the requested review; no artifact repair, expanded assignment or automatic next task.
 
 ## Domain questions, where relevant
 

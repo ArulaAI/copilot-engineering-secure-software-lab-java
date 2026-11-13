@@ -25,8 +25,8 @@ Use only organization-permitted settings and models. No model pin, paid upgrade 
 | Codebase Mapper | read/search/edit/execute | map report |
 | Vulnerability Hunter | read/search/edit/execute | findings report |
 | STRIDE Threat Modeler | read/search/edit/execute | threat-model report |
-| Remediation Engineer | read/search/edit/execute | agreed task code/new tests and necessary agreed test adaptations, plan, ledger, evidence |
-| Code Reviewer | read/search/edit/execute | task/final review, task status, new critique tests, evidence |
+| Remediation Engineer | read/search/edit/execute | requested task code/tests and concise chat result |
+| Code Reviewer | read/search/edit/execute | short review.md entries and necessary new critique tests |
 | Hand-off Recorder | read/search/edit/execute | handoff only; execute read-only Git inspection only; works in any repository and never blocks |
 | OWASP Expert | read/search | none |
 
@@ -35,7 +35,7 @@ File-level scope is instructional, not host enforcement. In particular an edit-c
 can technically edit more than its report. Inspect all actual changes. Execute-capable roles need
 exact command approval and observed restrictions; a role name alone is not proof.
 
-Rehearse direct mapping, report creation, task/cycle persistence, fresh task review, sequential advancement,
+Rehearse direct mapping, focused implementation/testing, fresh task review,
 separate same-chat Recorder invocation and cumulative final review. The mapper reads source and configuration directly without delegation. New chat reduces context carryover but provides no
 OS isolation or guarantee of independent judgment.
 
@@ -64,3 +64,6 @@ rehearsal, and record any missing features or fallback limits before claiming re
 - [VS Code custom agents](https://code.visualstudio.com/docs/agent-customization/custom-agents)
 - [VS Code skills](https://code.visualstudio.com/docs/agent-customization/agent-skills)
 - [GitHub feature matrix](https://docs.github.com/en/copilot/reference/copilot-feature-matrix)
+
+Stage 3 does not depend on task/plan files, artifact validators or earlier gate approval. Preserve old
+rehearsal artifacts without reading or repairing them. Native runtime tests remain required for acceptance.

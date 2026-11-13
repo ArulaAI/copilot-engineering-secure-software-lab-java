@@ -1,42 +1,25 @@
 # Workflow architecture
 
-Profiles define roles and intended tools. Explicit skills define reusable procedures. Task scope
-comes from selected findings and the agreed plan; profiles contain no preset implementation issue IDs,
-source-file pairs or test totals. All roles follow the shared contract in .github/skills/security-review/references/evidence-contract.md.
+Seven visible agents and seven explicit skills. Mapping uses one agent. Discovery covers the whole
+service; Stage 2 models supported findings and ranks five with uncertainty. The guide supplies named
+implementation/review prompts. Agents handle any selected task, not preset source-file restrictions.
 
-| Action | Agent | Skill | State written |
+| Action | Agent | Skill | Output |
 | --- | --- | --- | --- |
 | Map | Codebase Mapper | /map-codebase | codebase-map.md |
 | Investigate | Security Vulnerability Hunter | /find-vulnerabilities | findings.md |
 | Threat model | STRIDE Threat Modeler | /generate-threat-model | threat-model.md |
-| Create/correct one task | Secure Remediation Engineer | /fix-vulnerability | change-plan.md, tasks.md, evidence |
-| Critique one task | Secure Code Reviewer | /review-security-fix + named task Critique prompt | task-reviews.md, task status, new critique tests, evidence |
-| Cumulative final review | Secure Code Reviewer | /review-security-fix final | review.md, evidence |
-| End a stage | Hand-off Recorder, same stage chat | /hand-off | handoff.md only |
+| Create/correct | Secure Remediation Engineer | /fix-vulnerability | source/tests and concise chat result |
+| Critique/final review | Secure Code Reviewer | /review-security-fix | short review.md entry |
+| Capture state | Hand-off Recorder | /hand-off | handoff only |
 
-Paths in the last column are under outputs/ except new tests. Seven profiles are visible; the Mapper reads source and configuration directly without delegation. Seven explicit skills include the optional /security-review overview.
+Report paths are under outputs/. Stage 3 has no mandatory plan, ledger, cycle counter, entry-artifact
+snapshot or metadata validator. Existing retired files stay untouched. Create stops after the named
+task; Critique stops after its verdict. The participant sends each prompt and chooses the next task.
+A fresh reviewer runs actual focused/regression tests. Optional hardening outside the agreed criteria
+is follow-up rather than an endless correction loop. Three attempts can guide facilitation without
+state machinery. Final acceptance covers completed scope; other priorities stay open.
 
-Stage 2 ranks five priorities from all supported findings. The guide defines the named course assignments and their Create/Critique prompts; these are linked to priorities rather than replaced by a generated task list. Agents support any number of tasks.
-The facilitator usually chooses one or two for live implementation, preserving other priorities for
-continuation. Three cycles is a maximum per task, not a target. Persist Cycle before each Create.
-Critique in a fresh chat independently runs the task tests and regression. Only reviewer acceptance
-marks verified; no advancement past unfinished work without an explicit recorded facilitator scope
-change. Reopening a task preserves its cycle budget and history.
-
-State lives in reports, the task ledger and append-only critique/cycle history. The separate handoff
-reads available state whenever requested, normally at stage end. It records pending/unapproved work
-without controlling transitions; stage agents independently check their prerequisites. It does not infer why code changed from diff
-alone, fabricate approvals, or ask for duplicated participant summaries. Git status includes new files
-that ordinary git diff omits. Evidence records the tested source state.
-
-Final review covers all cumulative changes and every original finding's current disposition. An
-accepted partial-session scope does not mean all selected threats were fixed. Deferred and unresolved
-work stays explicit. New task tests join subsequent regression. Skipped seeded tests prove no control.
-
-Tool lists require observation in the supported IDE. File-scope text is advisory. Fresh chat is context
-separation, not process isolation or guaranteed independent judgment. Native skills, direct mapping,
-report writes, command approvals and manual fallbacks all require target rehearsal. No CLI or extra
-orchestration runtime is introduced.
-
-- [VS Code custom agents](https://code.visualstudio.com/docs/agent-customization/custom-agents)
-- [VS Code skills](https://code.visualstudio.com/docs/agent-customization/agent-skills)
+Generic handoff records available work, including pending decisions, without enforcing sequence.
+Actual tests/diffs and concise reviews supply evidence. Tool scopes and fresh chats do not establish
+file-level sandboxing or independent judgment. Native Copilot behavior and timing require rehearsal.
