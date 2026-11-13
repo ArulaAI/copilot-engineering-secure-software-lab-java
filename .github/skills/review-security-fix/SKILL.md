@@ -8,6 +8,12 @@ disable-model-invocation: true
 
 Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts. Skill invocation does not switch roles or grant tools.
 
+Readiness (yours, not /hand-off's). Task mode: check `outputs/tasks.md` has exactly one task
+in_progress and `outputs/change-plan.md` records its agreed scope. Final mode: check the Stage 3
+`gate` in `outputs/change-plan.md` is `pass`. If something is missing, tell the learner exactly what
+and ask whether to continue anyway; record their answer in your report. Do not stop silently and do
+not edit earlier reports.
+
 Select Secure Code Reviewer or stop. Start in a fresh chat. Read original findings, threat model, plan, ledger, prior task critiques, actual source/tests, Git status/diff and untracked files. Default to task mode when one task is in_progress; use final only when requested for closeout. Never reset Cycle or earlier evidence.
 
 ## Task mode: critique before advancing

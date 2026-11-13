@@ -1,21 +1,21 @@
 ---
 stage: handoff
-last_stage: ""
+last_stage: ""            # free text: what the latest section covers, e.g. "1B analyze" or "paused mid-task"
 ---
 
-# Stage handoffs
+# Hand-offs
 
-Only the explicit /hand-off action writes this file, after the learner's gate decision.
-Append a short section per stage, with later corrections superseding rather than erasing history.
-Read the linked reports and ledger for detail. Missing evidence or approval remains missing.
+/hand-off appends a section whenever it is run: at the end of a stage, mid-task or when pausing.
+It records the state as it is, including pending decisions and unfinished work. It does not
+approve anything or decide whether the next stage may start.
 
 <!-- Repeat this section, normally under 12 lines:
-## Stage <name>
-- Gate / recorded human decision:
-- Source baseline and pre-existing changes:
-- Report and evidence paths:
-- Observed code/test changes, including untracked files:
-- Selected task state / cycles: see outputs/tasks.md
-- Open, deferred or unresolved work:
-- Next action and minimum inputs:
+## <what this covers> · <date or revision>
+- Goal:
+- Done (files, commits):
+- In progress or pending (decisions, gates, approvals still open):
+- Evidence (commands and actual results):
+- Repository state (branch, revision, changed and untracked files):
+- Open questions and risks:
+- Next step and minimum inputs:
 -->

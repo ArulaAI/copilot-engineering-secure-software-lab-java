@@ -8,7 +8,7 @@ Record commands, exit codes, named test results, pass/fail/error/skip counts and
 
 ## State and separate handoff
 
-Stage skills write their own report and designated task/run artifacts. outputs/tasks.md holds the selected task state; outputs/task-reviews.md retains each critique and cycle. These files carry state across fresh chats. Only /hand-off with Hand-off Recorder writes outputs/handoff.md, at the END of a stage after the human gate. No stage skill automatically updates it. Read task state directly during Stage 3; a stage handoff is not required between every task.
+Stage skills write their own report and designated task/run artifacts. outputs/tasks.md holds the selected task state; outputs/task-reviews.md retains each critique and cycle. These files carry state across fresh chats. Only /hand-off with Hand-off Recorder writes outputs/handoff.md. It records the current state whenever asked, including pending gates and unfinished work, and never approves or blocks progress. Readiness to start a stage is checked by that stage's own skill. No stage skill automatically updates the hand-off. Read task state directly during Stage 3; a stage handoff is not required between every task.
 
 Read reports and run evidence instead of asking learners to copy summaries or logs. A participant makes real decisions: priority confirmation, scope agreement, gate and residual-risk acceptance. Missing decisions remain missing. A compact handoff is selective and must point to its source reports.
 

@@ -10,7 +10,8 @@
 | 70 to 85 | Final review | Cumulative changes versus original findings; NEVER CUT |
 | 85 to 90 | Debrief | Evidence, critique and remaining work; NEVER CUT |
 
-Stage close: human gate, then Hand-off Recorder in the same chat and /hand-off. Stage skills do not
+Stage close: human gate, then Hand-off Recorder in the same chat and /hand-off. The hand-off records
+whatever state exists and never blocks; the next stage's skill checks readiness. Stage skills do not
 write handoff. Reports and the ledger carry state during task loops; no learner summary requests.
 
 Task rhythm: agree scope, persist cycle, Create and run, fresh reviewer Critique and run, correct if

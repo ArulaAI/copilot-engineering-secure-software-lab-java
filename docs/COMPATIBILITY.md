@@ -29,7 +29,7 @@ Use only organization-permitted settings and models. No model pin, paid upgrade 
 | STRIDE Threat Modeler | read/search/edit/execute | threat-model report |
 | Remediation Engineer | read/search/edit/execute | agreed task code/new tests and necessary agreed test adaptations, plan, ledger, evidence |
 | Code Reviewer | read/search/edit/execute | task/final review, task status, new critique tests, evidence |
-| Hand-off Recorder | read/search/edit/execute | handoff only; execute read-only Git inspection only |
+| Hand-off Recorder | read/search/edit/execute | handoff only; execute read-only Git inspection only; works in any repository and never blocks |
 | OWASP Expert | read/search | none |
 
 Analysis execute is limited by instructions to read-only Git metadata/diff inspection; no builds or source execution.

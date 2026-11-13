@@ -53,6 +53,8 @@ legitimate-behavior tests normally end in Test so they join ordinary regression.
 verified task checks too. Do not require all intentionally unfixed defects to pass before verifying an
 unrelated task. Final review must still disclose those open defects.
 
-Only /hand-off with Hand-off Recorder updates outputs/handoff.md at a stage boundary. Each stage
+Only /hand-off with Hand-off Recorder updates outputs/handoff.md. It records the current state
+whenever asked, including pending decisions, and never approves or blocks progress; each stage
+checks its own readiness. Each stage
 writes its own report; Stage 3 also maintains the task ledger and critique history. Participants make
 scope, gate and residual-risk decisions; agents derive summaries from files and actual tool results.

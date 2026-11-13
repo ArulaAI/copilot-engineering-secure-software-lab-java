@@ -1,16 +1,25 @@
 ---
 name: hand-off
-description: "Record an explicit end-of-stage handoff without asking for repeated summaries."
-argument-hint: "Stage just completed"
+description: "Capture the current state of work for continuation in a new chat or session. Use at any point, in any repository; it never blocks."
+argument-hint: "Optional: what this hand-off covers, or a file path to write to"
 user-invocable: true
 disable-model-invocation: true
 ---
 
-Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts. Skill invocation does not switch roles or grant tools.
+Use with **Hand-off Recorder**. If another agent is selected, ask the user to switch; that is the
+only reason to stop. Running in the same chat as the work gives the best record, but if the earlier
+conversation is not available, record that and capture what the files and Git show.
 
-Select Hand-off Recorder in the SAME chat as the stage being closed, or stop and ask to switch. Read that stage report, current task state and observed evidence. Use existing conversation decisions rather than requesting them again.
+# Hand-off
 
-1. Infer the stage or use the supplied stage argument. Inspect base revision, pre-existing changes, current Git status/diff and untracked files. Discovery stages may have report-only changes. Do not infer a decision or test run from a diff.
-2. Read current gate and task verdicts. A stale or missing approval stays pending; ask only if it blocks the next action. Do not change task status or counts.
-3. Create outputs/handoff.md from its template if absent. Append a concise section for the stage: decision/gate, report paths, observed source/test changes and run evidence, selected task states/cycles, unresolved/deferred work, next action and inputs. Point to the ledger and reports rather than repeating them. Update last_stage. Record later corrections as a superseding section, preserving earlier entries.
-4. Write ONLY outputs/handoff.md. Do not rewrite stage reports, source, tests or task states. Show the learner the saved section and next step. Begin the next stage in a fresh chat. No automatic commits, resets or pushes.
+1. Work out what to cover from the argument, the conversation, or recent changes. Do not ask the
+   user to restate it.
+2. Read the existing hand-off file if there is one, plus any reports, task lists or notes the work
+   produced. Inspect `git status`, `git diff --stat`, untracked files and the current revision.
+3. Record the state as it is, including anything unfinished, failed or awaiting a decision. An unset
+   gate or missing approval is written down as pending, not treated as an error.
+4. Write one new section to the hand-off file (see the recorder's "Where to write"), following the
+   repository's hand-off template if one exists. Keep it short and point to files rather than
+   copying them. Add a date or revision so sections can be told apart.
+5. Show the user the section you wrote and the file path. Do not decide whether the next stage may
+   start; that is for the next stage's own checks and the user.

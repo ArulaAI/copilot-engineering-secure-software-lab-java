@@ -12,7 +12,7 @@ source-file pairs or test totals. All roles follow the shared contract in .githu
 | Create/correct one task | Secure Remediation Engineer | /fix-vulnerability | change-plan.md, tasks.md, evidence |
 | Critique one task | Secure Code Reviewer | /review-security-fix task ID | task-reviews.md, task status, new critique tests, evidence |
 | Cumulative final review | Secure Code Reviewer | /review-security-fix final | review.md, evidence |
-| End a stage | Hand-off Recorder, same stage chat | /hand-off | handoff.md only |
+| Record state (end of stage or any pause) | Hand-off Recorder, same chat | /hand-off | handoff.md only |
 
 Paths in the last column are under outputs/ except new tests. Eight profiles include one hidden
 Package Explorer used by the Mapper. Seven explicit skills include the optional /security-review overview.
@@ -25,7 +25,8 @@ marks verified; no advancement past unfinished work without an explicit recorded
 change. Reopening a task preserves its cycle budget and history.
 
 State lives in reports, the task ledger and append-only critique/cycle history. The separate handoff
-reads this state at stage end and records transitions. It does not infer why code changed from diff
+records this state whenever asked, including pending gates and unfinished work. It never approves,
+blocks or sequences work; each stage skill checks its own readiness. It does not infer why code changed from diff
 alone, fabricate approvals, or ask for duplicated participant summaries. Git status includes new files
 that ordinary git diff omits. Evidence records the tested source state.
 

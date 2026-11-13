@@ -15,7 +15,8 @@ scope based on observed timing. Keep dependency/POM and environment constraints 
 
 SAY You inherited this service. Understand it, prioritize risks, prove a change and challenge it.
 DO demonstrate role selection, explicit skill, report inspection, gate and same-chat Hand-off Recorder
-with /hand-off. Show the distinction between stage handoff and task state. No repeated learner summaries.
+with /hand-off. Show that hand-off records state (even with a pending gate) and that the next stage
+checks readiness. Show the distinction between handoff and task state. No repeated learner summaries.
 CHECK-IN baseline succeeds with expected skipped seeded checks; customization discovery is qualified.
 
 ## 10 to 22: Map

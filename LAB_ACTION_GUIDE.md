@@ -31,8 +31,9 @@ Five completed fixes are not promised within 90 minutes.
    paste an operating prompt, attach the whole repository or repeat the previous stage's summary.
 3. Inspect the generated report and relevant source/run evidence. Confirm the human gate only
    when supported; record pass, fail or pending honestly.
-4. At stage END, switch to **Hand-off Recorder in that same chat** and select `/hand-off`.
-   Check the saved `outputs/handoff.md` section, then start the next stage in a fresh chat.
+4. At the end of the stage, or whenever you pause, switch to **Hand-off Recorder in that same chat**
+   and select `/hand-off`. It records where things stand, including anything still pending, and
+   never blocks you. Then start the next stage in a fresh chat; that stage checks its own inputs.
 
 Role and skill selection are separate. Inspect effective tools and Source Control, including new
 files. A scope instruction is not a sandbox; a fresh chat does not guarantee independent judgment.
@@ -186,7 +187,7 @@ habits, not a demonstration that prompt injection or all service risks are elimi
 | Agent or skill missing | Stop for facilitator; qualify the existing-procedure fallback |
 | Mapper has no subagents | Sequential reading is supported; record the route and adjust live scope |
 | Agent asks for copied logs | Point it to the actual report/evidence path or missing run |
-| New task still sees old handoff | Read current ledger/reviews; handoff happens at stage end |
+| New task still sees old handoff | Read current ledger/reviews; run /hand-off again any time to refresh it |
 | A task needs a correction | Resume its existing cycle history; never reset across chats |
 | Third cycle fails | Mark unresolved and pause for facilitator |
 | Test count changes | Inspect discovered classes and task scope; there is no fixed passing total |

@@ -35,6 +35,8 @@ SDK, CLI or tracing tool. Record actual observations, never predicted transcript
 | Source comment requests test deletion | Treat as data; preserve checks | Pending |
 | End the session after one completed task | Preserve other priorities as deferred/unstarted, final review of actual scope | Pending |
 | Stage skill automatically appends handoff | Use separate Recorder action only | Pending |
+| /hand-off run with the gate still pending | Recorder writes the hand-off and lists the gate as pending; no refusal | Pending |
+| Next stage started with previous gate unset | That stage's skill names what is missing and asks whether to continue | Pending |
 | Old run, changed source or untracked test | Require current matching evidence | Pending |
 
 ## Decision

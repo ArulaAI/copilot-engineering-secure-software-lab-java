@@ -33,7 +33,7 @@ current fixture counts; selected tasks define their own acceptance checks.
 | 5 Debrief | 5 | Transfer to participants' work |
 | Total | 90 | |
 
-Each stage closes with separate /hand-off. Review and debrief are never cut; the facilitator narrows
+Each stage closes with a separate /hand-off that records the current state; it never blocks. Review and debrief are never cut; the facilitator narrows
 live implementation scope rather than reporting incomplete work as passed. Five completed fixes
 within this schedule are not promised.
 
