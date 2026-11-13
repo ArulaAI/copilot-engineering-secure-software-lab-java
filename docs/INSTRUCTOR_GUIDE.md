@@ -1,109 +1,74 @@
 # Instructor guide
 
-## Marker legend
-
-SAY is suggested framing. DO is a facilitator action. WATCH FOR identifies a misconception.
-CHECK-IN is a participant checkpoint. TIP is a delivery option.
+SAY is suggested framing. DO is an action. WATCH FOR is a misconception. CHECK-IN is a checkpoint.
 
 ## Before delivery
 
-DO pin the release SHA and complete docs/COMPATIBILITY.md for each supported environment.
-DO run the baseline, the reproduce command (six failures) and acceptance with the reference
-solutions using docs/VERIFICATION.md. Check Maven artifacts using the organization's approved route.
-DO confirm repository access, the approved model, chat permissions, and breakout-room support.
-DO confirm each stage's agent creates its report from the template and adds a hand-off section.
-Confirm role selection and skill discovery. Use docs/WORKFLOW_REHEARSAL.md to record time, quality,
-corrective turns, and usage where exposed. Do not claim savings from the format change alone.
-DO assign one facilitator to the parallel help room during the introduction.
-DO validate the 90-minute rehearsal. Environment readiness is a separate gate from code checks.
+DO pin the release and record its source state. Complete COMPATIBILITY.md, VERIFICATION.md and
+WORKFLOW_REHEARSAL.md. Use the private facilitator risk inventory outside the participant workspace;
+no answer-key architecture is required. Recognize semantically equivalent findings, not exact AI titles.
+DO rehearse one task end to end and a second-task transition, including task-specific tests, fresh
+critique, three-cycle persistence, explicit handoff and final partial-scope closeout. Choose a live
+scope based on observed timing. Keep dependency/POM and environment constraints intact.
 
-Facilitator resources in reference/ are visible in the public clone. Explain the educational
-boundary. For an independent assessment, distribute a participant package without reference/
-and facilitator docs. Do not claim a prompt restriction prevents access to public solutions.
+## 0 to 10: Setup and demonstration
 
-## 0 to 10 minutes. Setup and demonstration
+SAY You inherited this service. Understand it, prioritize risks, prove a change and challenge it.
+DO demonstrate role selection, explicit skill, report inspection, gate and same-chat Hand-off Recorder
+with /hand-off. Show the distinction between stage handoff and task state. No repeated learner summaries.
+CHECK-IN baseline succeeds with expected skipped seeded checks; customization discovery is qualified.
 
-SAY You have inherited a service nobody on the team wrote. We will map it before judging it,
-rank before fixing, and attack our own fixes.
-DO demonstrate the rhythm once: new chat, pick the agent, type the command from the / list,
-open the report the agent wrote in outputs/, tick the gate. Learners never attach files, paste
-prompts or switch agents mid-stage.
-SAY Each report ends with a short hand-off in outputs/handoff.md; the next stage reads it first.
-TIP a prepared same-code comparison with and without its requirement/test can replace part of
-this demonstration. Discuss evidence quality without adding required minutes or tooling.
-CHECK-IN `mvn clean test` shows 10 run, 6 skipped. Route setup issues to the help room.
+## 10 to 22: Map
 
-## 10 to 22 minutes. Map the codebase
+DO inspect actual entry points and call edges. Package Explorer is optional where qualified; sequential
+mapping is the fallback. WATCH FOR helpers drawn as connected controllers without call evidence.
+CHECK-IN map labels implemented, assumed and proposed components/edges and names unknowns.
 
-SAY Before asking what is wrong, ask what this code does and where outsiders get in.
-DO point out the Package Explorer subagents: each package is read in its own context and only
-a summary returns, which keeps the main chat small.
-WATCH FOR vulnerability judgments in the map, or a database or authentication layer drawn as
-implemented when the code only assumes it.
-CHECK-IN codebase-map.md indexes all four packages, lists entry points with file and line,
-and has a diagram with implemented and assumed labels.
+## 22 to 35: Investigate
 
-## 22 to 35 minutes. Analyze
+DO compare evidence, preconditions and impact. AI may miss or group findings differently.
+WATCH FOR finding quotas, simulated sinks reported as executed exploits and invented authentication policy.
+CHECK-IN original findings saved, severity explained, a false positive rejected and coverage stated.
+FLEX shorten discussion of lower-priority findings; do not force participants to inspect every row live.
 
-SAY Follow each untrusted input to where it is used. Nothing in the code labels the problems;
-the code path is the evidence.
-WATCH FOR finding-count competition, severity copied from comments, or duplicates not merged.
-CHECK-IN findings.md is sorted by severity. Learners opened the top three locations, classified
-candidates as confirmed/rejected/needs evidence, and rejected one false positive with evidence. Compare against reference/finding-catalog.md for coverage, not matching IDs.
+## 35 to 50: Model and prioritize
 
-## 35 to 50 minutes. Threat model, blast radius and top 5
+DO apply STRIDE to all findings; assess severity, impact, likelihood and blast radius. Confirm the five
+priorities with acceptance criteria. Do not prescribe issue types or assume all five are Critical.
+CHECK-IN selected threats trace to actual findings and source evidence, with uncertainty retained.
+FLEX use concise scoring explanations after a worked example, preserving a rationale for each priority.
 
-SAY Priority is impact times likelihood. Blast radius is who, what, which action, how often,
-and whether anyone would notice.
-DO accept different top-5 rankings when the scores cite code. If SQLI-01 or PATH-01 falls
-outside a learner's top five, ask for the one-line reason the template requires.
-CHECK-IN threat-model.md has scored threats, five blast radius rows and a top-5 table marking
-the lab fixes. See reference/threat-model.md for one reasonable answer.
+## 50 to 70: Create and critique
 
-## 50 to 70 minutes. Fix SQLI-01 and PATH-01
+DO choose how many tasks to attempt live, normally one or two; all priorities remain available.
+For each task, agree scope, persist Cycle before Create, add relevant behavior/security tests, execute
+checks, and critique in a fresh reviewer chat. Return concrete critique to the preserved implementation
+chat. Three complete cycles maximum per task, including initial Create; stop earlier on acceptance.
+CHECK-IN no next-task advancement before verified, previous fixes stay in regression and task histories
+survive new chats. The reviewer can add tests and reports, but cannot fix application source.
+WATCH FOR test weakening, self-certified acceptance, resetting cycles, or requiring irrelevant seeded
+failures to turn green before another task is accepted. Relevant skips are missing proof, not passes.
+DO pause unresolved third-cycle work. At time checkpoint explicitly defer remaining live work with
+reasons; do not erase an unresolved defect. Close Stage 3 using the separate /hand-off action.
 
-DO confirm the reproduce run shows six failing exploit tests before any edit.
-DO require scope agreement before the first edit, and command approval for each run.
-SAY Inspect the exact command before approval. This human checkpoint complements host permissions.
-WATCH FOR edits to tests or pom.xml, fixes spreading to variant methods, or a copied solution.
-CHECK-IN change-plan.md records the six failures before and 10 run, 0 skipped after, and the
-diff stat lists only UserRepository.java and FileHandler.java.
+## 70 to 85: Final review, NEVER CUT
 
-## 70 to 85 minutes. Review and red-team
+DO invoke /review-security-fix final in a fresh reviewer chat. Compare every original finding with
+current source, all actual changes and current runs. Inspect cross-fix regressions and new files.
+CHECK-IN acceptance is for verified completed scope, with deferred/unresolved tasks and untested
+boundaries explicit. Return regressions to the affected task's remaining budget; no reset to pass.
+DO inspect the final gate and run /hand-off with Recorder in this review chat.
 
-DO confirm learners opened a new chat with Secure Code Reviewer for /review-security-fix.
-SAY Verify first. Red-team follows only after the fixes pass verification, and the reviewer
-reruns the tests itself rather than trusting the author's recorded result.
-DO expect red-team to hold against a careful fix and to catch common naive ones (unescaped LIKE
-wildcards, String.startsWith on paths). See reference/threat-model.md.
-WATCH FOR red-team classes ending in Test (they join the acceptance count) or loops beyond one
-correction.
-CHECK-IN review.md has section A with evidence, a decision for every successful attack, a
-verdict, and a final hand-off section. This stage is NEVER CUT.
+## 85 to 90: Debrief, NEVER CUT
 
-## 85 to 90 minutes. Debrief
+Ask what changed after source/test inspection, what critique caught, and what remains to be done.
+SAY Take the evidence trail and the remaining priorities back to your own work.
 
-DO ask the three debrief questions and walk the Copilot-safety table. NEVER CUT.
-SAY On your own codebase: map it, rank it, fix the top items with tests, attack your fixes.
+## Recovery
 
-## Common room issues
-
-| Symptom | Action |
-| --- | --- |
-| Slash command missing | Stop for facilitator, check discovery and qualify the existing-skill fallback |
-| Different findings or severity | Compare evidence and preconditions, not raw counts |
-| No report file | The agent may lack edit rights; check its tools, or have the learner save the chat output |
-| Subagent not called | Mapping falls back to reading packages one at a time; allow extra minutes |
-| Agent asks for pasted logs | Ask it to run the command itself and record the summary line |
-| Baseline green before fix | Show the skipped checks and enable security.verify |
-| Model pinned/unavailable | Confirm approved selected model and reload repository agents |
-| New package requested | Decline scope expansion and use existing Java/Maven features |
-| Spring server fails | Required exercise uses tests. Record the runtime issue separately |
-| Skill or role unavailable in IDEA | Attach the phase SKILL.md and send the one-line fallback; record the limitation |
-
-## Solutions and residual scope
-
-See reference/README.md for the reference solutions to SQLI-01 and PATH-01, the finding catalog
-and an example threat model. The reference fixes change only the assigned methods; variants stay
-vulnerable by design. No claims are made about production authentication, deployment security
-or PCI compliance.
+If mapping or discussion overruns, narrow live implementation scope. If a task fails at the cycle
+limit, preserve the result and pause for facilitator intervention. A failed demonstration is not a
+verified fix; final review can honestly report incomplete scope. No guarantee of five fixes in 90 minutes.
+Skills missing: qualify existing-file manual route. Commands blocked: participant runs the same check
+and attaches its evidence by path. Dependency errors: approved support route, no bypass. Never reset
+participant work or install tools during the session to recover a schedule.

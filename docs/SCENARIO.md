@@ -1,62 +1,58 @@
 # Lab scenario
 
-## The codebase
+Your team has inherited a synthetic legacy Java service with users, payments, files and sessions.
+Before extending it, understand the code, identify risks and demonstrate defensible improvements.
+Nothing is deployed. Review all actual source packages and configuration; standalone helpers are
+not automatically connected to controllers. Do not invent infrastructure to complete a diagram.
 
-You have joined a team that owns a legacy Java Spring service. Nobody who wrote it is still
-around. It has user accounts, payments, file uploads, sessions and an admin API, spread across
-four packages under `src/main/java/com/securelabs/vulnerable/` (`api`, `auth`, `data`,
-`session`), about 2,400 lines. All data is synthetic. Nothing is deployed.
+## Stage contracts
 
-Your job in this lab: understand the codebase, find and rank its security problems, decide what
-to mitigate first, then fix two of them with evidence.
+1. Map and investigate: produce architecture/attack-surface evidence and all supported findings.
+2. Apply STRIDE to the service and all findings. Assess severity, impact, likelihood and blast radius.
+   Select the top five threats from that evidence. This is an analysis result, not a prescribed list.
+3. Implement selected tasks sequentially. The facilitator normally chooses one or two for the live
+   session; participants may continue through all priorities as time permits or afterward. There is
+   no implementation count restriction. Agree each task's scope and acceptance, Create, then Critique
+   in a fresh reviewer chat. Verify the current task before the next. Up to three complete cycles
+   per task, stopping earlier when accepted. Third-cycle failure pauses for the facilitator.
+4. Review all actual changes against original findings. Accept completed scope only, with explicit
+   deferred, unstarted and unresolved tasks. Record residual risks and close the stage.
 
-## Stages
+## Working scope
 
-1. **Map** the codebase (index, entry points, architecture diagram), then **analyze** it and
-   rank findings by severity.
-2. **Threat-model** the findings with STRIDE and blast radius, and choose the top 5 to mitigate.
-3. **Fix** the two lab fixes below, proven by shipped exploit tests.
-4. **Verify** the fixes in an isolated review, then **red-team** them.
+Any selected threat may require changes to relevant application files, small supporting helpers and
+new behavioral tests. Agree these per task. Preserve existing assertions; never weaken or delete tests
+to report green. No dependency/POM changes, new installations, external API calls or application startup.
+Use the existing Java/Maven, Spring Security, JUnit and H2 facilities with local synthetic fixtures.
+A fix can add a trustworthy local identity boundary when needed; do not treat an unchecked user-supplied
+ID as authenticated identity. Test the chosen boundary and state its limits.
 
-## Lab fixes (assigned)
+Known dependency/runtime issues remain findings if not changed; method-level tests do not establish
+that the full Spring application starts. Do not assert every dependency risk is fixed by application code.
 
-Every learner fixes these two, whatever their own ranking says. Both are one file each.
+## Evidence and test selection
 
-| Fix ID | File | Methods to change | Defect | A correct fix |
-| --- | --- | --- | --- | --- |
-| SQLI-01 | `vulnerable/data/UserRepository.java` | `findByEmail`, `searchUsers` | SQL built by string concatenation | Bind values as parameters; allow-list the sort column and throw `IllegalArgumentException` for anything else |
-| PATH-01 | `vulnerable/data/FileHandler.java` | `readFile`, `deleteFile`, `listFiles` | User input joined to a folder path | Reject any path that resolves outside the upload folder with `IllegalArgumentException` or `SecurityException`, before touching the file system |
-
-The same patterns appear in other methods and classes. Those are variants: record them in your
-findings and threat model, but do not fix them in this lab.
-
-Shipped tests in `src/test/java/com/securelabs/vulnerable/data/`:
-
-- `UserRepositoryTest`, `FileHandlerTest`: legitimate behavior. They pass before and after the fix.
-- `UserRepositorySecurityTest`, `FileHandlerSecurityTest`: exploit tests. They fail on the
-  unfixed code and must pass after it. They run only with `-Dsecurity.verify=true`.
-
-Never change these tests or `pom.xml`. In Stage 4 the reviewer adds one new test class,
-`DataRedTeamCheck`, in the same folder.
-
-## Commands
-
-| Purpose | Command |
+| Purpose | Command or action |
 | --- | --- |
-| Baseline (setup) | `mvn clean test` |
-| Reproduce | `mvn -Dsecurity.verify=true "-Dtest=*SecurityTest" test` |
-| Acceptance | `mvn -Dsecurity.verify=true clean test` |
-| Changed files | `git diff --stat -- src/main/java` |
-| Red-team | `mvn "-Dtest=*RedTeamCheck" test` |
-| Check report forms | `mvn -Dtest=OutputsCheck test` |
+| Setup and ordinary regression | `mvn clean test` |
+| Current tracked changes | `git diff --stat` and `git diff -- src/main/java src/test/java` |
+| Include new files | `git status --short`, then inspect each untracked source/test file |
+| Identify tested file contents | `git hash-object <relevant-source-and-test-paths>` |
+| Selected task tests | `mvn -Dtest=<actual-test-class-or-method> test` |
+| Selected opt-in security tests, where relevant | `mvn -Dsecurity.verify=true -Dtest=<actual-security-class> test` |
+| Check report forms and task-ledger consistency | `mvn -Dtest=OutputsCheck test` |
 
-Expected results: baseline 10 run, 0 failed, 6 skipped. Reproduce 6 run, 6 failed.
-Acceptance 10 run, 0 failed, 0 skipped. Agents that run a command record its summary line in
-their report.
+Angle-bracket test/path values are selected from actual evidence by the agent, not literal runnable
+commands. Save full command output under outputs/evidence/ (Maven's `-l <file>` option is available),
+record exit status, counts, failures/skips and current source state. No participant log copying is needed.
 
-## Out of scope
+The shipped opt-in security fixtures cover only database query handling and upload paths. They are
+available checks, not assigned tasks or complete service coverage. Enable only relevant fixtures for
+task acceptance; retain skipped/unselected fixtures as explicitly unverified. New task security and
+legitimate-behavior tests normally end in Test so they join ordinary regression. Rerun previously
+verified task checks too. Do not require all intentionally unfixed defects to pass before verifying an
+unrelated task. Final review must still disclose those open defects.
 
-Fixing anything other than SQLI-01 and PATH-01, starting the Spring application, the
-dependency CVEs in `pom.xml` (record them as findings only), and real deployment concerns such as
-TLS, network controls and production identity. Symbolic links inside the upload folder are not
-tested by this fixture; record them as residual risk if red-team raises them.
+Only /hand-off with Hand-off Recorder updates outputs/handoff.md at a stage boundary. Each stage
+writes its own report; Stage 3 also maintains the task ledger and critique history. Participants make
+scope, gate and residual-risk decisions; agents derive summaries from files and actual tool results.

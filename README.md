@@ -1,64 +1,56 @@
 # Secure Software Development with GitHub Copilot
 
-A 90-minute hands-on lab for Java engineers. You inherit an unfamiliar legacy service, map it
-with Copilot, find and rank its security problems, threat-model them to choose the top 5 to
-mitigate, fix two of them with test evidence, and red-team your own fixes.
+A 90-minute Java lab about inheriting an unfamiliar service, mapping its attack surface, investigating
+findings and using STRIDE and blast radius to prioritize five threats. Create and critique selected
+fixes sequentially, then review the cumulative changes against the original findings.
 
-## Start here
-
-1. Complete [setup and compatibility checks](docs/COMPATIBILITY.md).
-2. Read [the scenario](docs/SCENARIO.md): the codebase, the two assigned fixes and the commands.
-3. Follow [the participant action guide](LAB_ACTION_GUIDE.md).
-
-The baseline `mvn clean test` passes with six exploit tests
-skipped. Passing does not mean the code is secure; the exploit tests are switched on in Stage 3.
+Start with [compatibility](docs/COMPATIBILITY.md), [the scenario](docs/SCENARIO.md) and
+[the Lab Action Guide](LAB_ACTION_GUIDE.md). The facilitator decides how many priorities to implement
+live, usually one or two. All selected tasks remain available for continuation. No agent is restricted
+to a specific issue, file pair or implementation count.
 
 ## Prerequisites
 
-- An approved JDK, Java 17 or later, with Maven using the same JDK.
-- Maven 3.9 or later with the organization's approved settings.xml.
-- Approved GitHub Copilot access in VS Code (IntelliJ IDEA via the manual fallback).
-- Repository access and a successful pre-session baseline and customization check.
+- Java 17 or later and Maven 3.9 or later with the organization's existing settings.xml.
+- Approved Copilot access in VS Code, or the rehearsed IntelliJ fallback.
+- Repository access and pre-session build/customization checks.
 
-No new package, Python runtime, CLI, hook, database server or external API is required. The
-exploit tests use the in-memory H2 database already in the POM. Spring Boot startup is outside
-the lab.
+No new dependency, scanner, database service, CLI, MCP server or external API is required. Spring
+application startup is outside the required route. A passing baseline includes explicitly skipped
+seeded security checks and does not prove security. See [verification](docs/VERIFICATION.md) for the
+current fixture counts; selected tasks define their own acceptance checks.
 
-## Session schedule
+## Schedule
 
-| Stage | Minutes | Outcome |
+| Stage | Minutes | Output |
 | --- | --- | --- |
-| 0. Setup | 10 | Baseline runs; agents and commands visible |
-| 1A. Map the codebase | 12 | Index, entry points, architecture diagram |
-| 1B. Analyze | 13 | Findings ranked by severity |
-| 2. Threat model and top 5 | 15 | Prioritized threats, blast radius, top 5 to mitigate |
-| 3. Fix SQLI-01 and PATH-01 | 20 | Minimal fixes proven by shipped exploit tests |
-| 4. Verify, then red-team | 15 | Isolated review, attack tests, verdict |
-| 5. Debrief | 5 | Habits to carry back |
+| 0 Setup and demonstration | 10 | Baseline and customization readiness |
+| 1A Map | 12 | Source-grounded architecture and attack surface |
+| 1B Investigate | 13 | Supported findings and uncertainty |
+| 2 Threat model and priorities | 15 | STRIDE, blast radius and top five |
+| 3 Create and critique | 20 | As many independently verified tasks as time permits |
+| 4 Final review | 15 | Cumulative verdict and remaining risks |
+| 5 Debrief | 5 | Transfer to participants' work |
 | Total | 90 | |
 
-## Repository layout
+Each stage closes with separate /hand-off. Review and debrief are never cut; the facilitator narrows
+live implementation scope rather than reporting incomplete work as passed. Five completed fixes
+within this schedule are not promised.
 
-- `src/main/java/com/securelabs/vulnerable/` is the legacy codebase under study.
-- `src/test/java/com/securelabs/vulnerable/data/` holds the shipped behavior and exploit tests.
-- `.github/` holds seven custom agents (one is a hidden subagent), the stage skills,
-  repository instructions and scoped Java instructions.
-- `outputs/` holds the report templates (YAML header, evidence tables, gate list); each stage
-  writes its report there.
-- `docs/lab-guide/` holds the diagrams used in the action guide.
-- `docs/` holds the scenario, compatibility steps and facilitator material.
-- `reference/` holds facilitator solutions, the finding catalog and an unsafe historical archive,
-  outside compilation. Do not consult it during the lab.
+## Repository
 
-The public clone exposes facilitator files; this is an educational boundary, not an access
-control. For assessment, distribute a package without `reference/` and facilitator docs.
+- src/main/java/ contains the synthetic vulnerable service and helpers.
+- src/test/java/ contains behavior, opt-in exploit and workflow-form checks.
+- .github/ contains eight profiles (seven visible and one package subagent) and seven explicit skills.
+- outputs/ contains templates, the task ledger, per-task critiques and handoff format.
+- docs/ contains the scenario, security references and [facilitator guide](docs/INSTRUCTOR_GUIDE.md).
 
-## Facilitators
+Participant-generated architecture and findings belong in outputs/. No completed answer key or
+facilitator solution is included in the working tree. Older Git history can still contain earlier
+material; a clean participant distribution must omit prior Git objects when separation is required.
 
-Use [INSTRUCTOR_GUIDE](docs/INSTRUCTOR_GUIDE.md), [RUN_SHEET](docs/RUN_SHEET.md),
-[WORKFLOW_ARCHITECTURE](docs/WORKFLOW_ARCHITECTURE.md), [VERIFICATION](docs/VERIFICATION.md)
-and the [rehearsal worksheet](docs/WORKFLOW_REHEARSAL.md). Rehearse on the target IDE, plugin,
-harness and model before delivery; subagents, agent switching and tool limits must be confirmed
-there.
+Facilitators use [the run sheet](docs/RUN_SHEET.md), [workflow architecture](docs/WORKFLOW_ARCHITECTURE.md),
+[verification](docs/VERIFICATION.md) and [rehearsal worksheet](docs/WORKFLOW_REHEARSAL.md).
+Native IDE behavior and session timing require target-environment rehearsal.
 
 Copyright InRhythm / Arula. Training material using synthetic data.

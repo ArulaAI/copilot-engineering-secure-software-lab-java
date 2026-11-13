@@ -16,9 +16,9 @@ attacker would use the same way into one threat.
 
 ## Threats
 
-| ID | Threat | Findings | Entry point | STRIDE | Impact (1-3) | Likelihood (1-3) | Priority (impact x likelihood) | Evidence |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T-01 | {{attacker goal and method}} | {{F-xx, ...}} | {{entry point}} | {{category}} | {{1-3}} | {{1-3}} | {{1-9}} | {{file:line}} |
+| ID | Threat | Findings | Entry point | STRIDE | Severity | Impact (1-3) | Likelihood (1-3) | Priority (impact x likelihood) | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| T-01 | {{attacker goal and method}} | {{F-xx, ...}} | {{entry point}} | {{category}} | {{Critical/High/Medium/Low with rationale}} | {{1-3}} | {{1-3}} | {{1-9}} | {{file:line}} |
 
 Impact: 3 = data of all users or code execution, 2 = one user's data or a privileged action,
 1 = limited disclosure. Likelihood: 3 = reachable by anyone with no precondition, 2 = needs an
@@ -32,14 +32,14 @@ account or a known identifier, 1 = needs unusual access.
 
 ## Top 5 to mitigate first
 
-| Rank | Threat | Why it ranks here | Mitigation | Fixed in this lab? |
+| Rank | Threat | Why it ranks here | Mitigation | Acceptance criteria / proposed scope |
 | --- | --- | --- | --- | --- |
-| 1 | {{T-xx}} | {{priority, blast radius}} | {{one sentence}} | {{yes: SQLI-01 / PATH-01, or deferred}} |
+| 1 | {{T-xx}} | {{priority, blast radius}} | {{one sentence}} | {{positive and negative checks; implementation is not yet complete}} |
 
 ## Gate
 
 - [ ] Every threat traces to findings and an entry point in the code.
 - [ ] Priority uses the impact and likelihood scales above, with evidence.
 - [ ] Each top-5 blast radius answer cites code or is marked assumed or unknown.
-- [ ] The two lab fixes (SQLI-01, PATH-01) are located in the table; if either is outside your
-      top 5, say why.
+- [ ] The selected five arise from evidence-based priorities and have actionable scope and acceptance criteria.
+- [ ] All other findings remain visible, and no proposed mitigation is labelled implemented.

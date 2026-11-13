@@ -1,304 +1,203 @@
-# Secure Software Lab: Map, Rank, Fix, Attack
+# Secure Software Lab: Understand, Prioritize, Create and Critique
 
-You have just joined a team that owns a legacy Java service. Nobody who wrote it is still around.
-Today you use GitHub Copilot to understand it, find what is wrong, decide what to fix first, fix two
-problems with proof, and then try to break your own fix. Everything is synthetic and nothing is
-deployed.
+Your team has inherited a synthetic legacy Java service. Before extending it, understand what it
+does, investigate its weaknesses and make changes you can defend with evidence. A green build is
+only the beginning. Copilot reads and writes; you decide whether its claims and fixes are supported.
 
-## How to use this guide
+## Your route
 
-Every stage has the same three parts:
+| Clock | Stage | Outcome |
+| --- | --- | --- |
+| 0 to 10 | 0 Setup and demonstration | Tools and baseline ready |
+| 10 to 22 | 1A Map | Source-grounded architecture and attack surface |
+| 22 to 35 | 1B Investigate | Findings, severity and uncertainty |
+| 35 to 50 | 2 Threat model | STRIDE, blast radius and five priorities |
+| 50 to 70 | 3 Create and critique | Selected tasks independently verified one at a time |
+| 70 to 85 | 4 Final review | All changes compared with original findings |
+| 85 to 90 | 5 Debrief | Transfer and next actions |
 
-- **What's happening** explains the stage and the one decision that is yours.
-- **Run** lists what to do, in order. Each item says whether it happens in **Copilot Chat** or the
-  **terminal**. Open "Example output" to see what a rehearsal run printed.
-- **Look for** is a checklist. Tick each item before you move on.
+The facilitator normally chooses one or two tasks for live implementation. Continue through more
+priorities when time permits or after the session. The workflow has no implementation count limit.
+Review and debrief are never cut. The facilitator can shorten discussion of lower-ranked findings
+and repeated scoring explanations to protect implementation time, or end the live scope explicitly.
+Five completed fixes are not promised within 90 minutes.
 
-Copilot's answers will not match anyone else's word for word. That is expected. What matters is that
-every claim points to code you can open.
+![The lab workflow](docs/lab-guide/overview.svg)
 
-![The five stages of the lab](docs/lab-guide/overview.svg)
+## How to drive each stage
 
-## Before you start
+1. Start the stage in a new Copilot chat. Select the named agent in the picker.
+2. Type `/` and select the existing skill. The skill reads its input files by path; you do not
+   paste an operating prompt, attach the whole repository or repeat the previous stage's summary.
+3. Inspect the generated report and relevant source/run evidence. Confirm the human gate only
+   when supported; record pass, fail or pending honestly.
+4. At stage END, switch to **Hand-off Recorder in that same chat** and select `/hand-off`.
+   Check the saved `outputs/handoff.md` section, then start the next stage in a fresh chat.
 
-Setup is done before the session ([docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)). Open the
-repository root in VS Code with Copilot Chat on the side and a terminal at the bottom. The codebase,
-the two fixes and every command are in [docs/SCENARIO.md](docs/SCENARIO.md).
+Role and skill selection are separate. Inspect effective tools and Source Control, including new
+files. A scope instruction is not a sandbox; a fresh chat does not guarantee independent judgment.
+If a skill or role is missing, call the facilitator. Use only the rehearsed fallback in
+[compatibility](docs/COMPATIBILITY.md). No new CLI is required.
+
+## 0. Check your setup (10 minutes)
+
+Complete [compatibility](docs/COMPATIBILITY.md) before the session and read [the scenario](docs/SCENARIO.md).
+
+- Confirm seven visible agents: Codebase Mapper, Security Vulnerability Hunter, STRIDE Threat
+  Modeler, Secure Remediation Engineer, Secure Code Reviewer, Hand-off Recorder and OWASP Security
+  Expert. Package Explorer is a hidden helper.
+- Confirm seven skills: `/map-codebase`, `/find-vulnerabilities`, `/generate-threat-model`,
+  `/fix-vulnerability`, `/review-security-fix`, `/hand-off` and optional `/security-review`.
+- Run `mvn clean test` in the terminal. It must build successfully. Some shipped security checks
+  are intentionally skipped until explicitly enabled. Inspect the actual summary rather than
+  treating green as proof of security. Exact release counts are in [verification](docs/VERIFICATION.md).
+- Observe the facilitator demonstrate role selection, skill invocation, a report gate and separate
+  handoff. Agents create report files from their templates when needed; you need not copy forms.
 
-If you get stuck, tell the facilitator the stage number and what you see.
+## 1A. Map the codebase (12 minutes)
 
----
+**Question:** what have we inherited, and where does untrusted input enter?
 
-## 0. Check your setup (10 min)
+**Input:** actual source/configuration and the scenario.
+
+1. New chat, **Codebase Mapper**, `/map-codebase`.
+2. The mapper discovers packages and asks Package Explorer for compact per-package summaries where
+   supported. With no subagents it reads sequentially and records that route.
+3. Open `outputs/codebase-map.md`. Inspect representative entry points and call edges in source.
+
+**Gate:** actual packages are indexed, externally controlled inputs and resources are named, and
+source supports every implemented diagram edge. Mark unknowns. A standalone helper is not an HTTP
+endpoint merely because it has a public method. No completed architecture is supplied.
 
-### What's happening
+Set the report gate, then **Hand-off Recorder**, `/hand-off` in this chat.
 
-You confirm Copilot can see the lab's agents and commands, and that the build works. The build
-passes, but six exploit tests are switched off until Stage 3: a green build does not mean secure code.
+## 1B. Investigate (13 minutes)
 
-### Run
+**Question:** which weaknesses are supported, and what evidence is still missing?
 
-1. In **Copilot Chat**, open the agent picker. You should see Codebase Mapper, Security
-   Vulnerability Hunter, STRIDE Threat Modeler, Secure Remediation Engineer, Secure Code Reviewer and
-   OWASP Security Expert. Type `/` and look for `/map-codebase`, `/find-vulnerabilities`,
-   `/generate-threat-model`, `/fix-vulnerability` and `/review-security-fix`.
-2. In the **terminal**, run the tests. It takes about 30 seconds.
+**Input:** map and actual code paths.
 
-   ```bash
-   mvn clean test
-   ```
+1. New chat, **Security Vulnerability Hunter**, `/find-vulnerabilities`.
+2. Read `outputs/findings.md`. Inspect the top findings' input-to-sink paths and preconditions.
+3. Check severity and coverage, merge duplicate root causes, and reject a plausible false positive
+   with a reason. Different titles or finding counts are expected; evidence is the assessment.
 
-   <details><summary>Example output</summary>
+**Gate:** findings cite current source, distinguish confirmed paths from needs-evidence claims, and
+retain uncertainty. Preserve this accepted discovery record; later resolution belongs in task/review
+artifacts rather than rewriting the original finding away.
 
-   ```text
-   [WARNING] Tests run: 10, Failures: 0, Errors: 0, Skipped: 6
-   [INFO] BUILD SUCCESS
-   ```
+Set the report gate, then **Hand-off Recorder**, `/hand-off`.
 
-   </details>
+## 2. Threat model and prioritize (15 minutes)
 
-### Look for
+**Question:** which threats deserve attention first, and why?
 
-- [ ] All six agents and five commands are listed. If one is missing, call the facilitator.
-- [ ] `Tests run: 10, Failures: 0, Errors: 0, Skipped: 6` and `BUILD SUCCESS`.
+**Input:** architecture and ALL Stage 1 findings.
 
----
-
-## 1A. Map the codebase (12 min)
-
-### What's happening
-
-Before judging code, understand it. The Codebase Mapper splits the code by package and hands each one
-to a Package Explorer, a helper that reads one package in its own context and returns a short summary.
-Your chat holds four summaries instead of every file. The result is `outputs/codebase-map.md`.
-
-**You decide:** is this map accurate enough to analyze from?
-
-![How /map-codebase works](docs/lab-guide/map.svg)
-
-### Run
-
-1. In **Copilot Chat**, start a new chat, pick **Codebase Mapper** and type `/map-codebase`.
-2. Open `outputs/codebase-map.md`. Pick two entry points and open their file and line.
-
-### Look for
-
-- [ ] All four packages (`api`, `auth`, `data`, `session`) are in the index.
-- [ ] Each entry point cites a file and line, and names the input an outsider controls.
-- [ ] The diagram shows nothing as *implemented* that the code does not contain.
-- [ ] You set `gate: pass` at the top of the report.
-
----
-
-## 1B. Analyze (13 min)
-
-### What's happening
-
-Start from each entry point in your map and follow the untrusted input to where it is used: SQL,
-file paths, URLs, commands, tokens, passwords. A finding is a claim until you have seen the code path.
-The result is `outputs/findings.md`, sorted from Critical to Low.
-
-**You decide:** which findings are real, and how severe each one is.
-
-### Run
-
-1. In **Copilot Chat**, start a new chat, pick **Security Vulnerability Hunter** and type
-   `/find-vulnerabilities`.
-2. Open the code for the top three findings. Does it really do what the report says?
-
-### Look for
-
-- [ ] Every finding cites a location you could open.
-- [ ] Each is marked *confirmed* or *needs evidence*, and says what evidence is missing.
-- [ ] Severity is explained by who can exploit it and what happens, not by a hunch.
-- [ ] Duplicates are merged, and at least one plausible false positive is rejected with a reason.
-- [ ] You set `gate: pass` at the top of the report.
-
----
-
-## 2. Threat model and top 5 (15 min)
-
-### What's happening
-
-Findings describe code; threats describe attackers. The Threat Modeler groups findings by how an
-attacker would use them, scores each threat, and sizes the blast radius of the top five. The result
-is `outputs/threat-model.md`.
-
-| Score | 1 | 2 | 3 |
-|---|---|---|---|
-| **Impact** | Limited disclosure | One user's data or a privileged action | All users' data or code execution |
-| **Likelihood** | Needs unusual access | Needs an account or a known ID | Anyone, no preconditions |
-
-Priority is impact × likelihood. Blast radius answers five questions: who can exploit it, what they
-reach, which action, can it repeat, and would anyone notice?
-
-**You decide:** which five threats to mitigate first, and why.
-
-### Run
-
-1. In **Copilot Chat**, start a new chat, pick **STRIDE Threat Modeler** and type
-   `/generate-threat-model`.
-2. Read the top five. Would you defend that order to your team lead?
-
-### Look for
-
-- [ ] Every score cites code, or says *assumed*.
-- [ ] Each top-five threat answers all five blast radius questions.
-- [ ] The two lab fixes, SQLI-01 and PATH-01, appear in the table. If one is outside your top five,
-      the report says why.
-- [ ] You set `gate: pass` at the top of the report.
-
----
-
-## 3. Fix SQLI-01 and PATH-01 (20 min)
-
-### What's happening
-
-Everyone fixes the same two problems today, each in one file:
-
-| Fix | File | Problem |
-|---|---|---|
-| SQLI-01 | `UserRepository.java` | SQL built by joining strings |
-| PATH-01 | `FileHandler.java` | File paths built from user input |
-
-Shipped exploit tests prove each bug: they fail before the fix and must pass after it. The engineer
-proposes a plan and waits for you, and you approve every command it runs. The result is
-`outputs/change-plan.md`.
-
-**You decide:** is the plan small enough? Only the assigned methods should change.
-
-![How fixing and reviewing work](docs/lab-guide/fix-review.svg)
-
-### Run
-
-1. In **Copilot Chat**, start a new chat, pick **Secure Remediation Engineer** and type
-   `/fix-vulnerability`.
-2. Approve the reproduce command. The six exploit tests should fail.
-
-   <details><summary>Example output</summary>
-
-   ```text
-   [ERROR] Tests run: 6, Failures: 6, Errors: 0, Skipped: 0
-   UserRepositorySecurityTest.emailLookupCannotBeTurnedIntoAlwaysTrue:17 an injected OR clause returned a user
-   FileHandlerSecurityTest.listFilesRejectsTraversal:44 a path outside the upload folder was accepted
-   ```
-
-   </details>
-
-3. Read the plan. Reply in your own words: agree, or narrow it.
-4. Approve the acceptance and `git diff --stat` commands when they match
-   [the scenario](docs/SCENARIO.md#commands).
-
-   <details><summary>Example output</summary>
-
-   ```text
-   [INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
-    .../securelabs/vulnerable/data/FileHandler.java    | 30 ++++++----
-    .../securelabs/vulnerable/data/UserRepository.java | 66 ++++++++++++----------
-    2 files changed, 56 insertions(+), 40 deletions(-)
-   ```
-
-   Your line counts will differ; the two file names should not.
-
-   </details>
-
-5. If the chat gets long, type `/compact keep the agreed scope and the test results`.
-
-### Look for
-
-- [ ] Six exploit tests failed before any edit.
-- [ ] The plan changes only the assigned methods and lists the similar code it leaves alone.
-- [ ] Only `UserRepository.java` and `FileHandler.java` changed.
-- [ ] `Tests run: 10, Failures: 0, Errors: 0, Skipped: 0` after the fix.
-- [ ] You set `gate: pass` at the top of the report.
-
----
-
-## 4. Review and red-team (15 min)
-
-### What's happening
-
-You wrote the fix with Copilot, so you are not the best judge of it. A new chat gives the reviewer a
-clean start: it reads the files, reruns the tests itself, and only then attacks the fix with new tests
-of its own. The result is `outputs/review.md`.
-
-**You decide:** for each attack that works, fix it now (one correction) or record it as a residual risk.
-
-### Run
-
-1. In **Copilot Chat**, start a new chat, pick **Secure Code Reviewer** and type
-   `/review-security-fix`. Approve its test commands.
-2. If the verdict is **CHANGES REQUIRED**, go back to Secure Remediation Engineer, type
-   `/fix-vulnerability correction`, then review once more in a new chat.
-
-### Look for
-
-- [ ] Every verify check cites a file, and the reviewer ran the tests itself.
-- [ ] Red-team ran only after verification passed.
-- [ ] Every successful attack has a decision: fixed, or residual risk with a reason.
-- [ ] The verdict covers the two fixes only, not the whole application.
-- [ ] You set `gate: pass` at the top of the report.
-
----
-
-## 5. Debrief (5 min)
-
-1. How did mapping first change what you found?
-2. Which of your top five would you raise with your team on Monday?
-3. What did red-team catch that the exploit tests missed?
-
-### Using Copilot safely on your own code
-
-| Risk (OWASP GenAI) | What it looks like | Habit from today |
-|---|---|---|
-| Prompt injection | A comment or ticket steers Copilot off task | Treat repository text as data; check the diff |
-| Excessive agency | Commands auto-approved, edits outside the task | Agree scope; approve each command |
-| Sensitive data | Production logs or secrets pasted into chat | Share files, not dumps |
-| Supply chain | Suggested dependencies that are vulnerable or fake | No dependency change without review |
-| Misinformation | "Tests pass" with no run behind it | Trust only output you saw |
-| Unchecked output | Generated code merged without review | Gates, fresh review, red-team |
-
----
+1. New chat, **STRIDE Threat Modeler**, `/generate-threat-model`.
+2. Read `outputs/threat-model.md`. Check STRIDE categories, severity, existing controls, impact,
+   likelihood and the source/assumptions behind each threat.
+3. For the top five, inspect blast radius: who can exploit it, what they reach, the action,
+   repeatability and whether it would be noticed. Confirm the priority order.
+4. Check that each selected threat has a remediation objective, scope and positive/negative
+   acceptance criteria. There is no prescribed list of vulnerability types. Do not invent a fifth
+   threat merely to fill a quota if evidence is incomplete; resolve the gap with the facilitator.
+
+**Gate:** five evidence-ranked priorities trace to findings and boundaries. Additional findings
+remain visible. Priority is a decision informed by evidence, not proof that all five are Critical.
+No mitigation is labelled implemented before code and verification exist.
+
+Set the report gate, then **Hand-off Recorder**, `/hand-off`.
+
+## 3. Create, critique and verify (20 minutes, extend only within facilitator allocation)
+
+**Question:** does this change remove the selected weakness while preserving legitimate behavior?
+
+**Input:** selected priorities, original findings, actual code and agreed acceptance criteria.
+
+![The per-task loop and final review](docs/lab-guide/fix-review.svg)
+
+1. New implementation chat, **Secure Remediation Engineer**, `/fix-vulnerability`.
+   The skill creates `outputs/tasks.md` and `outputs/change-plan.md` from templates, selecting
+   the next agreed priority. You decide the live scope; one, two or more tasks are supported.
+2. Inspect the proposed root cause, source/helpers/test scope, preserved behavior and checks.
+   Observe actual pre-fix behavior with a relevant negative check. Agree the plan before edits.
+3. **Create:** the agent records Cycle before editing, implements the fix and focused tests,
+   executes task checks and ordinary/previous-task regression, and records actual evidence.
+4. **Critique:** open a fresh chat, select **Secure Code Reviewer**, then invoke
+   `/review-security-fix task <selected-ID>` using the actual task ID. The reviewer reads artifacts,
+   inspects the real diff and untracked files, reruns checks independently and challenges the fix
+   with bounded local adversarial cases. Read `outputs/task-reviews.md` and the ledger status.
+5. If CHANGES REQUIRED, return to the preserved implementation chat and invoke
+   `/fix-vulnerability correction`. Address the specific critique, then review again in a fresh
+   chat. At most **three complete Create/critique cycles per task**, including the initial attempt.
+   Stop earlier when accepted. NEEDS EVIDENCE blocks advancement until supplied.
+6. **Advance only after verified.** Return to implementation and invoke `/fix-vulnerability` for
+   the next task. Keep earlier task checks in regression. Third-cycle failure marks unresolved
+   and pauses for the facilitator; do not silently skip or claim a pass.
+7. At the time checkpoint, the facilitator ends live scope and explicitly defers the remaining
+   tasks for continuation. Preserve any unresolved details. Check task state and the Stage 3 gate,
+   then select **Hand-off Recorder in the implementation chat**, `/hand-off`.
+
+**Evidence rules:** tests come from the chosen task, not a fixed suite/count. Existing opt-in checks
+can support relevant tasks; skipped checks for unselected weaknesses remain unverified. New task
+checks normally join ordinary regression. Do not weaken tests, replace a missing control with a
+fabricated identity, change dependencies or contact real external targets. Record run failures,
+skips, source identity and full output. A compilation error is not an expected security failure.
+
+**Gate:** every completed task has independent acceptance, legitimate-behavior and regression evidence.
+The ledger retains all other task states and cycle histories. Creation never self-certifies a fix.
+A participant approves scope and real decisions; agents maintain artifacts without repeated forms.
+
+## 4. Final cumulative review (15 minutes, never cut)
+
+**Question:** what changed, what is now supported, and what remains open?
+
+**Input:** original findings, selected priorities, cumulative code/test changes, ledger and task critiques.
+
+1. New chat, **Secure Code Reviewer**, `/review-security-fix final`.
+2. Inspect `outputs/review.md`. The reviewer compares every original finding with current status,
+   checks all actual changes and interactions, and runs completed-task checks plus regression.
+3. Inspect ACCEPTED, CHANGES REQUIRED or NEEDS EVIDENCE against the actual evidence. ACCEPTED covers
+   verified completed scope only. Deferred, partial and unresolved work must remain visible.
+4. A regression returns to the affected task's remaining cycle budget; the reviewer cannot reset
+   the budget or edit application code. If time/budget is exhausted, preserve the failing verdict.
+
+**Gate:** completed scope has matching evidence; original findings have current dispositions; no
+skipped, deferred or unresolved work is misrepresented as fixed. Inspect residual risks and limits.
+
+Set the final gate, then **Hand-off Recorder**, `/hand-off` in the review chat.
+
+## 5. Debrief (5 minutes, never cut)
+
+1. Which model claim changed after you checked the source or ran a test?
+2. Which critique exposed an incomplete fix or broken legitimate behavior?
+3. Which prioritized work remains, and what would be needed to finish it?
+
+Take away the map, findings, threat model, task ledger, plan, per-task critiques, final review and
+handoff. On your own code, separate evidence from confidence, constrain tool authority, protect
+sensitive context and inspect changes before accepting generated output. These are useful AI-security
+habits, not a demonstration that prompt injection or all service risks are eliminated.
 
 ## If you get stuck
 
-| What you see | What to do |
-|---|---|
-| A command is missing after `/` | Call the facilitator. On IntelliJ, use the manual route below |
-| An agent is missing from the picker | Call the facilitator. Don't continue in the default agent |
-| Mapping reads files one by one | Subagents may be blocked. Let it finish; it notes this in the report |
-| Baseline shows 0 skipped | You added `-Dsecurity.verify=true`. Run `mvn clean test` exactly |
-| Reproduce shows a compile error | Stop and call the facilitator. Don't reset your work |
-| The test count is not 10 after the fix | The red-team class must end in `RedTeamCheck`, not `Test` |
-| Dependencies won't download | Use the support route in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) |
+| Symptom | Action |
+| --- | --- |
+| Agent or skill missing | Stop for facilitator; qualify the existing-procedure fallback |
+| Mapper has no subagents | Sequential reading is supported; record the route and adjust live scope |
+| Agent asks for copied logs | Point it to the actual report/evidence path or missing run |
+| New task still sees old handoff | Read current ledger/reviews; handoff happens at stage end |
+| A task needs a correction | Resume its existing cycle history; never reset across chats |
+| Third cycle fails | Mark unresolved and pause for facilitator |
+| Test count changes | Inspect discovered classes and task scope; there is no fixed passing total |
+| Dependencies or application startup fail | Use the approved support route; do not bypass restrictions |
 
-**Manual route (IntelliJ without skill support).** Attach the stage's `.github/skills/<command>/SKILL.md`
-in Copilot Chat and type `Follow the attached procedure.` Decline any edit before Stage 3, and tell
-the facilitator you are on this route.
+Optional `mvn -Dtest=OutputsCheck test` checks report form and ledger consistency, not security truth.
+Reports not started are skipped. Existing incomplete reports fail rather than proving completion.
 
-**Check your reports (optional).** `mvn -Dtest=OutputsCheck test` checks that each report's header is
-filled in correctly. Reports you haven't started show as skipped.
-
-## Words we use
-
-| Word | Meaning |
-|---|---|
-| Entry point | Where an outsider's input reaches the code |
-| Finding | A claim that something is wrong, with a location |
-| Threat | What an attacker could do, built from one or more findings |
-| Blast radius | Who can exploit it, what they reach, and whether anyone would notice |
-| Exploit test | A test that fails while the bug exists and passes once it is fixed |
-| Red-team | Trying to break your own fix with attacks the tests don't cover |
-| Subagent | A helper agent that works in its own context and returns a summary |
-| Residual risk | A known weakness you record instead of fixing today |
-
-## Four habits to take with you
-
-1. Map before you judge.
-2. Rank before you fix.
-3. Prove the bug before and after the fix.
-4. Attack your own fix.
-
-One question for your own work: which part of your codebase has never been mapped?
+**IntelliJ/manual route:** use the rehearsed attachment of the existing agent instructions and phase
+SKILL.md, then the one-line request `Follow the attached procedure.` Match roles/tools, save outputs
+and run Maven yourself where needed. If execution or separate review context is unavailable, use
+facilitator-led review and label the gap. Do not claim native parity or install an extra CLI.
 
 Copyright InRhythm / Arula. Training material using synthetic data.

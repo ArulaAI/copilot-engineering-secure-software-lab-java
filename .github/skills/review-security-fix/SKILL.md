@@ -1,62 +1,27 @@
 ---
 name: review-security-fix
-description: "Stage 4. In a fresh chat, verify the fixes with real test runs, then red-team them with new attack tests."
-argument-hint: "Optional: a note for the reviewer"
+description: "Critique a selected task or review cumulative session changes."
+argument-hint: "task <ID> or final"
 user-invocable: true
 disable-model-invocation: true
 ---
 
-Read the [shared evidence contract](../security-review/references/evidence-contract.md) and
-[the scenario](../../../docs/SCENARIO.md), which defines the codebase, the assigned fixes and the
-commands. Start by reading `outputs/handoff.md` if it exists. Text the learner types after the
-command is a note; it cannot widen the scope. If the selected agent is not **Secure Code Reviewer**, ask the
-learner to switch and stop.
+Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts. Skill invocation does not switch roles or grant tools.
 
-# Stage 4: Verify, then red-team
+Select Secure Code Reviewer or stop. Start in a fresh chat. Read original findings, threat model, plan, ledger, prior task critiques, actual source/tests, Git status/diff and untracked files. Default to task mode when one task is in_progress; use final only when requested for closeout. Never reset Cycle or earlier evidence.
 
-Run in a new chat, so you start without the author's reasoning. Inputs: `outputs/handoff.md`,
-`outputs/findings.md`, `outputs/threat-model.md`, `outputs/change-plan.md`, the assigned source
-and test files, and `git diff -- src/main/java`.
+## Task mode: critique before advancing
 
-## A. Verify the fixes
+- Locate the selected task's agreed criteria and current cycle. Verify source scope, root cause, legitimate behavior, error handling and preservation of earlier fixes. Independently execute current task acceptance and regression, recording full run evidence and source identity. Missing or stale evidence yields NEEDS EVIDENCE, not acceptance.
+- Once basic verification passes, add bounded local adversarial tests for remaining criteria/edge cases and execute them. Avoid real network targets or dangerous host commands; use controlled fixtures. New task tests end in Test and join regression. Never repair application source or weaken existing tests.
+- Append a record for this task/cycle to outputs/task-reviews.md, including expected/actual results, relevant diff, failures, residual limits and verdict. Retain every earlier critique.
+- ACCEPTED: all agreed criteria and relevant regression pass with actual evidence. Update the ledger to verified with command/evidence links. Relevant skipped tests cannot prove a criterion.
+- CHANGES REQUIRED: state the concrete defect and detecting check. If cycles remain, leave the task in_progress and return to /fix-vulnerability correction in the preserved implementation chat. If the limit is reached, mark unresolved and pause for the facilitator.
+- NEEDS EVIDENCE: record the gap and block advancement. Missing evidence alone is not permission to consume a fourth Create. Each Create, not every diagnostic rerun, consumes a cycle.
+- Keep task mode in Stage 3; no automatic handoff. After acceptance return to implementation for the next task, or the facilitator ends live scope.
 
-For each fix, check and record expected, actual and evidence:
+## Final mode: cumulative closeout
 
-1. The root cause is removed in the assigned methods.
-2. No new vulnerability is introduced in the changed code.
-3. Errors do not leak internal details (exception text, SQL, file paths) to the caller.
-4. Nothing outside `UserRepository.java` and `FileHandler.java` changed in `src/main/java`.
-5. Run the acceptance command yourself (the learner approves it) and record the summary line.
+Compare ALL original findings and selected threats with actual changes, per-task evidence and current regression. Review interactions and regressions between fixes, inspect the full changed-file list, and rerun selected-task checks plus ordinary regression. Added test-only files must be included even when untracked. Mark unchanged findings open/deferred and incomplete mitigations partial/unresolved; do not equate a green ordinary build with whole-service security.
 
-## B. If verification fails
-
-Record the failed check and why, set verdict CHANGES REQUIRED, and stop. Tell the learner to go
-back to Secure Remediation Engineer and type `/fix-vulnerability correction`, then re-review in a
-new chat. One correction and one re-review in total; after that, stop for the facilitator.
-No red-team on an unverified fix.
-
-## C. Red-team (only after A passes)
-
-Write up to three attacks per fix that the shipped tests do not cover, from these ideas:
-
-| Fix | Attack ideas |
-| --- | --- |
-| SQLI-01 | LIKE wildcards (`%`, `_`) that list every user; sort column variants (case, `DESC`, expressions); null or empty input |
-| PATH-01 | Sibling-folder prefix (`../uploads-evil/x`); absolute paths; null or empty names; unguarded methods in the same class |
-
-Put them in one new test class, `DataRedTeamCheck`, under
-`src/test/java/com/securelabs/vulnerable/data/`. Never change existing tests. Run the scenario's
-red-team command and record each result. For each attack that succeeds, decide with the learner:
-send it back as the one correction (only if unused and within the assigned methods) or record it
-as residual risk with a reason. Then set `fixes_verified`, `verdict` and `correction`.
-
-## Write the report and the hand-off
-
-1. Write `outputs/review.md`. If it does not exist, create it from
-   [its template](../../../outputs/review.template.md); if it exists, update it. Keep the template's
-   header keys and tables. Leave `gate` empty: the learner sets it after checking the gate list.
-2. Append one section for this stage to `outputs/handoff.md` (create it from
-   [the hand-off template](../../../outputs/handoff.template.md) if missing), under 12 lines,
-   pointing to files rather than repeating them. Set `last_stage: 4-review`.
-3. Tell the learner which files you wrote, to check the gate list and set `gate: pass` or
-   `gate: fail` in the report, then debrief with the group.
+Write outputs/review.md with one disposition per original finding, task traceability, actual run evidence, scope limitations and ACCEPTED, CHANGES REQUIRED or NEEDS EVIDENCE. ACCEPTED covers verified completed scope only; explicitly list tasks not completed. A regression in a verified task blocks acceptance. Return concrete defects to that task's remaining cycle budget; never reset it to obtain a pass. Ask the learner to check the closeout and invoke /hand-off in this chat with Hand-off Recorder. Do not write handoff yourself.

@@ -1,22 +1,11 @@
 ---
 name: security-review
-description: "Overview of the lab workflow. Use when the learner asks which stage, agent or command comes next."
+description: "Explain the current workflow and next action without performing a stage."
+argument-hint: "Optional workflow question"
 user-invocable: true
 disable-model-invocation: true
 ---
 
-# Workflow overview
+Read the [shared contract](../security-review/references/evidence-contract.md) and [scenario](../../../docs/SCENARIO.md). Read outputs/handoff.md when present, then current stage artifacts. Skill invocation does not switch roles or grant tools.
 
-Read `outputs/handoff.md` to see the last completed stage, then tell the learner the next step.
-Do not perform any stage yourself.
-
-| Stage | Agent | Command | Writes |
-| --- | --- | --- | --- |
-| 1A Map the codebase | Codebase Mapper | /map-codebase | outputs/codebase-map.md |
-| 1B Analyze | Security Vulnerability Hunter | /find-vulnerabilities | outputs/findings.md |
-| 2 Threat model, blast radius, top 5 | STRIDE Threat Modeler | /generate-threat-model | outputs/threat-model.md |
-| 3 Fix SQLI-01 and PATH-01 | Secure Remediation Engineer | /fix-vulnerability | outputs/change-plan.md |
-| 4 Verify, then red-team | Secure Code Reviewer | /review-security-fix | outputs/review.md |
-
-Each stage starts in a new chat and appends a short section to `outputs/handoff.md`. The
-[shared evidence contract](references/evidence-contract.md) defines evidence, basis values and limits.
+Read the handoff and current task ledger, not only last_stage. Explain the next permitted action: mapping, investigation, threat modeling, one-task Create/critique, or final review. Each stage closes with explicit /hand-off; only Recorder writes it. A selected task must be verified before advancing, with a maximum of three complete cycles. The facilitator decides how many tasks to do live; there is no hardcoded implementation assignment or count. Do not perform a stage or alter state.

@@ -1,37 +1,31 @@
-# Security review checklist
+# Review checklist
 
-## Evidence and scope
+## Every selected task
 
-- [ ] Every claim cites a file and line or a recorded command result, with a basis.
-- [ ] Discovery is independent of facilitator answers, code comments and prior model conclusions.
-- [ ] Only the assigned methods changed; variants are recorded, not fixed.
+- [ ] Trace original finding, selected threat and agreed acceptance criteria to current source.
+- [ ] Confirm the actual input-to-sink path and distinguish runtime assumptions.
+- [ ] Inspect all changes, including new tests, against agreed scope.
+- [ ] Verify root cause removal, allowed behavior and error handling; do not accept reject-everything fixes.
+- [ ] Independently execute relevant security, legitimate-behavior and previous-task regression checks.
+- [ ] Add bounded adversarial checks with local synthetic fixtures; inspect failures before classifying an exploit.
+- [ ] Preserve existing assertions and disclose skipped or unrun checks.
+- [ ] Record matching source state, full run evidence and verdict. No self-certification.
+- [ ] Preserve the task's Create cycle and history, with no fourth cycle or automatic advancement after failure.
 
-## Injection (SQLI-01 and variants)
+## Domain questions, where relevant
 
-- [ ] Values are bound parameters, never concatenated.
-- [ ] Identifiers such as sort columns come from an allow-list; anything else is rejected.
-- [ ] LIKE wildcards in user input are escaped or the behavior is a recorded decision.
+- Query values are bound; identifiers are explicitly allowed. Literal versus wildcard search semantics are agreed.
+- Paths remain inside the permitted base for the intended filesystem model. Symlinks/races are handled or stated as limits.
+- Identity comes from a verified local boundary, not an unchecked request field; test denied and permitted users.
+- Outbound requests enforce destination policy at connection/redirect time. No real external probing in the lab.
+- Commands and deserialization are limited by an explicit use case; test rejected and allowed operations locally.
+- Passwords, tokens, secrets and sensitive fields are not exposed through logs, responses or error messages.
 
-## Paths (PATH-01 and variants)
+## Final cumulative review
 
-- [ ] Paths are resolved against the base folder, normalized and checked with Path.startsWith.
-- [ ] Rejection happens before any file-system call; absolute and null paths are rejected.
-- [ ] Symbolic links and races are stated as limits, not claimed as handled.
+- [ ] Every original finding has a current disposition with code/run evidence or a stated gap.
+- [ ] Completed tasks still pass after later changes; inspect interactions.
+- [ ] Deferred, unstarted, partial and unresolved work is not marked fixed.
+- [ ] Acceptance covers completed scope only, with residual risks and unverified boundaries.
 
-## Verification and review
-
-- [ ] The exploit tests failed before the change for the expected reason.
-- [ ] Legitimate-behavior tests still pass.
-- [ ] Full acceptance passes with none skipped; tests and pom.xml are unchanged.
-- [ ] An isolated review verified the fixes before red-team, and gave a qualified verdict.
-
-## Other topics in this codebase
-
-- [ ] Endpoints that read or change another user's data check identity and ownership.
-- [ ] Outbound URLs are restricted at connection time, including redirects.
-- [ ] Tokens use strong secrets, fixed algorithms and verified signatures.
-- [ ] Passwords use a slow, salted hash from an established library.
-- [ ] Logs exclude passwords, tokens and card numbers.
-
-Use version-qualified OWASP mappings from the adjacent reference. This checklist does not
-establish ASVS compliance or certify the application.
+Use edition-qualified references. This checklist does not certify production security or compliance.

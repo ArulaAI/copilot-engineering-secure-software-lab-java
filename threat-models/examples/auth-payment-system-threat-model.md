@@ -1,9 +1,9 @@
-# Threat-model example location
+# Architecture and threat-model exercise
 
-The previous example represented hypothetical infrastructure and included stale language references.
-The current [scenario](../../docs/SCENARIO.md) describes the codebase under study.
-Use [the participant template](../../outputs/threat-model.template.md).
+Create the diagram from the actual source during Stage 1. No completed architecture is supplied.
+Use [the participant map template](../../outputs/codebase-map.template.md) and
+[the threat-model template](../../outputs/threat-model.template.md).
 
-The facilitator example is in [reference](../../reference/threat-model.md). Do not consult it
-during participant discovery. Any gateway, authentication service, or database in a proposed
-production diagram must be labelled as assumed or proposed unless source evidence establishes it.
+Label implemented, assumed and proposed elements and call edges explicitly. Do not invent a gateway,
+authentication service or database connection to make a diagram complete. Stage 2 models all supported
+findings and produces evidence-ranked priorities.

@@ -35,12 +35,7 @@ Everything an outside caller can reach: HTTP endpoints, public methods called by
 
 Label each component and edge **implemented** (cite source), **assumed** or **proposed**.
 
-```mermaid
-flowchart LR
-  client[{{External caller}}] -->|HTTP| api[{{api package}}]
-  api --> data[{{data package}}]
-  data --> db[({{database}})]
-```
+{{Generate the Mermaid graph from actual source connections. No completed architecture is supplied.}}
 
 ## Trust boundaries
 
@@ -57,3 +52,7 @@ flowchart LR
 - [ ] Every package in src/main/java appears in the index.
 - [ ] Entry points cite file and line; inputs are named.
 - [ ] The diagram shows nothing as implemented that the code does not contain.
+
+## Stage entry state
+
+{{Base SHA and pre-existing Git status/diff. No commit or reset required.}}

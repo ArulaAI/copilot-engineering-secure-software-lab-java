@@ -1,54 +1,47 @@
 ---
 stage: 4-review
-fixes_verified: ""        # yes | no, from section A
-verdict: ""               # ACCEPTED | CHANGES REQUIRED | NEEDS EVIDENCE
-correction: 0             # 0 | 1; at most one correction pass
-evidence: [outputs/change-plan.md]
-gate: ""                  # pass | fail
+completed_scope_verified: ""
+verdict: ""
+evidence: [outputs/findings.md, outputs/threat-model.md, outputs/tasks.md, outputs/task-reviews.md]
+gate: ""
 ---
 
-# Review
+# Final cumulative review
 
-Written in a fresh chat by Secure Code Reviewer. It reads files and runs the tests itself; it never sees the authoring chat.
+Review actual changes in a fresh chat. Compare original findings with current source and runs.
+ACCEPTED refers to the completed scope; it never implies that deferred tasks or the whole service are secure.
 
-## A. Do the fixes fix it?
+## Original findings to current state
 
-| Fix | Check | Expected | Actual | Evidence | Pass/Fail |
+| Original finding | Selected task, if any | Current disposition | Code evidence | Task / regression evidence | Limits / next action |
 | --- | --- | --- | --- | --- | --- |
-| SQLI-01 | Root cause removed in the changed methods | {{root cause}} | {{what the change does}} | {{file:line}} | {{pass / fail}} |
-| SQLI-01 | No new vulnerability introduced | none | {{observation}} | {{file:line}} | {{pass / fail}} |
-| PATH-01 | Root cause removed in the changed methods | {{root cause}} | {{what the change does}} | {{file:line}} | {{pass / fail}} |
-| PATH-01 | No new vulnerability introduced | none | {{observation}} | {{file:line}} | {{pass / fail}} |
-| Both | Errors do not leak internal details (exception text, SQL, paths) | no leak | {{observation}} | {{file:line}} | {{pass / fail}} |
-| Both | Only UserRepository.java and FileHandler.java changed | two files | {{git diff --stat output}} | git diff | {{pass / fail}} |
-| Both | Acceptance rerun by the reviewer | Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 | {{summary line as printed}} | acceptance command | {{pass / fail}} |
+| {{finding}} | {{task or not selected}} | {{verified fixed / partial / open / deferred / unresolved}} | {{file:line or unchanged}} | {{path or missing}} | {{remaining work}} |
 
-## B. What failed the critic
+## Cumulative checks
 
-Fill only if a check in A failed. One correction pass, then one re-verification.
-
-| Failed check | Why it failed | Correction made | Re-verified result | Evidence |
+| Check | Expected | Actual | Evidence | Result |
 | --- | --- | --- | --- | --- |
-| {{check}} | {{reason}} | {{change}} | {{pass / fail}} | {{file}} |
+| Completed task criteria | All agreed criteria met | {{observed}} | {{current runs}} | {{pass/fail/missing}} |
+| Interactions and previous fixes | No regression | {{observed}} | {{checks}} | {{pass/fail/missing}} |
+| Scope and tests | Only agreed edits, no weakened assertions | {{observed}} | {{full status/diff including untracked}} | {{pass/fail/missing}} |
 
-## C. Red-team
+## Actual runs
 
-Run only after every check in A passes. Attacks go into one new `DataRedTeamCheck` test class.
+| Command | Exit | Named results, counts and skips | Source state | Full evidence |
+| --- | --- | --- | --- | --- |
+| {{command}} | {{exit}} | {{observed}} | {{base/diff/hashes}} | {{path}} |
 
-| # | Fix | Attack | Expected (attacker refused) | Actual | Evidence | Decision |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | {{fix}} | {{attack}} | {{result}} | {{result}} | {{red-team summary line or test name}} | {{held / sent back as correction / residual risk: reason}} |
+## Closeout
 
-## Verdict
-
-| Item | Value |
-| --- | --- |
-| Verdict | {{ACCEPTED / CHANGES REQUIRED / NEEDS EVIDENCE}} |
-| Residual risks | {{red-team items accepted, variants left unfixed}} |
-| Not verified | {{what this review did not cover}} |
+- Completed and verified: {{task IDs}}
+- Deferred/unstarted: {{task IDs and facilitator scope decision}}
+- Partial/unresolved: {{task IDs and concrete gaps}}
+- Verdict and basis: {{ACCEPTED / CHANGES REQUIRED / NEEDS EVIDENCE for completed scope}}
+- Boundaries not verified: {{limitations}}
 
 ## Gate
 
-- [ ] Every check in A cites a file; no result comes from the agent's say-so.
-- [ ] Red-team ran only after A passed, and every successful attack has a decision.
-- [ ] The verdict covers SQLI-01 and PATH-01 only, not the whole application.
+- [ ] Every original finding has a current disposition with evidence or an explicit unknown.
+- [ ] Completed tasks have current acceptance and regression evidence.
+- [ ] Deferred tasks are not reported fixed; relevant skipped tests are not counted as passed.
+- [ ] The learner inspected closeout and accepted the stated scope and residual risks.

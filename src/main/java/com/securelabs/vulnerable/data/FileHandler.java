@@ -9,11 +9,19 @@ import java.util.*;
  * File storage and URL fetch helpers for uploads.
  */
 public class FileHandler {
-    private static final String UPLOAD_DIR = "/var/www/uploads/";
+    private final String uploadDir;
+
+    public FileHandler() {
+        this(Path.of("/var/www/uploads/"));
+    }
+
+    FileHandler(Path uploadRoot) {
+        this.uploadDir = uploadRoot.toAbsolutePath().normalize() + File.separator;
+    }
     private static final String[] BLOCKED_EXTENSIONS = {".exe", ".bat"};
 
     public byte[] readFile(String filename) throws IOException {
-        String fullPath = UPLOAD_DIR + filename;
+        String fullPath = uploadDir + filename;
 
         System.out.println("Reading file: " + fullPath);
 
@@ -21,7 +29,7 @@ public class FileHandler {
     }
 
     public void writeFile(String filename, byte[] data) throws IOException {
-        String fullPath = UPLOAD_DIR + filename;
+        String fullPath = uploadDir + filename;
 
         Files.write(Paths.get(fullPath), data);
     }
@@ -80,7 +88,7 @@ public class FileHandler {
     }
 
     public List<String> listFiles(String directory) throws IOException {
-        String fullPath = UPLOAD_DIR + directory;
+        String fullPath = uploadDir + directory;
 
         File dir = new File(fullPath);
         String[] files = dir.list();
@@ -89,19 +97,19 @@ public class FileHandler {
     }
 
     public void deleteFile(String filename) throws IOException {
-        String fullPath = UPLOAD_DIR + filename;
+        String fullPath = uploadDir + filename;
 
         Files.deleteIfExists(Paths.get(fullPath));
         System.out.println("Deleted file: " + fullPath);
     }
 
     public void moveFile(String source, String destination) throws IOException {
-        Files.move(Paths.get(UPLOAD_DIR + source), Paths.get(UPLOAD_DIR + destination));
+        Files.move(Paths.get(uploadDir + source), Paths.get(uploadDir + destination));
     }
 
     public void extractZip(String zipPath, String destDir) throws Exception {
         java.util.zip.ZipInputStream zis = new java.util.zip.ZipInputStream(
-            new FileInputStream(UPLOAD_DIR + zipPath)
+            new FileInputStream(uploadDir + zipPath)
         );
 
         java.util.zip.ZipEntry entry;

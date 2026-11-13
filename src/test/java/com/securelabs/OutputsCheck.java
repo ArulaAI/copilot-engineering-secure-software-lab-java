@@ -46,13 +46,15 @@ class OutputsCheck {
             Rule.number("threats_total"), Rule.any("top5"), Rule.oneOf("gate", GATE))),
         new Report("change-plan.md", "scope_agreed", List.of(
             Rule.oneOf("scope_agreed", Set.of("yes", "no")), Rule.any("files_changed"),
-            Rule.oneOf("acceptance", Set.of("pass", "fail")), Rule.oneOf("gate", GATE))),
+            Rule.oneOf("gate", GATE))),
         new Report("review.md", "verdict", List.of(
-            Rule.oneOf("fixes_verified", Set.of("yes", "no")),
+            Rule.oneOf("completed_scope_verified", Set.of("yes", "no")),
             Rule.oneOf("verdict", Set.of("ACCEPTED", "CHANGES REQUIRED", "NEEDS EVIDENCE")),
-            Rule.oneOf("correction", Set.of("0", "1")), Rule.oneOf("gate", GATE))),
+            Rule.oneOf("gate", GATE))),
+        new Report("tasks.md", "tasks_total", List.of(Rule.number("tasks_total"))),
+        new Report("task-reviews.md", "reviews_total", List.of(Rule.number("reviews_total"))),
         new Report("handoff.md", "last_stage", List.of(
-            Rule.oneOf("last_stage", Set.of("1a-map", "1b-analyze", "2-threat-model", "3-fix", "4-review")))));
+            Rule.any("last_stage"))));
 
     @TestFactory
     Stream<DynamicTest> stageReportsAreCompleteForms() {
@@ -78,6 +80,13 @@ class OutputsCheck {
             if (report.file().equals("threat-model.md") && !list(header.getOrDefault("top5", "")).isEmpty()
                     && list(header.get("top5")).size() != 5) {
                 problems.add("top5 must list exactly five threat IDs");
+            }
+            if (report.file().equals("tasks.md")) {
+                String table = text.split("## Cycle history", 2)[0];
+                problems.addAll(TaskLedger.validate(table, path -> Files.isRegularFile(Path.of(path))));
+                problems.addAll(TaskLedger.validateHistory(text));
+                long rows = table.lines().filter(line -> line.startsWith("|") && !line.startsWith("| Task ") && !line.startsWith("| ---")).count();
+                if (!header.getOrDefault("tasks_total", "").equals(Long.toString(rows))) problems.add("tasks_total does not match rows");
             }
             if (text.contains("{{")) {
                 problems.add("unfilled {{placeholder}} left in the report");

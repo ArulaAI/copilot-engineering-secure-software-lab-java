@@ -2,24 +2,24 @@
 
 | Clock | Stage | Cue |
 | --- | --- | --- |
-| 0 to 10 | 0 Setup and demo | Rhythm: new chat, pick agent, type command, check report. Baseline 10 run, 6 skipped |
-| 10 to 22 | 1A Map | Package Explorer subagents per package. Four packages indexed; entry points cite lines |
-| 22 to 35 | 1B Analyze | Ranked Critical to Low; confirmed or needs evidence. Open the top three |
-| 35 to 50 | 2 Threat model and top 5 | Impact x likelihood with evidence. Blast radius for the top 5 |
-| 50 to 70 | 3 Fix | Six exploit tests fail first. Agree scope. Approve each command. 10 run, 0 skipped |
-| 70 to 85 | 4 Review and red-team | New chat. Reviewer reruns tests, verifies, then attacks. NEVER CUT |
-| 85 to 90 | 5 Debrief | Three questions and the Copilot-safety table. NEVER CUT |
+| 0 to 10 | Setup/demo | Baseline; roles/skills; separate end-of-stage handoff |
+| 10 to 22 | Map | Verify actual inputs, call edges and assumptions |
+| 22 to 35 | Investigate | Source-backed findings, severity and false-positive judgment |
+| 35 to 50 | STRIDE and top five | All findings, blast radius, selected acceptance criteria |
+| 50 to 70 | Sequential Create/critique | Choose live count; verify each before next; three cycles max per task |
+| 70 to 85 | Final review | Cumulative changes versus original findings; NEVER CUT |
+| 85 to 90 | Debrief | Evidence, critique and remaining work; NEVER CUT |
 
-Commands are in docs/SCENARIO.md. Each stage's agent writes its own report in outputs/ and adds
-a short section to outputs/handoff.md, so learners never paste prompts or logs and never switch
-agents mid-stage.
+Stage close: human gate, then Hand-off Recorder in the same chat and /hand-off. Stage skills do not
+write handoff. Reports and the ledger carry state during task loops; no learner summary requests.
 
-Limits: one correction pass and one re-review, then escalate. No red-team before verification.
-`mvn -Dtest=OutputsCheck test` shows which learners have complete report forms.
-Assessment aids: reference/finding-catalog.md and reference/threat-model.md. Platform limits:
-docs/COMPATIBILITY.md.
+Task rhythm: agree scope, persist cycle, Create and run, fresh reviewer Critique and run, correct if
+needed. Stop on acceptance or after three cycles. A task is not verified by its author. The facilitator
+usually does one or two live; agents support more. Explicitly defer remaining work at the time check.
 
-If findings differ, compare evidence and reasoning, never counts. If asked whether the
-application is secure, point to the deferred items in their top 5.
+FLEX shorten lower-ranked finding discussion and repeated score explanations, then narrow live task
+count. Do not cut review/debrief or rename unresolved work as passed. Ledger consistency checks are
+form checks; native execution and timing need rehearsal. No installations, POM changes or real external probes.
 
-Closing line: map before you judge, rank before you fix, prove the bug, attack your own fix.
+Final check: every original finding has a disposition; completed scope has current evidence; previous
+fixes did not regress; deferred/unresolved tasks and relevant skips remain explicit. /hand-off closes the stage.

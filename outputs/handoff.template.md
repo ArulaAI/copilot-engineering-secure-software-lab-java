@@ -1,20 +1,21 @@
 ---
 stage: handoff
-last_stage: ""            # 1a-map | 1b-analyze | 2-threat-model | 3-fix | 4-review
+last_stage: ""
 ---
 
-# Hand-off log
+# Stage handoffs
 
-Each stage's skill appends one section when it writes its report. The next stage reads this file first.
-Each section points to files rather than repeating them, and stays under 12 lines.
+Only the explicit /hand-off action writes this file, after the learner's gate decision.
+Append a short section per stage, with later corrections superseding rather than erasing history.
+Read the linked reports and ledger for detail. Missing evidence or approval remains missing.
 
-<!-- Section format, repeated per stage:
-
-## Stage N hand-off: <stage name>
-- Decided: <decisions the learner made or accepted>
-- Evidence: <outputs files written this stage, and commands run with their summary lines>
-- Gate: <pass | fail, with the unchecked item if fail>
-- Open questions: <unknowns, marked unknown rather than guessed>
-- Next stage needs: <the minimum the next stage must know or preserve>
-
+<!-- Repeat this section, normally under 12 lines:
+## Stage <name>
+- Gate / recorded human decision:
+- Source baseline and pre-existing changes:
+- Report and evidence paths:
+- Observed code/test changes, including untracked files:
+- Selected task state / cycles: see outputs/tasks.md
+- Open, deferred or unresolved work:
+- Next action and minimum inputs:
 -->

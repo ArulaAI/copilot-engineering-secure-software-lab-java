@@ -1,45 +1,41 @@
 ---
 stage: 3-fix
-fixes: [SQLI-01, PATH-01]
-scope_agreed: ""          # yes | no; yes only after the learner agreed in chat
-files_changed: []         # files in the actual diff
-acceptance: ""            # pass | fail, from the after-fix summary line
-evidence: [outputs/findings.md, outputs/threat-model.md]
-gate: ""                  # pass | fail
+scope_agreed: ""
+files_changed: []
+evidence: [outputs/findings.md, outputs/threat-model.md, outputs/tasks.md]
+gate: ""
 ---
 
-# Change plan
+# Change plan and execution record
 
-The fixes are fixed by the lab: see docs/SCENARIO.md. Plan both before editing either.
+Append a section for each selected task and cycle; preserve earlier scope and results.
+Scope agreement describes the current task and must be recorded before source changes.
 
-## Agreed scope
+## Task {{selected ID}}: {{objective}}
 
-| Fix | Root cause (file:line) | Methods to change | Behavior to preserve | Variants left unfixed |
-| --- | --- | --- | --- | --- |
-| SQLI-01 | {{root cause}} | {{methods}} | {{legitimate lookups and sorting}} | {{other methods with the same pattern}} |
-| PATH-01 | {{root cause}} | {{methods}} | {{normal file names, dot-dot that stays inside}} | {{other methods with the same pattern}} |
+- Original findings and threat: {{IDs and source evidence}}
+- Root cause and exploit preconditions: {{input to sink and missing control}}
+- Allowed source files, helpers and new tests: {{exact scope}}
+- Legitimate behavior to preserve: {{behavior}}
+- Deferred variants and limits: {{scope}}
+- Learner agreement: {{actual decision, or pending}}
+- Stage/task entry state: {{base SHA, pre-existing status/diff, new files}}
 
-Learner's agreement: {{quote or summarize the learner's reply}}
+### Acceptance criteria
 
-## Acceptance criteria
+| Criterion | Positive / negative behavior | Test or inspection | Before fix | After fix | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| {{criterion}} | {{behavior}} | {{named check}} | {{observed or not run}} | {{result or pending}} | {{path}} |
 
-| Fix | Criterion | Proving test | Before fix | After fix |
-| --- | --- | --- | --- | --- |
-| SQLI-01 | {{criterion}} | {{test name}} | {{fail}} | {{pass / fail}} |
-| PATH-01 | {{criterion}} | {{test name}} | {{fail}} | {{pass / fail}} |
+### Runs and changes
 
-## Runs
-
-Copy each summary line exactly as Maven or git printed it.
-
-| Run | Command | Summary line as printed | Failing tests |
-| --- | --- | --- | --- |
-| Before fix | Reproduce command from docs/SCENARIO.md | {{Tests run: 6, Failures: 6, ...}} | {{names}} |
-| After fix | Acceptance command from docs/SCENARIO.md | {{Tests run: 10, Failures: 0, ...}} | {{none or names}} |
-| Changed files | `git diff --stat -- src/main/java` | {{files and line counts}} | |
+| Task / cycle | Command | Exit | Tests pass/fail/error/skip | Source identity | Full evidence |
+| --- | --- | --- | --- | --- | --- |
+| {{task / cycle}} | {{actual command}} | {{exit}} | {{actual counts and names}} | {{base, diff and relevant file hashes}} | {{file}} |
 
 ## Gate
 
-- [ ] The learner agreed the scope before the first edit.
-- [ ] The diff touches only UserRepository.java and FileHandler.java; no test or pom.xml changed.
-- [ ] The after-fix summary line shows every test passing with none skipped.
+- [ ] Scope was agreed before edits and actual source/test changes stay within it.
+- [ ] Evidence covers security criteria, legitimate behavior and previous-task regression.
+- [ ] Task status and cycles match the ledger and independent critique.
+- [ ] Unstarted, deferred and unresolved work remains visible. Create does not self-certify.

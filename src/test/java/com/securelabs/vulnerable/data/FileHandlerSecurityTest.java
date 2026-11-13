@@ -3,44 +3,40 @@ package com.securelabs.vulnerable.data;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
-/**
- * PATH-01 exploit tests. They fail on the unfixed code. Enabled with -Dsecurity.verify=true.
- * A fix must reject a path that leaves the upload folder with IllegalArgumentException or
- * SecurityException, before touching the file system.
- */
+/** Opt-in negative checks. Starter must fail; no host files are read or deleted. */
 @EnabledIfSystemProperty(named = "security.verify", matches = "true")
 class FileHandlerSecurityTest {
+    @TempDir Path root;
 
+    private FileHandler handler() throws Exception {
+        return new FileHandler(Files.createDirectories(root.resolve("uploads")));
+    }
     private static void assertRejected(Executable call) {
         Throwable thrown = null;
-        try {
-            call.execute();
-        } catch (Throwable t) {
-            thrown = t;
-        }
-        if (thrown == null) {
-            fail("a path outside the upload folder was accepted");
-        }
+        try { call.execute(); } catch (Throwable t) { thrown = t; }
+        assertNotNull(thrown, "a path outside the upload folder was accepted");
         assertTrue(thrown instanceof IllegalArgumentException || thrown instanceof SecurityException,
             "the path reached the file system instead of being rejected: " + thrown);
     }
-
-    @Test
-    void readFileRejectsTraversal() {
-        assertRejected(() -> new FileHandler().readFile("../../../etc/passwd"));
+    @Test void readFileRejectsTraversal() throws Exception {
+        Path outside = Files.writeString(root.resolve("private.txt"), "private");
+        FileHandler handler = handler();
+        assertRejected(() -> handler.readFile("../private.txt"));
+        assertEquals("private", Files.readString(outside));
     }
-
-    @Test
-    void deleteFileRejectsTraversal() {
-        assertRejected(() -> new FileHandler().deleteFile("../../../tmp/file-that-does-not-exist"));
+    @Test void deleteFileRejectsTraversal() throws Exception {
+        Path outside = Files.writeString(root.resolve("private.txt"), "private");
+        FileHandler handler = handler();
+        assertRejected(() -> handler.deleteFile("../private.txt"));
+        assertTrue(Files.exists(outside));
     }
-
-    @Test
-    void listFilesRejectsTraversal() {
-        assertRejected(() -> new FileHandler().listFiles("../../.."));
+    @Test void listFilesRejectsTraversal() throws Exception {
+        FileHandler handler = handler();
+        assertRejected(() -> handler.listFiles(".."));
     }
 }
