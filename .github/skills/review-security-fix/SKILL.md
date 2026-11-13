@@ -18,29 +18,53 @@ repeat the task-critique procedure.
    Check root cause, legitimate behavior and clear regressions.
 2. Independently run focused security/behavior tests and ordinary regression once. Add a detecting
    test only for a concrete in-scope gap, then run it. No new full-service audit or optional hardening.
-3. Give ACCEPTED, CHANGES REQUIRED or NEEDS EVIDENCE with actual commands/results and specific gaps.
+3. Start the final response with **Verdict: PASS / PARTIALLY FIXED / FAIL / NOT VERIFIED**, choosing one status using the reviewer profile definitions, then actual commands/results and specific required changes.
    Append one short task result to outputs/review.md and stop. Return defects to Create through the
    participant; never fix application source, start another agent or select another task.
 
-## Final closeout (Stage 4)
+## Final security review report (Stage 4)
 
-1. Read the existing review results and current change summary. Confirm the completed fixes are
-   the ones requested and note any changes since the last accepted critique. Do not rescan the whole
-   service or start a new red-team exercise. Unstarted findings remain open, not new assignments.
-2. Check completed-scope regression evidence. If the latest accepted critique already ran the same
-   relevant checks on the current unchanged code, reuse that result and state it was reused. Otherwise
-   run one appropriate regression command and only relevant checks missing from it. Do not collect
-   hashes or metadata solely to prove reuse; use the actual intervening changes and run record. If
-   matching evidence is uncertain, execute the required check once and report the uncertainty.
-3. Write one short final summary in outputs/review.md: fixes completed, actual/reused tests and
-   relevant skips, verdict, open issues and unverified boundaries. Do not generate another report,
-   tests or mandatory form. A real regression is CHANGES REQUIRED, not an invitation to fix more
-   service weaknesses. Stop; any further Create is a participant/facilitator decision.
+1. Read original findings, threat-model priorities, existing task critiques and the actual current
+   application/supporting-file diff, including new files. Review all modified files and their affected
+   interactions against the requested criteria. Summarize the application's known remaining risks
+   from existing findings without a new whole-service scan or new implementation work.
+2. Check current build/test evidence. Reuse matching accepted results when no relevant code changed,
+   explicitly stating reuse; otherwise run the needed regression and missing relevant checks once.
+   Do not rerun a separate clean compile just to duplicate compilation already established by Maven
+   test. No new tests, red-team campaign, dependencies or service startup in final mode.
+3. Generate ONE standalone report at outputs/security-review.md using
+   [the final report structure](../../../outputs/security-review.template.md). Start with the
+   verdict, then Executive Summary and Scope, Vulnerabilities Fixed, Remaining Issues and Required
+   Changes, ASVS Gaps and Production Assurance, Build Status and Test Evidence, Final Decision and
+   Next Steps. Fill with actual source/results; state missing evidence instead of inventing it.
+4. Keep statuses consistent with original finding/threat IDs and requested scope. Explain partial
+   parent-threat coverage. Separate blockers for completed scope from unstarted tasks. Only cite ASVS
+   requirement IDs from a supplied versioned source; otherwise discuss control-area gaps and state
+   no formal ASVS assessment occurred. No blanket compliance or deployment-security claim.
+5. Give a short verdict-first chat response with test totals (passed excludes skipped), required
+   corrections and the report path. Stop. Do not append another final summary to review.md, generate
+   extra reports, validate metadata or auto-start another agent/task. Stage 3 review.md stays the
+   concise task-critique input; this report is the consolidated final deliverable.
 
 ## Limits for both modes
 
 Never weaken assertions, install dependencies, change the POM, start the service or make real external
-requests. Missing relevant evidence stays NEEDS EVIDENCE. Record blocked Spring integration once;
+requests. Missing relevant evidence stays NOT VERIFIED. Record blocked Spring integration once;
 method-level proof is not full integration proof. Existing unselected seeded checks remain open.
 No tasks.md/change-plan.md/task-reviews.md, cycle counters, artifact validators, metadata repair,
 repeated hashes or per-cycle logs. Leave old artifacts untouched. Generic handoff remains separate.
+
+## Verdict-first response
+
+The FINAL review response and each saved review entry start with **Verdict: <STATUS>** and one
+sentence explaining it. Use exactly one of:
+- PASS: all requested criteria have adequate passing evidence, with no concrete in-scope gap.
+- PARTIALLY FIXED: some requested controls are verified, but a required part remains incomplete.
+- FAIL: the requested fix is ineffective or introduces a serious regression.
+- NOT VERIFIED: available execution/evidence cannot establish the requested behavior.
+
+Only PASS accepts the reviewed scope. Passing unit tests cannot override a known missing required
+integration. After the verdict, give actual tests (total/passed/failed/skipped), then required changes
+with code/test references, then remaining limits. Keep chat concise. Task mode appends one short review.md entry; final mode produces the single structured final report, not additional forms. Do not
+announce a verdict before the review has actually completed. Optional follow-up is separate from
+required corrections. Final closeout uses the same statuses for completed scope, not unstarted work.

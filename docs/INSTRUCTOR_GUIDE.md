@@ -49,3 +49,10 @@ If time allows, discuss these extensions without executing them:
 
 ASK Which additional check would matter most before you deployed this particular fix? Discuss one
 example; do not turn the answer into another implementation assignment during closeout.
+
+CHECK-IN the final reviewer response begins with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED, then tests and required changes. Only PASS accepts scope; green unit tests do not erase a known integration gap.
+
+Final deliverable: Stage 4 generates one structured outputs/security-review.md from its template,
+with verdict, scope, fixed/open findings, ASVS/control-area gaps and actual build/test results. Stage 3
+review.md remains a short per-task input. No duplicate final append, new whole-service scan or metadata
+loop is required. The report is scoped evidence, not production/ASVS certification.

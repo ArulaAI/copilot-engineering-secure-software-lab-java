@@ -151,7 +151,7 @@ Briefly explain your approach, then make the changes. Add tests for valid login,
 Review my authentication changes in AuthController.java and any supporting files.
 Check BCrypt, lockout timing, session controls, cookie attributes and generic errors.
 Run the relevant security and regression tests. Confirm legitimate login still works and credentials are not exposed.
-Report concrete gaps before accepting the fix.
+Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason. Then give actual test counts and required corrections.
 ```
 
 ### Task 2: Secure Payment Processing
@@ -179,7 +179,7 @@ Briefly explain your approach, then make the changes. Add local tests for legiti
 Review my payment changes in PaymentHandler.java and any supporting files.
 Check amount/currency validation, refund ownership and repeatability, sensitive-data protection and webhook authenticity.
 Run the relevant security and regression tests. Verify both permitted operations and rejected attacks without real payment calls.
-Report concrete gaps before accepting the fix.
+Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason. Then give actual test counts and required corrections.
 ```
 
 ### Task 3: Fix SQL Injection
@@ -207,7 +207,7 @@ Briefly explain your approach, then make the changes. Use the existing H2 fixtur
 Review my repository changes in UserRepository.java and any supporting files.
 Confirm query values are parameterized, identifiers are allow-listed, export inputs cannot select commands and avatar paths stay within their root.
 Run security and legitimate-behavior tests, including relevant existing opt-in checks, plus regression.
-Report concrete gaps before accepting the fix.
+Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason. Then give actual test counts and required corrections.
 ```
 
 ### Task 4: Fix SSRF and Access Control
@@ -235,7 +235,7 @@ Briefly explain your approach, then make the changes. Add tests for allowed beha
 Review my resource changes in ResourceController.java and any supporting files.
 Check connection/redirect destination enforcement, ownership, redirect validation and CORS.
 Run tests for authorized behavior and denied attacks, plus regression. Do not treat an annotation or a separate DNS check as proof of enforcement.
-Report concrete gaps before accepting the fix.
+Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason. Then give actual test counts and required corrections.
 ```
 
 ### Task 5: Modern Java API Security (Bonus)
@@ -263,7 +263,7 @@ Briefly explain your approach, then add local security and legitimate-behavior t
 Review my agreed changes in ModernApiHandler.java and any supporting files.
 Check outbound-request policy, correct concurrent results, sensitive-data handling and command restrictions where changed.
 Run relevant security and regression tests. Distinguish executed behavior from simulated query construction.
-Report concrete gaps before accepting the fix.
+Start with PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED and a one-sentence reason. Then give actual test counts and required corrections.
 ```
 
 ### Finish implementation
@@ -272,24 +272,38 @@ When the facilitator ends live work, select **Hand-off Recorder** in the impleme
 `/hand-off`. Capture completed, unfinished and unresolved work, then continue to Stage 4. Remaining
 tasks stay available for follow-up; ending the session does not mark them fixed.
 
-## 4. Final review and closeout (7 minutes)
+## 4. Final Security Review (7 minutes)
 
 Select **Secure Code Reviewer** in a fresh chat and send:
 
 ```text
 /review-security-fix final
 
-Close out the fixes completed in this session.
-Review their existing critique results and any changes made afterward.
-Reuse passing test results if they still cover the unchanged code; otherwise run the needed regression check once.
-Summarize what was fixed, the test results, any remaining issues and your final verdict in outputs/review.md.
-Do not start another vulnerability scan, add new tests or work on unstarted tasks.
+Perform a final security review of all application files modified in this session and their supporting changes.
+Compare the changes with the original findings, threat model and completed task reviews.
+Check that the scoped vulnerabilities are fixed, no clear new regressions were introduced,
+and authentication, authorization and error handling work as intended within the tested scope.
+Reuse passing tests when they cover the unchanged code; otherwise run the needed regression once.
+
+Create outputs/security-review.md with:
+1. Verdict first: PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED, with the reason and reviewed scope.
+2. Executive Summary and Scope.
+3. Vulnerabilities Fixed, with code and test evidence.
+4. Remaining Issues and Required Changes, separating blockers from unstarted tasks.
+5. ASVS Gaps and Production Assurance. Use ASVS IDs only from a supplied versioned source;
+   otherwise discuss control areas and state that no formal ASVS assessment was performed.
+6. Build Status and Test Evidence, showing total, passed, failed/errors and skipped separately.
+7. Final Decision and Next Steps, including unverified integration/runtime boundaries.
+
+Use outputs/security-review.template.md for the report structure.
+Do not rescan the whole service, add tests, fix more code or run artifact validators.
 ```
 
-Read the result together: **what was fixed, did the checks pass, and what remains open?** A real
-regression must be reported. Further fixes are a facilitator decision, not an automatic loop.
-Run `/hand-off` only if you want a continuation snapshot. Production assurance topics are discussed
-verbally; they are not additional lab tasks.
+Read the report together: **what was fixed, what evidence supports it, and what remains open?**
+Stage 3 keeps short critiques in review.md; Stage 4
+creates this separate consolidated deliverable. It is a scoped security review, not certification that
+the whole application is production-ready. Advanced production checks remain verbal discussion topics.
+Run `/hand-off` if you want a continuation snapshot.
 
 ## 5. Debrief (3 minutes, never cut)
 
@@ -297,7 +311,7 @@ verbally; they are not additional lab tasks.
 2. Which critique exposed an incomplete fix or broken legitimate behavior?
 3. Which prioritized work remains, and what would be needed to finish it?
 
-Take away the map, findings, threat model, concise review and
+Take away the map, findings, threat model, final security review report and
 handoff. On your own code, separate evidence from confidence, constrain tool authority, protect
 sensitive context and inspect changes before accepting generated output. These are useful AI-security
 habits, not a demonstration that prompt injection or all service risks are eliminated.

@@ -17,7 +17,7 @@ but do not trigger a Stage 3 repair loop. No form result proves security or chan
 Create and Critique use the requested task's actual criteria and focused tests plus ordinary regression.
 New tests change counts. Relevant skipped/unrun checks cannot prove acceptance; unrelated unselected
 seeded flaws remain open. No requirement to fix every priority before accepting completed scope.
-Reviewer executes checks independently and records a concise verdict in review.md, without plan/ledger
+Task reviewer executes checks independently and records a concise verdict in review.md, without plan/ledger
 or repeated metadata validation. Three attempts is facilitation guidance, not persistent machinery.
 
 In a disposable copy verify corrected query/path fixtures with all relevant checks enabled. A fix that
@@ -31,3 +31,8 @@ Only the single mapper is used; seven profiles and seven explicit skills remain.
 links, generic handoff, whole-service discovery and scenario-based modeling. Confirm no agent creates
 or repairs tasks/plan/cycle artifacts or auto-starts another task/agent. Leave generated rehearsal
 artifacts and participant work untouched. See WORKFLOW_REHEARSAL.md for acceptance observations.
+
+Final deliverable: Stage 4 generates one structured outputs/security-review.md from its template,
+with verdict, scope, fixed/open findings, ASVS/control-area gaps and actual build/test results. Stage 3
+review.md remains a short per-task input. No duplicate final append, new whole-service scan or metadata
+loop is required. The report is scoped evidence, not production/ASVS certification.

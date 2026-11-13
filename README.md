@@ -42,7 +42,7 @@ within this schedule are not promised. Stage 3 has no mandatory plan, ledger, cy
 - src/main/java/ contains the synthetic vulnerable service and helpers.
 - src/test/java/ contains behavior, opt-in exploit and workflow-form checks.
 - .github/ contains seven visible profiles and seven explicit skills.
-- outputs/ contains map/findings/model templates, concise review and handoff format.
+- outputs/ contains map/findings/model templates, task critique, final security-review and handoff formats.
 - docs/ contains the scenario, security references and [facilitator guide](docs/INSTRUCTOR_GUIDE.md).
 
 Participant-generated architecture and findings belong in outputs/. No completed answer key or
@@ -54,3 +54,6 @@ Facilitators use [the run sheet](docs/RUN_SHEET.md), [workflow architecture](doc
 Native IDE behavior and session timing require target-environment rehearsal.
 
 Copyright InRhythm / Arula. Training material using synthetic data.
+
+Final deliverable: [structured security-review template](outputs/security-review.template.md),
+used by Stage 4 to generate outputs/security-review.md.

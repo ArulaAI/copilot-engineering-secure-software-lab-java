@@ -45,7 +45,7 @@ class OutputsCheck {
         new Report("threat-model.md", "threats_total", List.of(
             Rule.number("threats_total"), Rule.any("top5"), Rule.oneOf("gate", GATE))),
         new Report("review.md", "verdict", List.of(
-            Rule.oneOf("verdict", Set.of("ACCEPTED", "CHANGES REQUIRED", "NEEDS EVIDENCE")))),
+            Rule.oneOf("verdict", Set.of("PASS", "PARTIALLY FIXED", "FAIL", "NOT VERIFIED")))),
         new Report("handoff.md", "last_stage", List.of(
             Rule.any("last_stage"))));
 

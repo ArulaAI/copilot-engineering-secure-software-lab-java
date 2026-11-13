@@ -40,12 +40,15 @@ acceptance claim. Do not repeatedly retry incompatible Spring integration; recor
 
 ## Final review and handoff
 
-Final review closes out actual completed changes using existing task critiques and intervening changes, not a fresh whole-service audit. Reuse current matching accepted evidence or run one missing regression check; do not add tests in final mode. ACCEPTED
+Final review closes out actual completed changes using existing task critiques and intervening changes, not a fresh whole-service audit. Reuse current matching accepted evidence or run one missing regression check; do not add tests in final mode. PASS
 covers completed scope only; unstarted priorities remain open without formal deferral questions. A
-regression in completed work requires a concrete correction, not a metadata change. Append/update the
-same concise outputs/review.md; no additional task/plan reports are required.
+regression in completed work requires a concrete correction, not a metadata change. Stage 3 appends short task critiques to outputs/review.md. Stage 4 creates one structured
+outputs/security-review.md using its template, with scope, fixed/open findings, ASVS/control-area
+gaps, actual build/test results and next steps. No duplicate final report or metadata validation is required.
 
 Generic /hand-off captures whatever state exists whenever requested, including pending decisions.
 It records, never enforces sequencing or approves work. Stage agents write no handoff themselves.
 No copied participant summaries or manual forms. Tool lists and file scope differ; inspect actual
 activity and changes. Fresh review context is not OS isolation or guaranteed independent judgment.
+
+Reviewer results are verdict-first: PASS, PARTIALLY FIXED, FAIL or NOT VERIFIED, with the profile definitions. Only PASS accepts the requested scope. Follow with exact test counts, required corrections and limits; no extra bookkeeping.

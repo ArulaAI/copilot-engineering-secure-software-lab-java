@@ -18,3 +18,5 @@ shorten discussion/live scope when time is short. No new packages, service start
 
 Stage 4 is closeout, not another Critique loop. Discuss production integration, ASVS/scanning and
 operational controls verbally if time permits; do not execute them as extra agent tasks.
+
+Stage 4 output: outputs/security-review.md, using the supplied final-review template.

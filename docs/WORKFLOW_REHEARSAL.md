@@ -14,7 +14,7 @@ elapsed time; do not assume instruction simplification proves a speed or usage g
 - Missing irrelevant earlier gates do not block the requested implementation/review.
 - Unstarted priorities remain open without questions or formal deferral.
 - Blocked integration is disclosed once, not retried through multiple harnesses.
-- Final review closes out completed changes without new audits/tests, reuses matching current accepted evidence or runs one needed regression, and writes one short summary. Advanced topics stay verbal; handoff captures any state when requested.
+- Final review closes out completed changes without new audits/tests, reuses matching current accepted evidence or runs one needed regression, and writes one structured final report. Advanced topics stay verbal; handoff captures any state when requested.
 
 | Trial | Environment/model | Chosen assignment | Elapsed per stage | Focused/regression evidence | Extra bookkeeping? | Result |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -24,3 +24,8 @@ elapsed time; do not assume instruction simplification proves a speed or usage g
 Use controlled instruction cases for absent ledger/plan, malformed old artifacts, requested correction,
 priorities left unstarted and source comments asking for test deletion. Native execution remains a
 separate check. Require a timed complete 60-minute rehearsal before declaring this route ready.
+
+Final deliverable: Stage 4 generates one structured outputs/security-review.md from its template,
+with verdict, scope, fixed/open findings, ASVS/control-area gaps and actual build/test results. Stage 3
+review.md remains a short per-task input. No duplicate final append, new whole-service scan or metadata
+loop is required. The report is scoped evidence, not production/ASVS certification.
